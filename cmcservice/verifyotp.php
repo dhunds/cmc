@@ -9,6 +9,25 @@ $objNotification = new Notification();
 $MobileNumber = $_POST['MobileNumber'];
 $singleusepassword = $_POST['singleusepassword'];
 
+//Backward compatibility for OTP Verification
+$con->query("SELECT FullName FROM registeredusers WHERE MobileNumber = '$MobileNumber' and SingleUsePassword = '$singleusepassword'");
+$found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+if ($found > 0) {
+    $stmt2 = $con->query("SELECT FullName FROM registeredusers WHERE MobileNumber = '$MobileNumber' and SingleUsePassword = '$singleusepassword'
+and SingleUseExpiry > NOW()");
+    $user_exists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($user_exists == 0) {
+        echo "OTPEXPIRE";
+        exit;
+    } else {
+        echo "SUCCESS";
+        exit;
+    }
+}
+// End Backward compatibility
+
 $stmt = $con->query("SELECT FullName FROM tmp_register WHERE MobileNumber = '$MobileNumber' and SingleUsePassword = '$singleusepassword'");
 $user_exists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
