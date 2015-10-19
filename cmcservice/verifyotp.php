@@ -64,7 +64,7 @@ and SingleUseExpiry > NOW()");
                 $sql = "SELECT PoolId FROM userpoolsmaster WHERE OwnerNumber='" . $usr['MobileNumber'] . "'";
                 $stmt = $con->query($sql);
                 $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-                $found1 = 0;
+                $found1 = '';
 
                 if ($found > 0) {
                     $ids = '';
@@ -78,7 +78,7 @@ and SingleUseExpiry > NOW()");
                     $found1 = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
                 }
 
-                if (!$found1) {
+                if ($found1 !='' && $found1 < 1) {
                     $insertedId = createClub($usr['MobileNumber'], 'My Cab Share');
                     addToClub($insertedId, $user['FullName'], $user['MobileNumber']);
                 }

@@ -135,6 +135,23 @@
 
         $stmt = $con->prepare($sql);
 
+		//Paging Start Here
+		$stmt->execute();
+		$rowCount = (int)$stmt->rowCount();
+		$totalpages = ceil($rowCount / PAGESIZE);
+
+		if (isset($_REQUEST['page']) && $_REQUEST['page'] != '') {
+			$page = $_REQUEST['page'];
+		} else {
+			$page = 1;
+		}
+
+		$start = ($page - 1) * PAGESIZE;
+		$sql .= " LIMIT $start , " . PAGESIZE;
+
+		$stmt = $con->prepare($sql);
+		//Paging End Here
+
 		if ($stmt->execute())
 		{
 			$rowCount = (int) $stmt->rowCount();
@@ -163,6 +180,7 @@
 		{							
 			echo "<span style='color:Red;font-size:13px; font-weight:bold;'>Error: " . var_dump($con->errorInfo()) . "</span>";
 		}
+		echo pagination_search($totalpages, $page);
 		echo "</div>";
 	}
 ?>	

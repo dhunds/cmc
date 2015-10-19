@@ -69,7 +69,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                 $res = $objNotification->sendIOSNotification();
             }
 
-            $stmt1 = $con->query("select count(*) from acceptedrequest where cabid = '$CabID'");
+            $stmt1 = $con->query("select MemberName from acceptedrequest where cabid = '$CabID'");
             $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
             if ($found >0){
                 $resp = claimFirstRideBonus($OwnerNumber, $objNotification, 1);
