@@ -755,7 +755,9 @@ if ($no_of_rows > 0) {
                         if ($value->display_name != 'Auto' && $value->cab_availability == '1') {
                             $CabStdClass = ReturnStdClass($cabItem, $mainCabsData, $value->display_name);
                             $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, $value->display_name);
-                            $CabsAllData = new stdClass;
+                           
+                          if ($CabStdClass->CabName !=null && $CabStdClass->CabNameID !=null){
+			    $CabsAllData = new stdClass;
                             $CabsAllData->CabName = $CabStdClass->CabName;
                             $CabsAllData->CabNameID = $CabStdClass->CabNameID;
                             $CabsAllData->CarType = $value->display_name;
@@ -773,6 +775,7 @@ if ($no_of_rows > 0) {
 
                             $mainCabsData[] = $CabsAllData;
                             $CabsAllData = new stdClass;
+                          }
                         }
                     }
                 }

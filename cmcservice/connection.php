@@ -1,8 +1,8 @@
 <?php
 
-    $dsn = 'mysql:host=localhost;dbname=cmcdev';
+    $dsn = 'mysql:host=localhost;dbname=clubmycab';
     $us = 'root';
-    $pa = 'Vbh4{tc+Nb';
+    $pa = 'yS?Hns/7Jy';
 
     try {
         $con = new PDO($dsn, $us, $pa);
@@ -12,13 +12,14 @@
         echo $error_message;
         exit();
     }
-define("MID", "MBK9002");
-define("MERCHANT_NAME", "MyMerchantName");
-define("API_SECRET", "ju6tygh7u7tdg554k098ujd5468o");
-define("LOAD_MONEY_URL", "https://test.mobikwik.com/mobikwik/loadmoney");
-define("WALLET_ID", "testapisupport@gmail.com");
-define("CMC_KEY", "NrD4LMv5xGAXdYvxvzzcxASUgWQkKcZx");
-
+    
+define("MID", "MBK9572");
+define("MERCHANT_NAME", "ClubMyCab");
+define("API_SECRET", "bToO0UJ7OaijZ9g7a1Axr3J5OpEF");
+define("LOAD_MONEY_URL", "https://walletapi.mobikwik.com/loadmoney");
+define("WALLET_ID", "support@clubmycab.com");
+define("CMC_KEY", "ahKQMpBZmCYVwYpPMG9CVgrN9H6K9MgC");
+ 
 $arrAPI = array(    
     'openacab.php',
     'fetchimagename.php',

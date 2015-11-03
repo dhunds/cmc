@@ -3,7 +3,7 @@ session_start();
 
 define( 'USERNAME', 'clubmycab');
 define( 'PASSWORD', '!Getgoing15');
-define( 'PAGESIZE', 20);
+define( 'PAGESIZE', 15);
 
 if (isset($_POST['submit']) && isset($_POST['username']) && $_POST['username'] !='' && isset($_POST['password']) && $_POST['password'] !=''){
     if ($_POST['username']==USERNAME && $_POST['password']==PASSWORD){
@@ -15,9 +15,9 @@ if (!(isset($_SESSION['username']) && $_SESSION['username'] !='')){
     header('location:login.php');
 }
 
-$dsn = 'mysql:host=localhost;dbname=cmcdev';
+$dsn = 'mysql:host=localhost;dbname=clubmycab';
     $us = 'root';
-    $pa = 'Vbh4{tc+Nb';
+    $pa = 'yS?Hns/7Jy';
 
 
     try {

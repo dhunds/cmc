@@ -8,19 +8,14 @@ include('connection.php');
 
 $sType = $_GET['type'];
 
-//const CLIENT_ID = 'ci-UpBdN7CONf8spC18ZdbETbb-sc4MC';
-//const SERVER_TOKEN = '97EIxmps8i-URhD995lHiWJSRVn5caxFEO_Dq2_a';
-//const CLIENT_SECRET = 'Dl85_kQxc5TXrDC0jaaQwGABc-N1yG0CVujFUUJz';
-
-//Dev
-const CLIENT_ID = 'RglrsY1E0pqbcf_zdiHXkk7Tz8jxGarP';
-const SERVER_TOKEN = 'ZuTOtu6k0s4AaXCX9_pKuuGz36kKD-wEp0G2ofJ3';
-const CLIENT_SECRET = 'yHUs9wPvKNazJKSow076cxSdSl9MQ5xdfdcDxQcX';
+const CLIENT_ID = '-Q9kL1722l5XeCTUK5vS8YHiY0mJUijo';
+const SERVER_TOKEN = 'l4534hMQeJg5JREbbhRfOHJuM9-UbwFKPfrYpwAi';
+const CLIENT_SECRET = '02UIbwOsXX1FXGPdOyU_95jjuW60YBKJAJd4seBX';
 
 const AUTHORIZATION_ENDPOINT = 'https://login.uber.com/oauth/authorize';
 const TOKEN_ENDPOINT = 'https://login.uber.com/oauth/token';
-const REDIRECT_URI = 'https://180.179.208.23/cmc/cmcservice/uberapi.php';
-const REDIRECT_PROCESS_URI = 'http://180.179.208.23/cmc/cmcservice/processing.php';
+const REDIRECT_URI = 'https://104.155.193.222/cmc/cmcservice/uberapi.php';
+const REDIRECT_PROCESS_URI = 'http://104.155.193.222/cmc/cmcservice/processing.php';
 
 if (isset($_GET['code'])) {
     $requestID = $_GET['requestid'];
