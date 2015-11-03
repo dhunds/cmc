@@ -751,31 +751,36 @@ if ($no_of_rows > 0) {
 
                 if ($olaApiData->status == 'SUCCESS' && ($olaApiData->cab_availability)) {
 
+                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Mini');
+                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Sedan');
+                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Prime');
+
                     foreach ($olaApiData->cab_categories as $value) {
-                        if ($value->display_name != 'Auto' && $value->cab_availability == '1') {
+                        if ($value->display_name != 'Auto' && ($value->cab_availability)) {
+
                             $CabStdClass = ReturnStdClass($cabItem, $mainCabsData, $value->display_name);
                             $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, $value->display_name);
-                           
-                          if ($CabStdClass->CabName !=null && $CabStdClass->CabNameID !=null){
-			    $CabsAllData = new stdClass;
-                            $CabsAllData->CabName = $CabStdClass->CabName;
-                            $CabsAllData->CabNameID = $CabStdClass->CabNameID;
-                            $CabsAllData->CarType = $value->display_name;
-                            $CabsAllData->timeEstimate = ($value->duration->value * 60);
-                            $CabsAllData->BaseFare = $CabStdClass->BaseFare;
-                            $CabsAllData->BaseFareKM = $CabStdClass->BaseFareKM;
-                            $CabsAllData->low_estimate = $CabStdClass->low_estimate;
-                            $CabsAllData->high_estimate = $CabStdClass->high_estimate;
-                            $CabsAllData->RatePerKMAfterBaseFare = $CabStdClass->RatePerKMAfterBaseFare;
-                            $CabsAllData->CabMobileSite = $CabStdClass->CabMobileSite;
-                            $CabsAllData->CabMode = $CabStdClass->CabMode;
-                            $CabsAllData->CabPackageName = $CabStdClass->CabPackageName;
-                            $CabsAllData->Rating = $CabStdClass->Rating;
-                            $CabsAllData->NoofReviews = $CabStdClass->NoofReviews;
 
-                            $mainCabsData[] = $CabsAllData;
-                            $CabsAllData = new stdClass;
-                          }
+                            if ($CabStdClass->CabName !=null && $CabStdClass->CabNameID !=null){
+                                $CabsAllData = new stdClass;
+                                $CabsAllData->CabName = $CabStdClass->CabName;
+                                $CabsAllData->CabNameID = $CabStdClass->CabNameID;
+                                $CabsAllData->CarType = $value->display_name;
+                                $CabsAllData->timeEstimate = ($value->duration->value * 60);
+                                $CabsAllData->BaseFare = $CabStdClass->BaseFare;
+                                $CabsAllData->BaseFareKM = $CabStdClass->BaseFareKM;
+                                $CabsAllData->low_estimate = $CabStdClass->low_estimate;
+                                $CabsAllData->high_estimate = $CabStdClass->high_estimate;
+                                $CabsAllData->RatePerKMAfterBaseFare = $CabStdClass->RatePerKMAfterBaseFare;
+                                $CabsAllData->CabMobileSite = $CabStdClass->CabMobileSite;
+                                $CabsAllData->CabMode = $CabStdClass->CabMode;
+                                $CabsAllData->CabPackageName = $CabStdClass->CabPackageName;
+                                $CabsAllData->Rating = $CabStdClass->Rating;
+                                $CabsAllData->NoofReviews = $CabStdClass->NoofReviews;
+
+                                $mainCabsData[] = $CabsAllData;
+                                $CabsAllData = new stdClass;
+                            }
                         }
                     }
                 }
