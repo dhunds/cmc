@@ -1,0 +1,3 @@
+Options -Indexes
+#Redirect 301 /cmc/terms---conditions.html /cmc/terms.html
+#Redirect 301 /cmc/privacy-policy.html /cmc/privacy.html
