@@ -14,7 +14,9 @@ const REDIRECT_URI = 'http://104.155.193.222/cmc/cmcservice/olaApi.php';
 $_POST = $_GET;
 if (isset($_POST['type']) && $_POST['type'] == 'cancellation') {
 
-    $access_token = $_POST['access_token'];
+    $stmt = $con->query("SELECT cbr.access_token FROM cabbookingrequest cbr, cmccabrecords cr WHERE cbr.requestID=cr.bookingRequestID AND cr.BookingRefNo='".$_REQUEST['booking_id']."'");
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $access_token = $row['access_token'];
 
     $params = array(
         'crn' => $_REQUEST['booking_id']
