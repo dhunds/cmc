@@ -1,8 +1,13 @@
 <?php
-include('connection.php');
-const CLIENT_ID = '7e22de1177fb4ac4b173a8653c72e1f3';
+ini_set('display_errors', 1);
+//include('connection.php');
+const CLIENT_ID = 'ZmNhNTk3NDctNTZjOS00MTkxLTg3NDUtZWQwYzExNzVmMjMw';
+const X_APP_TOKEN = '7e22de1177fb4ac4b173a8653c72e1f3';
+
 const BOOKING_URL = 'https://devapi.olacabs.com/v1/bookings/create';
 const CANCELLATION_URL = 'https://devapi.olacabs.com/v1/bookings/cancel';
+const AUTHORIZATION_ENDPOINT = 'https://devapi.olacabs.com/oauth2/authorize';
+const REDIRECT_URI = 'http://104.155.193.222/cmc/cmcservice/olaApi.php';
 
 
 //Ola Cancellation
@@ -23,7 +28,7 @@ if (isset($_POST['type']) && $_POST['type'] == 'cancellation') {
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_HTTPGET, true);
 
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-APP-TOKEN: ' . CLIENT_ID, 'Authorization: Bearer ' . $access_token));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-APP-TOKEN: ' . X_APP_TOKEN, 'Authorization: Bearer ' . $access_token));
 
     $resp_cancellation = curl_exec($ch);
     curl_close($ch);
@@ -80,7 +85,7 @@ if (isset($_REQUEST['access_token']) && $_REQUEST['access_token'] != '') {
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_HTTPGET, true);
 
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-APP-TOKEN: ' . CLIENT_ID, 'Authorization: Bearer ' . $access_token));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-APP-TOKEN: ' . X_APP_TOKEN, 'Authorization: Bearer ' . $access_token));
 
     $result = curl_exec($ch);
 
@@ -90,5 +95,19 @@ if (isset($_REQUEST['access_token']) && $_REQUEST['access_token'] != '') {
     }
     curl_close($ch);
     echo $result;
+    exit;
+} else {
+
+    $params = array(
+        'response_type' => 'token',
+        'client_id' => CLIENT_ID,
+        'redirect_uri' => REDIRECT_URI,
+        'scope' => 'profile booking',
+        'state' => 'state123'
+    );
+
+    $auth_url = AUTHORIZATION_ENDPOINT . '?' . http_build_query($params);
+
+    header('Location: ' . $auth_url);
     exit;
 }
