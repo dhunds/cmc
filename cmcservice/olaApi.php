@@ -70,11 +70,14 @@ if (isset($_REQUEST['access_token']) && $_REQUEST['access_token'] != '') {
     $stmt = $con->prepare($sql);
     $stmt->execute();
 
+    $stmt = $con->query("SELECT start_latitude, start_longitude, product_id FROM cabbookingrequest where requestID='$requestID'");
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     $params = array(
-        'pickup_lat' => $_REQUEST['slat'],
-        'pickup_lng' => $_REQUEST['slon'],
+        'pickup_lat' => $rows['start_latitude'],
+        'pickup_lng' => $rows['start_longitude'],
         'pickup_mode' => 'NOW',
-        'category' => $_REQUEST['category']
+        'category' => $rows['product_id']
     );
 
     $book_url = BOOKING_URL . '?' . http_build_query($params);
