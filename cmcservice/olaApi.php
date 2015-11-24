@@ -1,6 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-//include('connection.php');
+//ini_set('display_errors', 1);
+include('connection.php');
 const CLIENT_ID = 'ZmNhNTk3NDctNTZjOS00MTkxLTg3NDUtZWQwYzExNzVmMjMw';
 const X_APP_TOKEN = '7e22de1177fb4ac4b173a8653c72e1f3';
 
@@ -63,8 +63,8 @@ if (isset($_REQUEST['access_token']) && $_REQUEST['access_token'] != '') {
 
     $access_token = $_REQUEST['access_token'];
 
-    $requestID = $_GET['requestid'];
-    $expires_in = $_GET['expires_in'];
+    $requestID = $_REQUEST['requestid'];
+    $expires_in = $_REQUEST['expires_in'];
 
     $sql = "UPDATE cabbookingrequest SET access_token = '$access_token', expires_in = '$expires_in', token_type = '$token_type', requestStatus = 'REQUESTDONE' where requestID = '$requestID'";
     $stmt = $con->prepare($sql);
