@@ -97,6 +97,7 @@ if (isset($_POST['type']) && $_POST['type'] =='booking') {
         'booking_id' => $_POST['booking_id'],
         'cancellation_reason' => $_POST['cancellation_reason']
     );
+    $resp_cancellation = $TFS->cancelBooking($params);
 
     if ($resp_cancellation->status == 'success' && isset($_POST['booking_id']) && $_POST['booking_id'] !='') {
     //Mark Solo booking archieved
@@ -118,7 +119,7 @@ if (isset($_POST['type']) && $_POST['type'] =='booking') {
         $stmt->execute();
     }
 
-    echo $resp_cancellation = $TFS->cancelBooking($params);
+    echo $resp_cancellation;
     exit;
 } else {
     echo '{"msg": "Unauthorised Access"}';exit;
