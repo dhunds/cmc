@@ -66,12 +66,16 @@ if (isset($_REQUEST['access_token']) && $_REQUEST['access_token'] != '') {
     $requestID = $_REQUEST['requestid'];
     $expires_in = $_REQUEST['expires_in'];
 
-    $sql = "UPDATE cabbookingrequest SET access_token = '$access_token', expires_in = '$expires_in', token_type = '$token_type', requestStatus = 'REQUESTDONE' where requestID = '$requestID'";
+    $sql = "UPDATE cabbookingrequest SET access_token = '$access_token', expires_in = '$expires_in', requestStatus = 'REQUESTDONE' where requestID = '$requestID'";
     $stmt = $con->prepare($sql);
     $stmt->execute();
 
     $stmt = $con->query("SELECT start_latitude, start_longitude, product_id FROM cabbookingrequest where requestID='$requestID'");
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($rows['product_id']=='Within Delhi' || $rows['product_id']=='Delhi to NCR'){
+        $rows['product_id']='mini';
+    }
 
     $params = array(
         'pickup_lat' => $rows['start_latitude'],

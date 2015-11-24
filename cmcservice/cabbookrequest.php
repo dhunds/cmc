@@ -1,15 +1,15 @@
 <?php
 include('connection.php');
 
-$cabType = $_GET['cabType'];
-$productid = $_GET['productid'];
-$lat = $_GET['lat'];
-$lon = $_GET['lon'];
-$elat = $_GET['elat'];
-$elon = $_GET['elon'];
+$cabType = $_REQUEST['cabType'];
+$productid = $_REQUEST['productid'];
+$lat = $_REQUEST['lat'];
+$lon = $_REQUEST['lon'];
+$elat = $_REQUEST['elat'];
+$elon = $_REQUEST['elon'];
 
-if (isset($_GET['cabID'])) {
-    $cabID = $_GET['cabID'];
+if (isset($_REQUEST['cabID'])) {
+    $cabID = $_REQUEST['cabID'];
 } else {
     $cabID = 0;
 }
