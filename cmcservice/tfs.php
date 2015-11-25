@@ -97,7 +97,7 @@ if (isset($_POST['type']) && $_POST['type'] =='booking') {
         'booking_id' => $_POST['booking_id'],
         'cancellation_reason' => $_POST['cancellation_reason']
     );
-    $resp_cancellation = json_encode($TFS->cancelBooking($params));
+    $resp_cancellation = json_decode($TFS->cancelBooking($params));
 
     if ($resp_cancellation->status == 'success' && isset($_POST['booking_id']) && $_POST['booking_id'] !='') {
     //Mark Solo booking archieved
