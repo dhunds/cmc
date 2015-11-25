@@ -36,7 +36,7 @@ if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'cancellation') {
     curl_close($ch);
 
 
-    if ($resp_cancellation->status == 'SUCCESS' && isset($_REQUEST['booking_id']) && $_REQUEST['booking_id'] != '') {
+    if ($resp_cancellation->status == 'FAILURE' && isset($_REQUEST['booking_id']) && $_REQUEST['booking_id'] != '') {
         //Mark Solo booking archieved
 
         $stmt = $con->query("SELECT co.Seats, co.CabId  FROM cabopen co JOIN cmccabrecords cr ON cr.CabId=co.CabId AND cr.BookingRefNo='" . $_REQUEST['booking_id'] . "'");
@@ -57,7 +57,7 @@ if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'cancellation') {
         $stmt->execute();
     }
 
-    echo json_encode($resp_cancellation);
+    echo $resp_cancellation;
     exit;
 }
 // End Ola Cancellation
