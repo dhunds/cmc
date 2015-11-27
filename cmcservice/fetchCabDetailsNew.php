@@ -782,7 +782,7 @@ if ($no_of_rows > 0) {
                             $CabsAllData->CabName = 'Ola';
                             $CabsAllData->CabNameID = 2;
                             $CabsAllData->CarType = $value->display_name;
-                            $CabsAllData->timeEstimate = ($value->duration->value * 60);
+                            $CabsAllData->timeEstimate = ($value->eta * 60);
                             $CabsAllData->BaseFare = $value->fare_breakup[0]->base_fare;
                             $CabsAllData->BaseFareKM = $value->fare_breakup[0]->minimum_distance;
                             $CabsAllData->low_estimate = $price_estimate->amount_min;
