@@ -123,23 +123,22 @@ function CallTaxiForSureCabsInfo($slat, $slon)
     return $result;
 }
 
-function getOlaCabInfo($slat, $slon)
+function getOlaCabInfo($slat, $slon, $elat, $elon)
 {
     $curl = curl_init();
-    $url = "https://apps.olacabs.com/v3/cab/info/";
+    $url = "https://devapi.olacabs.com/v1/products";
     $fields = array(
-        'custom_lat' => $slat,
-        'custom_lng' => $slon,
-        'location_type' => 'CUSTOM',
-        'user_id' => 'KB9MYF7qSDSo4fNIKLbjY7tcCrmIoRi1JexP7NaisfgMSZICfRPzHT5IXw/Dak3k64RfuNjRmCF8em1tgbyD3g==',
-        'enable_auto' => true,
-        'enable_delivery' => true,
+        'pickup_lat' => $slat,
+        'pickup_lng' => $slon,
+        'drop_lat' => $elat,
+        'drop_lng' => $elon
     );
+
     $url = $url . '?' . http_build_query($fields);
     curl_setopt_array($curl, array(
         CURLOPT_RETURNTRANSFER => 1,
         CURLOPT_URL => $url,
-        CURLOPT_USERAGENT => 'clubmycab cURL Request'
+        CURLOPT_HTTPHEADER => array('X-APP-TOKEN: 7e22de1177fb4ac4b173a8653c72e1f3')
     ));
     $resp = curl_exec($curl);
     curl_close($curl);
@@ -747,9 +746,64 @@ if ($no_of_rows > 0) {
                 }
             } else if ($cabItem == 2) // Ola Cabs
             {
-                $olaApiData = json_decode(getOlaCabInfo($lat, $lon));
+                $olaApiData = json_decode(getOlaCabInfo($lat, $lon, $elat, $elon));
+                $getMainCabsData = [];
+                $getMainCabsData['Mini'] = ReturnStdClass($cabItem, $mainCabsData, 'Mini');
+                $getMainCabsData['Sedan'] = ReturnStdClass($cabItem, $mainCabsData, 'Sedan');
+                $getMainCabsData['Prime'] = ReturnStdClass($cabItem, $mainCabsData, 'Prime');
+                $getMainCabsData['Delhi to NCR'] = ReturnStdClass($cabItem, $mainCabsData, 'Delhi to NCR');
+                $getMainCabsData['Within Delhi'] = ReturnStdClass($cabItem, $mainCabsData, 'Within Delhi');
 
-                if ($olaApiData->status == 'SUCCESS' && ($olaApiData->cab_availability)) {
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Mini');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Sedan');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Prime');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Delhi to NCR');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Within Delhi');
+
+                if (!empty($olaApiData->categories)) {
+                    $rideEstimate = [];
+
+                    if (!empty($olaApiData->ride_estimate)) {
+                        foreach ($olaApiData->ride_estimate as $estimate) {
+                            $rideEstimate[$estimate->category] = $estimate;
+                        }
+                    }
+
+                    foreach ($olaApiData->categories as $value) {
+
+                        if (isset($rideEstimate[strtolower($value->display_name)])) {
+                            $price_estimate = $rideEstimate[strtolower($value->display_name)];
+                        }else{
+                            $price_estimate = $rideEstimate['mini'];
+                        }
+
+                        if ($value->display_name != 'Auto') {
+                            $CabsAllData = new stdClass;
+                            $CabsAllData->CabName = 'Ola';
+                            $CabsAllData->CabNameID = 2;
+                            $CabsAllData->CarType = $value->display_name;
+                            $CabsAllData->timeEstimate = ($value->duration->value * 60);
+                            $CabsAllData->BaseFare = $value->fare_breakup[0]->base_fare;
+                            $CabsAllData->BaseFareKM = $value->fare_breakup[0]->minimum_distance;
+                            $CabsAllData->low_estimate = $price_estimate->amount_min;
+                            $CabsAllData->high_estimate = $price_estimate->amount_max;
+                            $CabsAllData->RatePerKMAfterBaseFare = $value->fare_breakup[0]->cost_per_distance;
+                            $CabsAllData->CabMobileSite = 'm.olacab.com';
+                            $CabsAllData->CabMode = 1;
+                            $CabsAllData->CabPackageName = 'com.olacabs.customer';
+                            $CabsAllData->Rating = $getMainCabsData[$value->display_name]->Rating;
+                            $CabsAllData->NoofReviews = $getMainCabsData[$value->display_name]->NoofReviews;
+
+                            $mainCabsData[] = $CabsAllData;
+                            $CabsAllData = new stdClass;
+
+                        }
+                    }
+                }
+
+
+               //Old Implementation
+                /*if ($olaApiData->status == 'SUCCESS' && ($olaApiData->cab_availability)) {
 
                     $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Mini');
                     $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Sedan');
@@ -783,7 +837,7 @@ if ($no_of_rows > 0) {
                             }
                         }
                     }
-                }
+                }*/
             } else if ($cabItem == 3) //Meru Cabs
             {
                 $cabData = CallCabAPI($cabItem, '', '', $lat, $lon, '', '');
