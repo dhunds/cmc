@@ -724,7 +724,7 @@ if ($no_of_rows > 0) {
                                     }
                                 }
                             }
-                            if ($isFound == false) {
+                            if ($isFound == false && $item->display_name !='uberAuto') {
                                 $CabStdClass = ReturnStdClass($cabItem, $mainCabsData, $cabtype);
                                 $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, $cabtype);
 
@@ -747,6 +747,9 @@ if ($no_of_rows > 0) {
             } else if ($cabItem == 2) // Ola Cabs
             {
                 $olaApiData = json_decode(getOlaCabInfo($lat, $lon, $elat, $elon));
+                //echo '<pre>';
+                //print_r($olaApiData);
+
                 $getMainCabsData = [];
                 $getMainCabsData['Mini'] = ReturnStdClass($cabItem, $mainCabsData, 'Mini');
                 $getMainCabsData['Sedan'] = ReturnStdClass($cabItem, $mainCabsData, 'Sedan');
@@ -777,7 +780,7 @@ if ($no_of_rows > 0) {
                             $price_estimate = $rideEstimate['mini'];
                         }
 
-                        if ($value->display_name != 'Auto') {
+                        if ($value->display_name != 'Auto' && $value->eta != -1) {
                             $CabsAllData = new stdClass;
                             $CabsAllData->CabName = 'Ola';
                             $CabsAllData->CabNameID = 2;
