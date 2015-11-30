@@ -684,9 +684,6 @@ if ($no_of_rows > 0) {
 
             if ($cabItem == 1) // Uber Cabs
             {
-
-
-
                 $cabDataPrice = CallCabAPI($cabItem, $FromCity, $ToCity, $lat, $lon, $elat, $elon);
                 $uberPriceEstimate = json_decode($cabDataPrice);
 
@@ -718,7 +715,7 @@ if ($no_of_rows > 0) {
 
                 foreach ($uberPriceEstimate->prices as $price) {
 
-                    if ($arrTimeEstimate[$price->display_name]->product_id = $price->product_id){
+                    if ($arrTimeEstimate[$price->display_name]->product_id == $price->product_id){
                         if ($price->display_name !='uberAuto') {
                             $CabStdClass = $getMainCabsDataUber[$price->display_name];
 
@@ -738,7 +735,6 @@ if ($no_of_rows > 0) {
                         }
                     }
                 }
-
 
             } else if ($cabItem == 2) // Ola Cabs
             {
