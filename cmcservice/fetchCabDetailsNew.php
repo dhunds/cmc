@@ -187,6 +187,7 @@ function CallCabAPI($CabID, $From, $To, $slat, $slon, $elat, $elon)
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_HEADER, false);
             $result = curl_exec($ch);
+
             if ($result === false) {
                 echo "Error Number:" . curl_errno($ch) . "<br>";
                 echo "Error String:" . curl_error($ch);
@@ -680,75 +681,68 @@ if ($no_of_rows > 0) {
     if (count($ApiCabs) > 0) {
         foreach ($ApiCabs as $cabItem) {
             $CabStdClass = new stdClass;
+
             if ($cabItem == 1) // Uber Cabs
             {
-                $cabData = CallCabAPI($cabItem, $FromCity, '', $lat, $lon, '', '');
 
-                $uberProductsTime = json_decode($cabData);
-                if (isset($uberProductsTime->times)) {
-                    foreach ($uberProductsTime->times as $item) {
-                        $CabsAllData = new stdClass;
-                        $CabsAllData->CabName = "Uber";
-                        $CabsAllData->CarType = $item->display_name;
-                        $CabsAllData->timeEstimate = $item->estimate;
-                        $CabsAllData->productId = $item->product_id;
-                        $CabStdClass = ReturnStdClass($cabItem, $mainCabsData, $CabsAllData->CarType);
-                        $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, $CabsAllData->CarType);
-                        $CabsAllData->Rating = $CabStdClass->Rating;
-                        $CabsAllData->CabMode = $CabStdClass->CabMode;
-                        $mainCabsData[] = $CabsAllData;
+
+
+                $cabDataPrice = CallCabAPI($cabItem, $FromCity, $ToCity, $lat, $lon, $elat, $elon);
+                $uberPriceEstimate = json_decode($cabDataPrice);
+
+                $cabDataTime = CallCabAPI($cabItem, $FromCity, '', $lat, $lon, '', '');
+                $uberProductsTime = json_decode($cabDataTime);
+                $arrTimeEstimate = [];
+
+                foreach ($uberProductsTime->times as $time) {
+                    if (isset($arrTimeEstimate[$time->display_name]) ) {
+                        if ($arrTimeEstimate[$time->display_name]->estimate > $time->estimate) {
+                            $arrTimeEstimate[$time->display_name] = $time;
+                        }
+                    } else {
+                        $arrTimeEstimate[$time->display_name] = $time;
                     }
                 }
-                if ($elat != '' && $elon != '') {
-                    $cabData = CallCabAPI($cabItem, $FromCity, $ToCity, $lat, $lon, $elat, $elon);
-                    $uberProducts = json_decode($cabData);
-                    $cabtype = '';
-                    if (isset($uberProducts->prices)) {
-                        foreach ($uberProducts->prices as $item) {
-                            $isFound = false;
-                            $cabtype = $item->display_name;
-                            foreach ($mainCabsData as $row) {
-                                $lstdClass = new stdClass;
-                                $lstdClass = $row;
-                                if (property_exists($lstdClass, "productId")) {
-                                    if ($item->product_id == $lstdClass->productId) {
-                                        $lstdClass->high_estimate = $item->high_estimate;
-                                        $lstdClass->duration = $item->duration;
-                                        $lstdClass->low_estimate = $item->low_estimate;
-                                        $lstdClass->surge_multiplier = $item->surge_multiplier;
-                                        $lstdClass = AppendProperties($CabStdClass, $lstdClass);
-                                        $lstdClass->CarType = $lstdClass->CarType;
-                                        $lstdClass->CabName = "Uber";
-                                        $isFound = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if ($isFound == false && $item->display_name !='uberAuto') {
-                                $CabStdClass = ReturnStdClass($cabItem, $mainCabsData, $cabtype);
-                                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, $cabtype);
 
-                                $CabsAllData = new stdClass;
-                                $CabsAllData->CabName = "Uber";
-                                $CabsAllData->Rating = $CabStdClass->Rating;
-                                $CabsAllData->CabMode = $CabStdClass->CabMode;
-                                $CabsAllData->high_estimate = $item->high_estimate;
-                                $CabsAllData->duration = $item->duration;
-                                $CabsAllData->productId = $item->product_id;
-                                $CabsAllData->low_estimate = $item->low_estimate;
-                                $CabsAllData->surge_multiplier = $item->surge_multiplier;
-                                $CabsAllData = AppendProperties($CabStdClass, $CabsAllData);
-                                $CabsAllData->CarType = $item->display_name;
-                                $mainCabsData[] = $CabsAllData;
-                            }
+                $finalCabsArray = [];
+
+                $getMainCabsDataUber['UberBLACK'] = ReturnStdClass($cabItem, $mainCabsData, 'UberBLACK');
+                $getMainCabsDataUber['uberGO'] = ReturnStdClass($cabItem, $mainCabsData, 'uberGO');
+                $getMainCabsDataUber['uberX'] = ReturnStdClass($cabItem, $mainCabsData, 'uberX');
+                $getMainCabsDataUber['uberXL'] = ReturnStdClass($cabItem, $mainCabsData, 'uberXL');
+
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'UberBLACK');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'uberGO');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'uberX');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'uberXL');
+
+                foreach ($uberPriceEstimate->prices as $price) {
+
+                    if ($arrTimeEstimate[$price->display_name]->product_id = $price->product_id){
+                        if ($price->display_name !='uberAuto') {
+                            $CabStdClass = $getMainCabsDataUber[$price->display_name];
+
+                            $CabsAllData = new stdClass;
+                            $CabsAllData->CabName = "Uber";
+                            $CabsAllData->Rating = number_format($CabStdClass->Rating, 1, '.', '');
+                            $CabsAllData->NoofReviews = $CabStdClass->NoofReviews;
+                            $CabsAllData->CabMode = $CabStdClass->CabMode;
+                            $CabsAllData->high_estimate = $price->high_estimate;
+                            $CabsAllData->duration = $price->duration;
+                            $CabsAllData->productId = $price->product_id;
+                            $CabsAllData->low_estimate = $price->low_estimate;
+                            $CabsAllData->surge_multiplier = $price->surge_multiplier;
+                            $CabsAllData->CarType = $price->display_name;
+                            $CabsAllData->timeEstimate = $arrTimeEstimate[$price->display_name]->estimate;
+                            $mainCabsData[] = $CabsAllData;
                         }
                     }
                 }
+
+
             } else if ($cabItem == 2) // Ola Cabs
             {
                 $olaApiData = json_decode(getOlaCabInfo($lat, $lon, $elat, $elon));
-                //echo '<pre>';
-                //print_r($olaApiData);
 
                 $getMainCabsData = [];
                 $getMainCabsData['Mini'] = ReturnStdClass($cabItem, $mainCabsData, 'Mini');
