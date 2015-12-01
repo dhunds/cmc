@@ -10,7 +10,7 @@ class Notification {
     protected $_deviceIds;
 
     const GCM_ACCESS_KEY = 'AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0';
-    const PASSPHRASE = '91089108';
+    const PASSPHRASE = '!Getgoing15';
 
     protected $gcmUrl = 'https://android.googleapis.com/gcm/send';
 
@@ -147,16 +147,25 @@ class Notification {
      */
     public function sendIOSNotification() {
         set_time_limit(0);
+        if (ENV =='prod') {
+            $push_url = 'ssl://gateway.push.apple.com:2195';
+            $pemFile = 'cmcdev.pem';
+        } else {
+            $push_url = 'ssl://gateway.sandbox.push.apple.com:2195';
+            $pemFile = 'cmc.pem';
+        }
         header('content-type: text/html; charset: utf-8');
-        $message = $this->tr_to_utf($this->_bodyParams['msg']);
+        $message = $this->tr_to_utf($this->_bodyParams['gcmText']);
         $payload = '{"aps":{"alert":"' . $message . '","sound":"default"}}';
         $ctx = stream_context_create();
-        stream_context_set_option($ctx, 'ssl', 'local_cert', 'abc.pem');
+        stream_context_set_option($ctx, 'ssl', 'local_cert', $pemFile);
         stream_context_set_option($ctx, 'ssl', 'passphrase', self::PASSPHRASE);
+
+
 
         foreach ($this->_deviceIds as $item) {
             sleep(1);
-            $fp = stream_socket_client('ssl://gateway.push.apple.com:2195', $err, $errstr, 60, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
+            $fp = stream_socket_client($push_url, $err, $errstr, 60, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
 
             if (!$fp) {
                 exit("Failed to connect: $err $errstr" . '<br />');
