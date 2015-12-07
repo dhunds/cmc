@@ -360,6 +360,7 @@ function GetTaxiForSureCab($mproduct, $TaxiForSureI, $lat, $lon)
                     $mCab->uuid = $item->uuid;
                     $mCab->Distance = $item->Distance;
                     $mCab->carType = $item->carType;
+                    $mCab->CarType = $item->carType;
                     $mCab->longitude = $item->longitude;
                     $mCab->duration = $item->duration;
                     $mCab->timeEstimate = (int)$item->duration * 60;
@@ -374,6 +375,7 @@ function GetTaxiForSureCab($mproduct, $TaxiForSureI, $lat, $lon)
                 $mCab->uuid = $item->uuid;
                 $mCab->Distance = $item->Distance;
                 $mCab->carType = $item->carType;
+                $mCab->CarType = $item->carType;
                 $mCab->longitude = $item->longitude;
                 $mCab->duration = $item->duration;
                 $mCab->timeEstimate = (int)$item->duration * 60;
