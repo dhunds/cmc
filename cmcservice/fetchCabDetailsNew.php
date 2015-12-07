@@ -866,9 +866,11 @@ if ($no_of_rows > 0) {
 
                         $CabsAllData = new stdClass;
                         $CabsAllData = GetTaxiForSureCab($type, $TaxiForSureI, $lat, $lon);
-                        $CabsAllData = AppendProperties($CabStdClass, $CabsAllData);
 
-                        $mainCabsData[] = $CabsAllData;
+                        if ($CabsAllData->CabName !=''){
+                            $CabsAllData = AppendProperties($CabStdClass, $CabsAllData);
+                            $mainCabsData[] = $CabsAllData;
+                        }
                     }
                 }
             }
