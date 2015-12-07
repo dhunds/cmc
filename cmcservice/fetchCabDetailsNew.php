@@ -795,42 +795,7 @@ if ($no_of_rows > 0) {
                 }
 
 
-               //Old Implementation
-                /*if ($olaApiData->status == 'SUCCESS' && ($olaApiData->cab_availability)) {
 
-                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Mini');
-                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Sedan');
-                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Prime');
-
-                    foreach ($olaApiData->cab_categories as $value) {
-                        if ($value->display_name != 'Auto' && ($value->cab_availability)) {
-
-                            $CabStdClass = ReturnStdClass($cabItem, $mainCabsData, $value->display_name);
-                            $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, $value->display_name);
-
-                            if ($CabStdClass->CabName !=null && $CabStdClass->CabNameID !=null){
-                                $CabsAllData = new stdClass;
-                                $CabsAllData->CabName = $CabStdClass->CabName;
-                                $CabsAllData->CabNameID = $CabStdClass->CabNameID;
-                                $CabsAllData->CarType = $value->display_name;
-                                $CabsAllData->timeEstimate = ($value->duration->value * 60);
-                                $CabsAllData->BaseFare = $CabStdClass->BaseFare;
-                                $CabsAllData->BaseFareKM = $CabStdClass->BaseFareKM;
-                                $CabsAllData->low_estimate = $CabStdClass->low_estimate;
-                                $CabsAllData->high_estimate = $CabStdClass->high_estimate;
-                                $CabsAllData->RatePerKMAfterBaseFare = $CabStdClass->RatePerKMAfterBaseFare;
-                                $CabsAllData->CabMobileSite = $CabStdClass->CabMobileSite;
-                                $CabsAllData->CabMode = $CabStdClass->CabMode;
-                                $CabsAllData->CabPackageName = $CabStdClass->CabPackageName;
-                                $CabsAllData->Rating = $CabStdClass->Rating;
-                                $CabsAllData->NoofReviews = $CabStdClass->NoofReviews;
-
-                                $mainCabsData[] = $CabsAllData;
-                                $CabsAllData = new stdClass;
-                            }
-                        }
-                    }
-                }*/
             } else if ($cabItem == 3) //Meru Cabs
             {
                 $cabData = CallCabAPI($cabItem, '', '', $lat, $lon, '', '');
@@ -866,63 +831,40 @@ if ($no_of_rows > 0) {
                 }
             } else if ($cabItem == 4) //Taxi For Sure
             {
+                $getMainCabsData = [];
+                $cabTypes = [];
+                $getMainCabsData['hatchback'] = ReturnStdClass($cabItem, $mainCabsData, 'Hatchback');
+                $getMainCabsData['sedan'] = ReturnStdClass($cabItem, $mainCabsData, 'Sedan');
+
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Hatchback');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Sedan');
 
                 $cabIData = CallTaxiForSureCabsInfo($lat, $lon);
                 $TaxiForSureI = json_decode($cabIData);
-                $cabData = CallCabAPI($cabItem, '', '', $lat, $lon, '', '');
-                $TaxiForSure = json_decode($cabData, true);
 
-                $cabTypes = array();
                 if (isset($TaxiForSureI->response_data)) {
+
                     foreach ($TaxiForSureI->response_data->carTypes as $item) {
                         $cabTypes[] = $item->carType;
                     }
-                    foreach ($cabTypes as $mproduct) {
-                        $CabStdClass = ReturnStdClass($cabItem, $mainCabsData, $mproduct);
-                        $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, $mproduct);
+
+                    foreach ($cabTypes as $type) {
+
+                        if (isset($getMainCabsData[$type])){
+                            $CabStdClass = $getMainCabsData[$type];
+                        } else {
+                            $CabStdClass = $getMainCabsData['hatchback'];
+                        }
+
                         $CabsAllData = new stdClass;
-                        $CabsAllData = GetTaxiForSureCab($mproduct, $TaxiForSureI, $lat, $lon);
+                        $CabsAllData = GetTaxiForSureCab($type, $TaxiForSureI, $lat, $lon);
                         $CabsAllData = AppendProperties($CabStdClass, $CabsAllData);
 
-                        if (isset($TaxiForSure["response_data"])) {
-                            $dayTimings = $TaxiForSure["response_data"]["day"]["timings"];
-                            $stDateTime = explode(" ", $stime);
-                            $stTimeData = explode(":", $stDateTime[1]);
-                            $astTime = (int)$stTimeData[0];
-
-                            $aTime = 0;
-                            $bTime = 0;
-                            $stdayTimings = explode("-", $dayTimings);
-                            if (strpos($stdayTimings[0], 'AM') !== false) {
-                                $aTime = (int)str_replace('AM', '', $stdayTimings[0]);
-                            }
-                            if (strpos($stdayTimings[1], 'PM') !== false) {
-                                $bTime = (int)str_replace('PM', '', $stdayTimings[1]);
-                                if ($bTime != 12) {
-                                    $bTime = $bTime + 12;
-                                }
-                            }
-                            $IsDayFares = false;
-                            if ($astTime > $aTime && $astTime < $bTime) {
-                                $IsDayFares = true;
-                            }
-                            if ($IsDayFares) {
-                                foreach ($TaxiForSure["response_data"]["day"]["at-km"] as $item) {
-
-                                    if (strtolower($item["car_type"]) == strtolower($mproduct)) {
-
-                                    }
-                                }
-                            } else {
-                                foreach ($TaxiForSure["response_data"]["night"]["at-km"] as $item) {
-
-                                }
-                            }
-                        }
                         $mainCabsData[] = $CabsAllData;
                     }
                 }
-            } else if ($cabItem == 6) //Mega Cabs
+            }
+            else if ($cabItem == 6) //Mega Cabs
             {
 
                 $cabData = CallCabAPI($cabItem, $FromCity, '', $lat, $lon, '', '');
