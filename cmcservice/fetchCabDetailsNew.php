@@ -835,9 +835,15 @@ if ($no_of_rows > 0) {
                 $cabTypes = [];
                 $getMainCabsData['hatchback'] = ReturnStdClass($cabItem, $mainCabsData, 'Hatchback');
                 $getMainCabsData['sedan'] = ReturnStdClass($cabItem, $mainCabsData, 'Sedan');
+                $getMainCabsData['SUV'] = ReturnStdClass($cabItem, $mainCabsData, 'SUV');
+                $getMainCabsData['Nano'] = ReturnStdClass($cabItem, $mainCabsData, 'Nano');
+                $getMainCabsData['Tata Indica AC'] = ReturnStdClass($cabItem, $mainCabsData, 'Tata Indica AC');
 
                 $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Hatchback');
                 $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Sedan');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'SUV');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Nano');
+                $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Tata Indica AC');
 
                 $cabIData = CallTaxiForSureCabsInfo($lat, $lon);
                 $TaxiForSureI = json_decode($cabIData);
