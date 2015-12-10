@@ -18,7 +18,7 @@ if ($no_of_users > 0) {
         $FriendPlatform = $row['Platform'];
         $OwnerNumber = (string)$row['OwnerNumber'];
 
-        $RateNotificationMessage = "Trip from " . $FromShortAddress . " to  " . $ToShortAddress . " completed? Help us improve by rating the cab service.";
+        $RateNotificationMessage = "Trip from " . $FromShortAddress . " to  " . $ToShortAddress . " completed. Help us improve by rating the cab service.";
 
         $NotificationType = "Cab_Rating";
         $man = "INSERT INTO notifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$MemberName','$MemberNumber','$RateNotificationMessage','$CabID',now())";

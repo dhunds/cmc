@@ -149,14 +149,19 @@ class Notification {
         set_time_limit(0);
         if (ENV =='prod') {
             $push_url = 'ssl://gateway.push.apple.com:2195';
-            $pemFile = 'cmcdev.pem';
+            $pemFile = 'cmc.pem';
         } else {
             $push_url = 'ssl://gateway.sandbox.push.apple.com:2195';
-            $pemFile = 'cmc.pem';
+            $pemFile = 'cmcdev.pem';
         }
         header('content-type: text/html; charset: utf-8');
-        $message = $this->tr_to_utf($this->_bodyParams['gcmText']);
-        $payload = '{"aps":{"alert":"' . $message . '","sound":"default"}}';
+
+        $this->_bodyParams['alert'] = $this->tr_to_utf($this->_bodyParams['gcmText']);
+        unset($this->_bodyParams['gcmText']);
+        $this->_bodyParams['sound'] = "default";
+        $payload["aps"] = $this->_bodyParams;
+        $payload = json_encode($payload);
+        
         $ctx = stream_context_create();
         stream_context_set_option($ctx, 'ssl', 'local_cert', $pemFile);
         stream_context_set_option($ctx, 'ssl', 'passphrase', self::PASSPHRASE);
@@ -164,6 +169,7 @@ class Notification {
 
 
         foreach ($this->_deviceIds as $item) {
+            //echo $pemFile;
             sleep(1);
             $fp = stream_socket_client($push_url, $err, $errstr, 60, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
 
