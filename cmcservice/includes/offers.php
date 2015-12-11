@@ -27,7 +27,7 @@ function claimReferalBonus($referralCode, $mobileNumber, $name, $deviceToken, $o
         $stmt->execute();
 
         // Send Notification
-        $Message = 'You got Club Points worth Rs.' . $offer['amount'] . ' for joining ClubMyCab using a referral code.';
+        $Message = 'You got Club Points worth Rs.' . $offer['amount'] . ' for joining iShareRyde using a referral code.';
         $body = array('gcmText' => $Message, 'pushfrom' => 'genericnotificationoffers');
         $gcm_array[] = $deviceToken;
         $objNotification->setVariables($gcm_array, $body);
@@ -38,7 +38,7 @@ function claimReferalBonus($referralCode, $mobileNumber, $name, $deviceToken, $o
         // End Notification
 
         //Add Credits to Referrer
-        $Message = 'You got Club Points worth Rs.' . $offer['amount'] . '! ' . $name . ' joined ClubMyCab with your referral code.';
+        $Message = 'You got Club Points worth Rs.' . $offer['amount'] . '! ' . $name . ' joined iShareRyde with your referral code.';
 
         $sql = "SELECT COUNT(id) as useCount FROM credits WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $referrer['MobileNumber'] . "' AND beneficiaryType=1";
         $stmt = $con->query($sql);

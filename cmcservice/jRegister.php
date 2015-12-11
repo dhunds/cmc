@@ -1,7 +1,7 @@
 <?php
 include ('connection.php');
 
-$smsTemplate = "Your One-Time-Passsword (OTP) for ClubMyCab is ";
+$smsTemplate = "Your One-Time-Passsword (OTP) for iShareRyde is ";
 
 function sendSMS($nos,$message)
 {

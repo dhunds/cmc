@@ -73,7 +73,7 @@ if ($FullName != '' && $MobileNumber != '') {
         $objNotification->sendSMS($MobileNumber, $message);
 
         /*if ($Email != '') {
-            $emailBody = 'Hi ' . $FullName . ',<br/><br/>' . $message . '<br/><br/>Thanks,<br/>ClubMyCab Team';
+            $emailBody = 'Hi ' . $FullName . ',<br/><br/>' . $message . '<br/><br/>Thanks,<br/>iShareRyde Team';
             $params = array('to' => $Email, 'body' => $emailBody);
             $resp = $objNotification->sendEmailOTP($params);
         }*/

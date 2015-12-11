@@ -21,7 +21,7 @@ if ($rows > 0) {
     $objNotification->sendSMS($MobileNumber, $message);
 
     /*if ($usrRows[0]['Email'] != '') {
-        $emailBody = 'Hi ' . $usrRows[0]['FullName'] . ',<br/><br/>' . $message . '<br/><br/>Thanks,<br/>ClubMyCab Team';
+        $emailBody = 'Hi ' . $usrRows[0]['FullName'] . ',<br/><br/>' . $message . '<br/><br/>Thanks,<br/>iShareRyde Team';
         $params = array('to' => $usrRows[0]['Email'], 'body' => $emailBody);
         $resp = $objNotification->sendEmailOTP($params);
     }*/

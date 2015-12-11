@@ -18,7 +18,7 @@ if (isset($_POST['mobileNumber']) && isset($_POST['mobileNumber'])) {
         $emailBody .= 'Query Type: ' . $_POST['type'] . '<br />';
         $emailBody .= 'Query: ' . $_POST['desciption'] . '<br />';
         $emailBody .= 'Want Callback: ' . $_POST['callback'] . '<br />';
-        $emailBody .= '<br/>ClubMyCab Team';
+        $emailBody .= '<br/>iShareRyde Team';
 
         $mail->From = "webmaster@clubmycab.com";
         $mail->FromName = "Webmaster";

@@ -89,7 +89,7 @@ if (isset($_POST['act']) && $_POST['act'] = 'topup' && isset($_POST['senderNumbe
 		$resp = simplexml_load_string($result);
 
 		if ($resp->status == 'SUCCESS') {
-			$Message = 'You got Rs.' . $amount . '! ' . $senderData['FullName'] . ' joined ClubMyCab with your referral code. Amount added to your Mobikwik wallet';
+			$Message = 'You got Rs.' . $amount . '! ' . $senderData['FullName'] . ' joined iShareRyde with your referral code. Amount added to your Mobikwik wallet';
 			$log = logTransaction($cell, $amount, $comment, $sender, $Message, $user['DeviceToken'], $objNotification, "Referral_Bonus", $senderData['FullName'], $user['FullName'], $user['MobileNumber']);
 		}
 
@@ -108,7 +108,7 @@ if (isset($_POST['act']) && $_POST['act'] = 'topup' && isset($_POST['senderNumbe
 		$resp1 = simplexml_load_string($result1);
 
 		if ($resp1->status == 'SUCCESS') {
-			$Message = 'You got Rs.' . $amount . ' for joining ClubMyCab using a referral code. Amount added to your Mobikwik wallet';
+			$Message = 'You got Rs.' . $amount . ' for joining iShareRyde using a referral code. Amount added to your Mobikwik wallet';
 			$log = logTransaction($cell, $amount, $comment, $user['MobileNumber'], $Message, $senderData['DeviceToken'], $objNotification, "Referral_Bonus", $user['FullName'], $senderData['FullName'],
 				$senderData['MobileNumber']);
 		}

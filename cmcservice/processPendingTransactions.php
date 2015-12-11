@@ -28,7 +28,7 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
 		$result = transferMoney($fields, LOAD_MONEY_URL);
 		$resp = simplexml_load_string($result);
 
-		$Message = 'You got Rs.' . $row['amount'] . ' for joining ClubMyCab using a referral code. Amount added to your Mobikwik wallet';
+		$Message = 'You got Rs.' . $row['amount'] . ' for joining iShareRyde using a referral code. Amount added to your Mobikwik wallet';
 
 		logTransaction($row, $objNotification, $resp, $Message);
 

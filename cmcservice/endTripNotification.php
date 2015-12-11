@@ -14,7 +14,7 @@ if(isset($_POST['cabId']) && $_POST['cabId'] !=''){
         $ownerName = $row['OwnerName'];
         $FromShortAddress = $row['FromShortName'];
         $ToShortAddress = $row['ToShortName'];
-        $tripNotification = $ownerName." has started trip from ".$FromShortAddress. ". To track the location open ClubMyCab";
+        $tripNotification = $ownerName." has started trip from ".$FromShortAddress. ". To track the location open iShareRyde";
         $stmt1 = $con->query("select a.* from registeredusers a, acceptedrequest b where a.PushNotification != 'off' and Trim(a.MobileNumber) = Trim(b.MemberNumber) and b.cabid = '$CabID'");
         $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
         if ($no_of_users > 0)
