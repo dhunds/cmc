@@ -20,6 +20,17 @@ $ExpTripDuration = $_POST['ExpTripDuration'];
 $FromShortName = $_POST['FromShortName'];
 $ToShortName = $_POST['ToShortName'];
 
+$rideType = '';
+$perKmCharge = '';
+
+if(isset($_POST['rideType']) && $_POST['rideType'] !='') {
+    $rideType = $_POST['rideType'];
+}
+
+if(isset($_POST['perKmCharge']) && $_POST['perKmCharge'] !='') {
+    $perKmCharge = $_POST['perKmCharge'];
+}
+
 $dateInput = explode('/', $TravelDate);
 $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
 
@@ -30,7 +41,7 @@ $ExpEndDateTime = date('Y-m-d H:i:s', $newdate);
 $startDate = $expTrip;
 $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
 
-$sql2 = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime')";
+$sql2 = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime',$rideType,$perKmCharge)";
 
 $stmt2 = $con->prepare($sql2);
 $res2 = $stmt2->execute();
