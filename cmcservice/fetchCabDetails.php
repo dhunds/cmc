@@ -69,7 +69,7 @@ function CallCabAPI($CabID,$From,$To,$slat,$slon,$elat,$elon)
 		if($elat == '' && $elon == '')
 		{
 			//get Time estimates
-			$url = "http://180.179.207.159/cmc/cmcservice/uberConnect.php?type=timeestimates";
+			$url = BASEURL."/uberConnect.php?type=timeestimates";
 			$fields = array(
 				'lat' =>  $slat,
 				'lon' => $slon,		
@@ -92,7 +92,7 @@ function CallCabAPI($CabID,$From,$To,$slat,$slon,$elat,$elon)
 		else
 		{
 			//get Time estimates
-			$url = "http://180.179.207.159/cmc/cmcservice/uberConnect.php?type=priceestimates";
+			$url = BASEURL."/uberConnect.php?type=priceestimates";
 			$fields = array(
 				'lat' =>  $slat,
 				'lon' => $slon,	

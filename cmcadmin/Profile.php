@@ -1,7 +1,7 @@
 <?php
 include('connection.php');
 include('functions.php');
-$dir = 'http://180.179.207.159/cmc/cmcservice/ProfileImages/';
+$dir = BASEURL.'/ProfileImages/';
 ?>
 <h3 class="headingText">Members Profile</h3>
 <div class="articleBorder">

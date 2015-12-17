@@ -14,7 +14,7 @@ function CalculateDurationAndDistance($slat, $slon, $elat, $elon)
         $fields_string .= $key . '=' . urlencode($value) . '&';
     }
     rtrim($fields_string, '&');
-    curl_setopt($ch1, CURLOPT_URL, "http://localhost/cmc/cmcservice/distanceApi.php");
+    curl_setopt($ch1, CURLOPT_URL, BASEURL."/distanceApi.php");
     curl_setopt($ch1, CURLOPT_POST, true);
     curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch1, CURLOPT_POSTFIELDS, $fields_string);
@@ -152,7 +152,7 @@ function CallCabAPI($CabID, $From, $To, $slat, $slon, $elat, $elon)
     {
         if ($elat == '' && $elon == '') {
             //get Time estimates
-            $url = "http://localhost/cmc/cmcservice/uberConnect.php?type=timeestimates";
+            $url = BASEURL."/uberConnect.php?type=timeestimates";
             $fields = array(
                 'lat' => $slat,
                 'lon' => $slon,
@@ -172,7 +172,7 @@ function CallCabAPI($CabID, $From, $To, $slat, $slon, $elat, $elon)
             curl_close($ch);
         } else {
             //get Time estimates
-            $url = "http://localhost/cmc/cmcservice/uberConnect.php?type=priceestimates";
+            $url = BASEURL."/uberConnect.php?type=priceestimates";
             $fields = array(
                 'lat' => $slat,
                 'lon' => $slon,
