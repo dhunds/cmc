@@ -12,7 +12,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
     $res = $stmt->execute();
 
 // Sending notifications
-    $stmt = $con->query("SELECT MobileNumber, FromShortName, ToShortName from cabopen where CabId='" . $CabID . "' AND RateNotificationSend = 0 AND CabStatus = 'A'");
+    $stmt = $con->query("SELECT MobileNumber, FromShortName, ToShortName from cabopen where CabId='" . $CabID . "' AND RateNotificationSend = 0 AND CabStatus = 'A' AND rideType !=1");
     $CabsExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($CabsExists > 0) {
