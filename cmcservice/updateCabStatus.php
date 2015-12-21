@@ -12,7 +12,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
     $res = $stmt->execute();
 
 // Sending notifications
-    $stmt = $con->query("SELECT MobileNumber, FromShortName, ToShortName from cabopen where CabId='" . $CabID . "' AND RateNotificationSend = 0 AND CabStatus = 'A' AND rideType !=1");
+    $stmt = $con->query("SELECT MobileNumber, FromShortName, ToShortName, rideType from cabopen where CabId='" . $CabID . "' AND RateNotificationSend = 0 AND CabStatus = 'A'");
     $CabsExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($CabsExists > 0) {
@@ -20,6 +20,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
             $FromShortAddress = $row['FromShortName'];
             $ToShortAddress = $row['ToShortName'];
             $OwnerNumber = (string)$row['MobileNumber'];
+            $rideType = $row['rideType'];
         }
 
         $RateNotificationMessage = "Trip from " . $FromShortAddress . " to  " . $ToShortAddress . " completed. Help us improve by rating the cab service.";
@@ -37,15 +38,17 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                 $OwnerName = $row['FullName'];
             }
 
-            $NotificationType = "Cab_Rating";
-            $man = "INSERT INTO notifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$OwnerName','$OwnerNumber','$RateNotificationMessage','$CabID',now())";
-            $manstmt = $con->prepare($man);
-            $manres = $manstmt->execute();
-            $notificationId = $con->lastInsertId();
+            if ($rideType !=1) {
+                $NotificationType = "Cab_Rating";
+                $man = "INSERT INTO notifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$OwnerName','$OwnerNumber','$RateNotificationMessage','$CabID',now())";
+                $manstmt = $con->prepare($man);
+                $manres = $manstmt->execute();
+                $notificationId = $con->lastInsertId();
 
-            $cronsql = "INSERT INTO cronnotifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$MemberName','$MemberNumber','$RateNotificationMessage','$CabID',now())";
-            $cronstmt1 = $con->prepare($cronsql);
-            $cronres1 = $cronstmt1->execute();
+                $cronsql = "INSERT INTO cronnotifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$MemberName','$MemberNumber','$RateNotificationMessage','$CabID',now())";
+                $cronstmt1 = $con->prepare($cronsql);
+                $cronres1 = $cronstmt1->execute();
+            }
 
             $body = array('gcmText' => $RateNotificationMessageOwner, 'pushfrom' => 'ownerTripCompleted', 'notificationId' => $notificationId, 'CabId' => $CabID);
 
@@ -54,19 +57,23 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                 $objNotification->setVariables($gcm_array, $body);
                 $res = $objNotification->sendGCMNotification();
 
-                $body['gcmText'] = $RateNotificationMessage;
-                $body['pushfrom'] = 'Cab_Rating';
-                $objNotification->setVariables($gcm_array, $body);
-                $res = $objNotification->sendGCMNotification();
+                if ($rideType !=1) {
+                    $body['gcmText'] = $RateNotificationMessage;
+                    $body['pushfrom'] = 'Cab_Rating';
+                    $objNotification->setVariables($gcm_array, $body);
+                    $res = $objNotification->sendGCMNotification();
+                }
             } else {
                 $apns_array[] = $OwnerDeviceToken;
                 $objNotification->setVariables($apns_array, $body);
                 $res = $objNotification->sendIOSNotification();
 
-                $body['gcmText'] = $RateNotificationMessage;
-                $body['pushfrom'] = 'Cab_Rating';
-                $objNotification->setVariables($apns_array, $body);
-                $res = $objNotification->sendIOSNotification();
+                if ($rideType !=1) {
+                    $body['gcmText'] = $RateNotificationMessage;
+                    $body['pushfrom'] = 'Cab_Rating';
+                    $objNotification->setVariables($apns_array, $body);
+                    $res = $objNotification->sendIOSNotification();
+                }
             }
 
             $stmt1 = $con->query("select MemberName from acceptedrequest where cabid = '$CabID'");
@@ -88,14 +95,17 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                 $MemberNumber = (string)$row['MobileNumber'];
 
                 $NotificationType = "Cab_Rating";
-                $man = "INSERT INTO notifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$MemberName','$MemberNumber','$RateNotificationMessage','$CabID',now())";
-                $manstmt = $con->prepare($man);
-                $manres = $manstmt->execute();
-                $notificationId = $con->lastInsertId();
 
-                $cronsql = "INSERT INTO cronnotifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$MemberName','$MemberNumber','$RateNotificationMessage','$CabID',now())";
-                $cronstmt = $con->prepare($cronsql);
-                $cronres = $cronstmt->execute();
+                if ($rideType !=1) {
+                    $man = "INSERT INTO notifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$MemberName','$MemberNumber','$RateNotificationMessage','$CabID',now())";
+                    $manstmt = $con->prepare($man);
+                    $manres = $manstmt->execute();
+                    $notificationId = $con->lastInsertId();
+
+                    $cronsql = "INSERT INTO cronnotifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$MemberName','$MemberNumber','$RateNotificationMessage','$CabID',now())";
+                    $cronstmt = $con->prepare($cronsql);
+                    $cronres = $cronstmt->execute();
+                }
 
                 $body = array('gcmText' => $RateNotificationMessageOwner, 'pushfrom' => 'tripcompleted', 'notificationId' => $notificationId, 'CabId' => $CabID);
 
@@ -104,19 +114,23 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                     $objNotification->setVariables($gcm_array, $body);
                     $res = $objNotification->sendGCMNotification();
 
-                    $body['gcmText'] = $RateNotificationMessage;
-                    $body['pushfrom'] = 'Cab_Rating';
-                    $objNotification->setVariables($gcm_array, $body);
-                    $res = $objNotification->sendGCMNotification();
+                    if ($rideType !=1) {
+                        $body['gcmText'] = $RateNotificationMessage;
+                        $body['pushfrom'] = 'Cab_Rating';
+                        $objNotification->setVariables($gcm_array, $body);
+                        $res = $objNotification->sendGCMNotification();
+                    }
                 } else {
                     $apns_array[] = $row['DeviceToken'];
                     $objNotification->setVariables($apns_array, $body);
                     $res = $objNotification->sendIOSNotification();
 
-                    $body['gcmText'] = $RateNotificationMessage;
-                    $body['pushfrom'] = 'Cab_Rating';
-                    $objNotification->setVariables($apns_array, $body);
-                    $res = $objNotification->sendIOSNotification();
+                    if ($rideType !=1) {
+                        $body['gcmText'] = $RateNotificationMessage;
+                        $body['pushfrom'] = 'Cab_Rating';
+                        $objNotification->setVariables($apns_array, $body);
+                        $res = $objNotification->sendIOSNotification();
+                    }
                 }
                 if ($resp=='success'){
                     claimFirstRideBonus($MemberNumber, $objNotification, '');
