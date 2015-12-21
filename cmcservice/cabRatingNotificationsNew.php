@@ -3,7 +3,7 @@ include('connection.php');
 include_once('classes/class.notification.php');
 $objNotification = new Notification();
 
-$stmt = $con->query("SELECT cabid,MobileNumber,fromshortname,toshortname from cabopen where NOW() > DATE_ADD(ExpEndDateTime, INTERVAL 1 HOUR) AND RateNotificationSend = 0 and CabStatus = 'A'");
+$stmt = $con->query("SELECT cabid,MobileNumber,fromshortname,toshortname from cabopen where NOW() > DATE_ADD(ExpEndDateTime, INTERVAL 1 HOUR) AND RateNotificationSend = 0 and CabStatus = 'A' AND rideType !=1");
 $CabsExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 if ($CabsExists > 0) {
     while ($row = $stmt->fetch()) {

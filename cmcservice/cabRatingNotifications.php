@@ -3,7 +3,7 @@ include('connection.php');
 include_once('classes/class.notification.php');
 $objNotification = new Notification();
 
-$stmt = $con->query("select a.*,c.cabid,c.MobileNumber as OwnerNumber,c.fromshortname,c.toshortname from registeredusers a, acceptedrequest b, cabopen c where a.PushNotification != 'off' and a.MobileNumber = b.MemberNumber and b.cabid = c.cabid and c.cabid IN (SELECT cabid from cabopen where NOW() > DATE_ADD(ExpEndDateTime, INTERVAL 4 HOUR) AND RateNotificationSend = 0 and CabStatus = 'A')");
+$stmt = $con->query("select a.*,c.cabid,c.MobileNumber as OwnerNumber,c.fromshortname,c.toshortname from registeredusers a, acceptedrequest b, cabopen c where a.PushNotification != 'off' and a.MobileNumber = b.MemberNumber and b.cabid = c.cabid and c.cabid IN (SELECT cabid from cabopen where NOW() > DATE_ADD(ExpEndDateTime, INTERVAL 4 HOUR) AND RateNotificationSend = 0 and CabStatus = 'A' AND rideType !=1)");
 $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 if ($no_of_users > 0) {
