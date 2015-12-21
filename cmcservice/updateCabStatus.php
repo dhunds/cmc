@@ -3,7 +3,7 @@ include('connection.php');
 include_once('classes/class.notification.php');
 include_once('includes/offers.php');
 $objNotification = new Notification();
-
+$notificationId = 0;
 
 if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
     $CabID = $_POST['cabId'];
@@ -37,9 +37,9 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                 $Platform = $row['Platform'];
                 $OwnerName = $row['FullName'];
             }
+            $NotificationType = "Cab_Rating";
 
             if ($rideType !=1) {
-                $NotificationType = "Cab_Rating";
                 $man = "INSERT INTO notifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$OwnerName','$OwnerNumber','$RateNotificationMessage','$CabID',now())";
                 $manstmt = $con->prepare($man);
                 $manres = $manstmt->execute();
