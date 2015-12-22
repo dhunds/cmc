@@ -24,12 +24,12 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
             $val['credits'] = $credit['credits'];
 
             if ($val['type']=='referral'){
-                $msg = "You have earned ".$val['credits']." Club Points for inviting ".$credit['useCount']." friend(s). You can earn referral bonus for maximum ".$val['maxUsePerUser']." invitations";
+                $msg = "You have earned ".$val['credits']." Reward Points for inviting ".$credit['useCount']." friend(s). You can earn referral bonus for maximum ".$val['maxUsePerUser']." invitations";
             } else {
                 if ($credit['useCount']){
-                    $msg = "You have earned ".$val['credits']." Club Points for completing your first ride.";
+                    $msg = "You have earned ".$val['credits']." Reward Points for completing your first ride.";
                 } else {
-                    $msg = "Your have not completed your first ride yet. Complete your ride to earn ".$val['amount']." Club Points.";
+                    $msg = "Your have not completed your first ride yet. Complete your ride to earn ".$val['amount']." Reward Points.";
                 }
             }
             $val['UserOfferStatus'] = $msg;
