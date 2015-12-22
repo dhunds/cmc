@@ -15,8 +15,9 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
         $finalArray = array();
 
         foreach ($data as $val) {
-
-            $sql = "SELECT COALESCE(SUM(credits),0) as credits, COUNT(id) as useCount FROM credits WHERE offerId=" . $val['id'] . " AND mobileNumber='" . $_POST['mobileNumber'] . "' AND beneficiaryType=1";
+            // OLD Implementation till 22nd Dec 1015
+            //$sql = "SELECT COALESCE(SUM(credits),0) as credits, COUNT(id) as useCount FROM credits WHERE offerId=" . $val['id'] . " AND mobileNumber='" . $_POST['mobileNumber'] . "' AND beneficiaryType=1";
+            $sql = "SELECT COALESCE(SUM(credits),0) as credits, COUNT(id) as useCount FROM credits WHERE offerId=" . $val['id'] . " AND mobileNumber='" . $_POST['mobileNumber'] . "'";
             $stmt = $con->query($sql);
             $credit = $stmt->fetch(PDO::FETCH_ASSOC);
 

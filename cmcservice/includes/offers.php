@@ -83,7 +83,8 @@ function claimFirstRideBonus($mobileNumber, $objNotification, $isOwner)
 
     if ($found > 0) {
         $offer = $stmt->fetch(PDO::FETCH_ASSOC);
-
+        /*
+         // OLD Implementation till 22nd Dec 1015
         if ($isOwner) {
             $sql = "SELECT COUNT(id) as useCount FROM credits WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "' AND beneficiaryType=1";
             $stmt = $con->query($sql);
@@ -100,6 +101,22 @@ function claimFirstRideBonus($mobileNumber, $objNotification, $isOwner)
             $stmt = $con->prepare($sql);
             $stmt->execute();
             $resp='success';
+        }
+        */
+        if ($isOwner) {
+            $beneficiaryType = 1;
+        } else {
+            $beneficiaryType = 2;
+        }
+        $sql = "SELECT COUNT(id) as useCount FROM credits WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "'";
+        $stmt = $con->query($sql);
+        $credits = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($credits['useCount'] < $offer['maxUsePerUser']) {
+            $sql = "INSERT INTO credits SET offerId=" . $offer['id'] . ", mobileNumber='" . $mobileNumber . "', credits=" . $offer['amount'] . ", beneficiaryType=".$beneficiaryType.", created=now()";
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
+            $resp = 'success';
         }
 
         if ($resp=='success') {
