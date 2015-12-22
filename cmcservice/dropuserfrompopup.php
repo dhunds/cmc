@@ -19,7 +19,7 @@ if ($res2 === true) {
     $stmt3 = $con->prepare($sql3);
     $res3 = $stmt3->execute();
 
-    $upsql2 = "UPDATE cabopen SET RemainingSeats= (RemainingSeats+1) WHERE CabId = $CabId";
+    $upsql2 = "UPDATE cabopen SET RemainingSeats= (RemainingSeats+1) WHERE CabId = '$CabId'";
     $upstmt2 = $con->prepare($upsql2);
     $upres2 = $upstmt2->execute();
 

@@ -35,7 +35,7 @@ if (($Seats - $RemainingSeats) > 0) {
     if ($res2 === true) {
         if (($Seats - $RemainingSeats) > 0) {
             $updatedRemainingSeats = ($Seats - $RemainingSeats) - 1;
-            $upsql2 = "UPDATE cabopen SET RemainingSeats= '$updatedRemainingSeats' WHERE CabId = $CabId";
+            $upsql2 = "UPDATE cabopen SET RemainingSeats= '$updatedRemainingSeats' WHERE CabId = '$CabId'";
             $upstmt2 = $con->prepare($upsql2);
             $upres2 = $upstmt2->execute();
         }
