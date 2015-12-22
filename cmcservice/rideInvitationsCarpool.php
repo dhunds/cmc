@@ -11,7 +11,7 @@ LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
 LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
 LEFT JOIN acceptedrequest ar ON cm.CabId = ar.CabId
 WHERE TRIM(cm.MemberNumber) = '" . $mobileNumber . "'
-AND NOW() > DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
+AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
 AND co.rideType =1
 AND co.status < 2
 AND co.CabStatus ='A'
