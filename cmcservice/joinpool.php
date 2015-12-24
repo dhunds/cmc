@@ -23,7 +23,7 @@ $sth = $con->prepare("SELECT COUNT(*) AS RemainingSeats FROM acceptedrequest WHE
 $sth->execute();
 $RemainingSeats = (int)$sth->fetchColumn();
 
-$sth1 = $con->prepare("SELECT Seats FROM cabopen WHERE CabId = '$CabId' and CabStatus = 'A'");
+$sth1 = $con->prepare("SELECT Seats FROM cabopen WHERE CabId = '$CabId' and CabStatus = 'A' AND status !=2");
 $sth1->execute();
 $Seats = (int)$sth1->fetchColumn();
 

@@ -47,7 +47,7 @@ function save_split_fare($con, $arrMembersNumberAndFare, $totalFare, $cabId, $pa
         $stmt->execute();
         $user = $stmt->fetch();
 
-        $notificationMessage = $user['FullName'].' has paid for your club ride. Your share is Rs. '.$fareToPay.'. Click here for payment options.';
+        $notificationMessage = $user['FullName'].' has paid for your shared ride. Your share is Rs. '.$fareToPay.'. Click here for payment options.';
 
         $stmt = $con->query("select FullName, Platform, MobileNumber, DeviceToken FROM registeredusers WHERE trim(MobileNumber)='".$memberNumber."'");
         $noOfUsers = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
