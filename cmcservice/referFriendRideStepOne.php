@@ -66,7 +66,6 @@ if ($no_of_users > 0) {
             $notificationId = 0;
 
             if ($resRef === true) {
-                $NotificationType = "CabId_Rejected";
                 $params = array('NotificationType' => $NotificationType, 'SentMemberName' => $MemberName, 'SentMemberNumber' => $MemberNumber, 'ReceiveMemberName'=>$OwnerName, 'ReceiveMemberNumber'=>$OwnerNumber, 'Message'=>$Message, 'CabId'=>$CabId, 'DateTime'=>'now()', 'RefId'=>$RefId);
                 $notificationId = $objNotification->logNotification($params);
             }

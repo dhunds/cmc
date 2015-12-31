@@ -134,7 +134,11 @@ class Notification {
     {
         global $con;
 
-        $sql = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber,Message, CabId, DateTime) VALUES ('".$values['NotificationType']."', '".$values['SentMemberName']."','".$values['SentMemberNumber']."','".$values['ReceiveMemberName']."','".$values['ReceiveMemberNumber']."','".$values['Message']."','".$values['CabId']."', ".$values['DateTime'].")";
+        if (!isset($values['RefId'])){
+            $values['RefId'] = NULL;
+        }
+
+        $sql = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber,Message, CabId, DateTime, RefId) VALUES ('".$values['NotificationType']."', '".$values['SentMemberName']."','".$values['SentMemberNumber']."','".$values['ReceiveMemberName']."','".$values['ReceiveMemberNumber']."','".$values['Message']."','".$values['CabId']."', ".$values['DateTime'].", '".$values['RefId']."')";
         $stmt = $con->prepare($sql);
         $res = $stmt->execute();
         $notificationId =  $con->lastInsertId();
