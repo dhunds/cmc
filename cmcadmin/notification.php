@@ -6,7 +6,7 @@ if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != 
 
 	$pushFrom = $_POST['pushfrom'];
 
-    $sql = "SELECT * FROM registeredusers WHERE PushNotification='on'";
+    $sql = "SELECT * FROM registeredusers WHERE PushNotification='on' AND Platform='A'";
 
     if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
         $sql .= " AND MobileNumber='" . $_POST['mobileNumber'] . "'";
@@ -31,10 +31,31 @@ if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != 
         if (count($gcm_array) > 0) {
             $resp = sendAndroidNotification($gcm_array, $_POST['message'], $pushFrom, '');
         }
-        echo '<pre>';
-        print_r($resp);
-        echo 'Notification Sent';
+        //echo '<pre>';
+        //print_r($resp);
+        //echo 'Notification Sent';
     }
+
+    // Send IOS Notification
+    $sql = "SELECT * FROM registeredusers WHERE PushNotification='on' AND Platform='I'";
+
+    if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
+        $sql .= " AND MobileNumber='" . $_POST['mobileNumber'] . "'";
+    }
+
+    $stmt = $con->query($sql);
+    $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    $body = array('gcmText' => $_POST['message'], 'pushfrom' => $pushFrom);
+    
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $apns_array = array();
+        $apns_array[] = $row['DeviceToken'];
+        $objNotification->setVariables($apns_array, $body);
+        $objNotification->sendIOSNotification();
+
+    }
+    echo 'Notification Sent';
 }
 ?>
 
