@@ -35,15 +35,15 @@ if (isset($_POST['numberAndFare']) && $_POST['numberAndFare'] !='') {
     if ($save) {
         http_response_code(200);
         header('Content-Type: application/json');
-        echo '{status:"success", message:"Updated sucessfully"}';
+        echo '{"status":"success", "message":"Updated sucessfully"}';
         exit;
     } else {
         http_response_code(500);
         header('Content-Type: application/json');
-        echo '{status:"failed", message:"An error occured, Please try again after sometime."}';
+        echo '{"status":"failed", "message":"An error occured, Please try again after sometime."}';
     }
 } else {
     http_response_code(500);
     header('Content-Type: application/json');
-    echo '{status:"failed", message:"Invalid Params."}';
+    echo '{"status":"failed", "message":"Invalid Params."}';
 }
