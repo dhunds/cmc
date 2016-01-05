@@ -32,6 +32,6 @@ if (count($rows) > 0) {
 } else {
     http_response_code(500);
     header('Content-Type: application/json');
-    echo '{status:"fail", message:"No Records Found"}';
+    echo '{"status":"fail", "message":"No Records Found"}';
     exit;
 }
