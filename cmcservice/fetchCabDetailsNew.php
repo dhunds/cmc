@@ -724,8 +724,8 @@ if ($no_of_rows > 0) {
                             $CabsAllData = new stdClass;
                             $CabsAllData->CabName = "Uber";
                             $CabsAllData->Rating = number_format($CabStdClass->Rating, 1, '.', '');
-                            $CabsAllData->NoofReviews = $CabStdClass->NoofReviews;
-                            $CabsAllData->CabMode = $CabStdClass->CabMode;
+                            $CabsAllData->NoofReviews = ($CabStdClass->NoofReviews)?$CabStdClass->NoofReviews:'0';
+                            $CabsAllData->CabMode = ($CabStdClass->CabMode)?$CabStdClass->CabMode:1;
                             $CabsAllData->high_estimate = $price->high_estimate;
                             $CabsAllData->duration = $price->duration;
                             $CabsAllData->productId = $price->product_id;
