@@ -80,10 +80,10 @@ if ($CabsExists > 0) {
         }
     }
 
-    $sql12 = "UPDATE cabopen set RateNotificationSend = '1' where CabId = '$CabID'";
-    $stmt12 = $con->prepare($sql12);
-    $res12 = $stmt12->execute();
-} else {
+    $sql = "UPDATE cabopen set RateNotificationSend = 1 where CabId = '$CabID'";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+
     echo "no one in database";
 }
 ?>
