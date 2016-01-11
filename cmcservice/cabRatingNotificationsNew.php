@@ -3,13 +3,13 @@ include('connection.php');
 include_once('classes/class.notification.php');
 $objNotification = new Notification();
 
-$stmt = $con->query("SELECT cabid,MobileNumber,fromshortname,toshortname from cabopen where NOW() > DATE_ADD(ExpEndDateTime, INTERVAL 1 HOUR) AND RateNotificationSend = 0 and CabStatus = 'A' AND rideType !=1");
+$stmt = $con->query("SELECT CabId,MobileNumber,FromShortName,ToShortName from cabopen where NOW() > DATE_ADD(ExpEndDateTime, INTERVAL 1 HOUR) AND RateNotificationSend = 0 and CabStatus = 'A' AND rideType !=1");
 $CabsExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 if ($CabsExists > 0) {
     while ($row = $stmt->fetch()) {
-        $CabID = $row['cabid'];
-        $FromShortAddress = $row['fromshortname'];
-        $ToShortAddress = $row['toshortname'];
+        $CabID = $row['CabId'];
+        $FromShortAddress = $row['FromShortName'];
+        $ToShortAddress = $row['ToShortName'];
         $OwnerNumber = (string)$row['MobileNumber'];
     }
     $RateNotificationMessage = "Trip from " . $FromShortAddress . " to  " . $ToShortAddress . " completed? Help us improve by rating the cab service.";
@@ -47,7 +47,7 @@ if ($CabsExists > 0) {
             $objNotification->sendIOSNotification();
         }
     }
-    $stmt1 = $con->query("select a.* from registeredusers a, acceptedrequest b where a.PushNotification != 'off' and Trim(a.MobileNumber) = Trim(b.MemberNumber) and b.cabid = '$CabID'");
+    $stmt1 = $con->query("select a.* from registeredusers a, acceptedrequest b where a.PushNotification != 'off' and Trim(a.MobileNumber) = Trim(b.MemberNumber) and b.CabId = '$CabID'");
     $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
     if ($no_of_users > 0) {
         while ($row = $stmt1->fetch()) {
@@ -80,7 +80,7 @@ if ($CabsExists > 0) {
         }
     }
 
-    $sql12 = "UPDATE cabopen set ratenotificationsend = '1' where cabid = '$CabID'";
+    $sql12 = "UPDATE cabopen set RateNotificationSend = '1' where CabId = '$CabID'";
     $stmt12 = $con->prepare($sql12);
     $res12 = $stmt12->execute();
 } else {
