@@ -39,7 +39,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
             }
             $NotificationType = "Cab_Rating";
 
-            if ($rideType !=1) {
+            //if ($rideType !=1) {
                 $man = "INSERT INTO notifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$OwnerName','$OwnerNumber','$RateNotificationMessage','$CabID',now())";
                 $manstmt = $con->prepare($man);
                 $manres = $manstmt->execute();
@@ -48,7 +48,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                 $cronsql = "INSERT INTO cronnotifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$MemberName','$MemberNumber','$RateNotificationMessage','$CabID',now())";
                 $cronstmt1 = $con->prepare($cronsql);
                 $cronres1 = $cronstmt1->execute();
-            }
+            //}
 
             $body = array('gcmText' => $RateNotificationMessageOwner, 'pushfrom' => 'ownerTripCompleted', 'notificationId' => $notificationId, 'CabId' => $CabID);
 
