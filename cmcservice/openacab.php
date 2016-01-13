@@ -102,7 +102,7 @@ if ($res2 === true) {
         $body = array('gcmText' => $Message, 'pushfrom' => 'CabId_', 'CabId' => $CabId);
 
         while ($row = $stmt->fetch()) {
-            $rs = $con->query("SELECT NotificationId FROM notifications WHERE CabID = '".$CabId."' AND ReceiveMemberNumber='".$row['MobileNumber']."'");
+            $rs = $con->query("SELECT NotificationId FROM notifications WHERE CabID = '".$CabId."' AND TRIM(ReceiveMemberNumber)='".$row['MobileNumber']."'");
             $notification = $rs->fetch(PDO::FETCH_ASSOC);
             $notificationId = $notification['NotificationId'];
 
