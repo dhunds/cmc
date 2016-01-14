@@ -7,9 +7,8 @@ $notificationId = 0;
 
 if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
     $CabID = trim($_POST['cabId']);
-    $CabID = preg_replace( '/[^[:print:]]/', '',$CabID);
 
-    $sql = "UPDATE cabmembers SET TRIM(CabStatus)='A', TRIM(status)= 2 WHERE TRIM(CabId) = '".$CabID."'";
+    $sql = "UPDATE cabopen SET CabStatus='A', status= 2 WHERE CabId = '".$CabID."'";
     $stmt = $con->prepare($sql);
     $res = $stmt->execute();
 
