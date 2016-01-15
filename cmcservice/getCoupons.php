@@ -26,13 +26,13 @@ if (isset($_POST['type']) && $_POST['type'] != '' && isset($_POST['provider']) &
     } else {
         http_response_code(500);
         header('Content-Type: application/json');
-        echo '{status:"fail", message:"No Coupons available"}';
+        echo '{"status":"fail", "message":"No Coupons available"}';
         exit;
     }
 } else {
     http_response_code(500);
     header('Content-Type: application/json');
-    echo '{status:"fail", message:"Invalid Params"}';
+    echo '{"status":"fail", "message":"Invalid Params"}';
     exit;
 }
 
