@@ -1,5 +1,4 @@
 <?php
-include_once('connection.php');
 include_once('header.php');
 ?>
 <div class="header-login pure-u-1-1 pure-u-md-3-4">
@@ -13,6 +12,11 @@ Login
             <div style="padding: 15px;text-align: center;">
                 <form method="post" action="dashboard.php" enctype="multipart/form-data">
                     <div>
+                        <?php if (isset($_REQUEST['err']) && $_REQUEST['err']==1){ ?>
+                            <div class="divRight bluetext">Invalid Username / Password</div>
+                            <div style="clear:both;"></div>
+                            <br/>
+                        <?php } ?>
                         <div class="divRight bluetext"><input type="text" name="username" id="username" placeholder="Username"></div>
                         <div style="clear:both;"></div>
                         <br/>
