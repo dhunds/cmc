@@ -21,7 +21,7 @@ Login
                         <div style="clear:both;"></div>
                         <br/>
 
-                        <div class="divRight bluetext"><input type="text" name="password" id="password" placeholder="Password">
+                        <div class="divRight bluetext"><input type="password" name="password" id="password" placeholder="Password">
                         </div>
                         <div style="clear:both;"></div>
                         <br/>
