@@ -1,7 +1,7 @@
 <?php
 use Aws\Ses\SesClient;
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 $client = SesClient::factory(array(
     'key' => 'AKIAJM3Y6I63SA5QZMUA',
