@@ -20,17 +20,17 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
     if ($res == true) {
         http_response_code(200);
         header('Content-Type: application/json');
-        echo '{status:"success", message:"Data Saved", orderId:"'.$orderId.'"}';
+        echo '{"status":"success", "message":"Data Saved", "orderId":"'.$orderId.'"}';
         exit;
     } else {
         http_response_code(500);
         header('Content-Type: application/json');
-        echo '{status:"fail", message:"Something went wrong. Please try again later."}';
+        echo '{"status":"fail", "message":"Something went wrong. Please try again later."}';
         exit;
     }
 } else {
     http_response_code(500);
     header('Content-Type: application/json');
-    echo '{status:"fail", message:"Invalid Params"}';
+    echo '{"status":"fail", "message":"Invalid Params"}';
     exit;
 }

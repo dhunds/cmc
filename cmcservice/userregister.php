@@ -78,6 +78,11 @@ if ($FullName != '' && $MobileNumber != '') {
             $resp = $objNotification->sendEmailOTP($params);
         }*/
 
+        if ($Email != '') {
+            require_once 'mail.php';
+            sendRegistrationMail ($FullName, $Email);
+        }
+
         http_response_code(200);
         header('Content-Type: application/json');
         echo '{"status":"success", "message":"success"}';
