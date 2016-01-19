@@ -10,6 +10,7 @@ if (isset($_POST['mobileNumber']) && isset($_POST['mobileNumber'])) {
 
     if ($found > 0) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        require_once 'mail.php';
 
         $emailBody = 'Hi Admin, <br/><br/> A User with following details has contacted from app.<br/><br/>';
         $emailBody .= 'Name: ' . $_POST['name'] . '<br />';
@@ -20,25 +21,25 @@ if (isset($_POST['mobileNumber']) && isset($_POST['mobileNumber'])) {
         $emailBody .= 'Want Callback: ' . $_POST['callback'] . '<br />';
         $emailBody .= '<br/>iShareRyde Team';
 
-        $mail->From = "webmaster@clubmycab.com";
-        $mail->FromName = "Webmaster";
-        $mail->AddAddress("support@clubmycab.com");
+        $msg = array();
+        $msg['Source'] = "webmaster@clubmycab.com";
+        $msg['Destination']['ToAddresses'][] = "support@clubmycab.com";
+        $msg['Message']['Subject']['Data'] = "User Contacted from App";
+        $msg['Message']['Body']['Html']['Data'] =$emailBody;
+        $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
 
-        $mail->Subject = "User Contacted from App";
-        $mail->Body = $emailBody;
-        $mail->IsHTML(true);
-        $mail->WordWrap = 50;
-
-        if (!$mail->Send()) {
-            http_response_code(500);
-            header('Content-Type: application/json');
-            echo '{status:"fail", message:"Mailer error:'. $mail->ErrorInfo.'"}';
-            exit;
-        } else {
+        try{
+            $result = $client->sendEmail($msg);
             http_response_code(200);
             header('Content-Type: application/json');
             echo '{status:"success", message:"Message sent"}';
             exit;
+        } catch (Exception $e) {
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo '{status:"fail", message:"Mailer error:'. $e->getMessage().'"}';
+            exit;
+
         }
     }
 }
