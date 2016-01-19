@@ -22,7 +22,7 @@ if (isset($_POST['mobileNumber']) && isset($_POST['mobileNumber'])) {
         $emailBody .= '<br/>iShareRyde Team';
 
         $msg = array();
-        $msg['Source'] = "webmaster@clubmycab.com";
+        $msg['Source'] = "support@clubmycab.com";
         $msg['Destination']['ToAddresses'][] = "support@clubmycab.com";
         $msg['Message']['Subject']['Data'] = "User Contacted from App";
         $msg['Message']['Body']['Html']['Data'] =$emailBody;
@@ -30,6 +30,7 @@ if (isset($_POST['mobileNumber']) && isset($_POST['mobileNumber'])) {
 
         try{
             $result = $client->sendEmail($msg);
+
             http_response_code(200);
             header('Content-Type: application/json');
             echo '{status:"success", message:"Message sent"}';
