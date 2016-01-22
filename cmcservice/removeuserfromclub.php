@@ -41,7 +41,7 @@ if ($FriendExists > 0) {
         $MemberPlatform = $row['Platform'];
         $MemberName = $row['FullName'];
     }
-    $Message = $OwnerName . " has removed you from the club " . $ClubName;
+    $Message = $OwnerName . " has removed you from the group " . $ClubName;
     $gcm_arrayF = array();
     $apns_arrayF = array();
     if ($MemberPlatform == "A") {

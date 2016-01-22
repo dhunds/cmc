@@ -54,7 +54,7 @@ if ($no_of_users > 0) {
         $length = count($refNumber);
 
         for ($i = 0; $i < $length; $i++) {
-            $Message = $MemberName . " has reffered " . $refName[$i] . " to join your club " . $ClubName;
+            $Message = $MemberName . " has reffered " . $refName[$i] . " to join your group " . $ClubName;
             $NotificationType = "PoolId_Refered";
 
            $sqlRef = "INSERT INTO referfriendtoclub (PoolId,MemberNumber,FriendNumber,FriendName,RefDateTime) VALUES ('$PoolId','$MemberNumber','$refNumber[$i]','$refName[$i]',now())";
@@ -78,7 +78,7 @@ if ($no_of_users > 0) {
         }
         if ($IsSuccess) {
             if ($OwnerDeviceToken !='admin') {
-                $Message = $MemberName . " has referred friend(s) to join your club " . $ClubName;
+                $Message = $MemberName . " has referred friend(s) to join your group " . $ClubName;
                 $body = array('gcmText' => $Message);
                 if (count($gcm_array) > 0) {
                     $objNotification->setVariables($gcm_array, $body);

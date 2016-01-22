@@ -44,7 +44,7 @@ if ($FriendExists > 0) {
 
         $MemberName = $row['FullName'];
     }
-    $Message = $MemberName . " has left the club " . $ClubName;
+    $Message = $MemberName . " has left the group " . $ClubName;
     $gcm_arrayF = array();
     $apns_arrayF = array();
 

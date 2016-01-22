@@ -74,7 +74,7 @@ if ($no_of_users > 0) {
                 }
             }
 
-            $Message = $OwnerName . "  accepted " . $FriendName . " to club " . $PoolName;
+            $Message = $OwnerName . "  accepted " . $FriendName . " to group " . $PoolName;
 
             if ($MemberDeviceToken != '') {
                 $gcm_array = array();
@@ -110,7 +110,7 @@ if ($no_of_users > 0) {
             $stmt3 = $con->prepare($sql3);
             $res3 = $stmt3->execute();
             if ($res3 == true) {
-                $Message = $OwnerName . "  added you to club " . $PoolName . " (referred by " . $MemberName . ")";
+                $Message = $OwnerName . "  added you to a group " . $PoolName . " (referred by " . $MemberName . ")";
 
                 if ($FriendDeviceToken != '') {
                     $gcm_arrayF = array();
@@ -156,7 +156,7 @@ if ($no_of_users > 0) {
                 }
             }
         } else if (strtolower($Accepted) == strtolower('NO')) {
-            $Message = $OwnerName . "  rejected referral of " . $FriendName . " to club " . $PoolName;
+            $Message = $OwnerName . "  rejected referral of " . $FriendName . " to group " . $PoolName;
 
             if ($MemberDeviceToken != '') {
                 $gcm_array = array();

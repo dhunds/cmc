@@ -72,7 +72,7 @@ if ($PoolStatus == "OPEN") {
                     $MemberPlatform = $row['Platform'];
                     $MemberName = $row['FullName'];
                 }
-                $Message = $OwnerName . " has added you to the club " . $ClubName;
+                $Message = $OwnerName . " has added you to the group " . $ClubName;
                 $gcm_arrayF = array();
                 $apns_arrayF = array();
                 if ($MemberPlatform == "A") {

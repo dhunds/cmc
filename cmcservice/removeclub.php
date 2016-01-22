@@ -44,7 +44,7 @@ if ($MembersExists > 0) {
         $stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$MemberNumber' and PushNotification != 'off'");
         $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
         if ($FriendExists > 0) {
-            $Message = $OwnerName . " has deleted the club " . $ClubName;
+            $Message = $OwnerName . " has deleted the group " . $ClubName;
             while ($row = $stmtF->fetch()) {
                 $MemberDeviceToken = $row['DeviceToken'];
                 $MemberPlatform = $row['Platform'];

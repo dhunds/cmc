@@ -50,7 +50,7 @@ if ($no_of_users > 0) {
                 $FriendNumber = trim((string)$memNumber[$i]);
                 $FriendName = trim((string)$memName[$i]);
 
-                $Message = $OwnerName . ' added you to a club ' . $ClubName;
+                $Message = $OwnerName . ' added you to a group ' . $ClubName;
 
                 $stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$FriendNumber' and PushNotification != 'off'");
                 $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
