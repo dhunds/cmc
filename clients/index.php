@@ -1,4 +1,30 @@
 <?php
+$page='login';
+include_once('connection.php');
+
+if ((isset($_SESSION['username']) && $_SESSION['username'] !='')){
+    header('location:dashboard.php');
+}
+
+if (isset($_POST['submit']) && isset($_POST['username']) && $_POST['username'] !='' && isset($_POST['password']) && $_POST['password'] !=''){
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+    $sql = "SELECT username, password FROM clients WHERE username='$username' AND password='$password'";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    $rowCount = (int) $stmt->rowCount();
+
+    if ($rowCount > 0){
+        $_SESSION['username'] = $_POST['username'];
+        header('location:dashboard.php');
+    } else {
+        $_REQUEST['err']=1;
+    }
+}
+
+?>
+
+<?php
 include_once('header.php');
 ?>
 <div class="header-login pure-u-1-1 pure-u-md-3-4">
@@ -10,7 +36,7 @@ Login
         <!-- Login form start -->
         <div>
             <div style="padding: 15px;text-align: center;">
-                <form method="post" action="dashboard.php" enctype="multipart/form-data">
+                <form method="post" action="">
                     <div>
                         <?php if (isset($_REQUEST['err']) && $_REQUEST['err']==1){ ?>
                             <div class="divRight bluetext">Invalid Username / Password</div>
