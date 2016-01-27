@@ -2,6 +2,49 @@
 include_once('connection.php');
 include_once('header.php');
 include_once('topmenu.php');
+
+if (isset($_POST['submit']) && $_POST['groupname'] !='') {
+    $sql = "SELECT PoolId, PoolName FROM userpoolsmaster JOIN clientGroups ON clientGroups.groupId=userpoolsmaster.PoolId AND clientGroups.clientId=".$_SESSION['userId']." AND userpoolsmaster.PoolId=".$_POST['groupId'];
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    $rowCount = (int) $stmt->rowCount();
+
+    if ($rowCount > 0){
+        $sql = "SELECT PoolName FROM userpoolsmaster JOIN clientGroups ON clientGroups.groupId=userpoolsmaster.PoolId AND clientGroups.clientId=".$_SESSION['userId']." AND userpoolsmaster.PoolName='".$_POST['groupname']."'";
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
+        $rowCount = (int) $stmt->rowCount();
+
+        if ($rowCount > 0) {
+            $msg = 'You already have a group with this name. Please choose a different name.';
+        } else {
+            $sql = "UPDATE userpoolsmaster SET PoolName='".$_POST['groupname']."' WHERE PoolId=".$_POST['groupId'];
+            $stmt = $con->prepare($sql);
+
+            if ($stmt->execute()){
+                $msg = 'Updated Successfully!';
+            } else{
+                $msg = 'An error occured. Please try again.';
+            }
+        }
+
+
+    } else {
+        $msg = 'You do not have permission to edit this group.';
+    }
+}
+
+$sql = "SELECT PoolId, PoolName FROM userpoolsmaster JOIN clientGroups ON clientGroups.groupId=userpoolsmaster.PoolId AND clientGroups.clientId=".$_SESSION['userId']." AND userpoolsmaster.PoolId=".$_REQUEST['id'];
+$stmt = $con->prepare($sql);
+$stmt->execute();
+$rowCount = (int) $stmt->rowCount();
+
+if($rowCount > 0){
+    $group = $stmt->fetch(PDO::FETCH_ASSOC);
+} else {
+    $msg = 'You do not have permission to edit this group.';
+}
+
 ?>
 
 <div class="content pure-u-1-1 pure-u-md-3-4">
@@ -9,24 +52,15 @@ include_once('topmenu.php');
 
         <div>
             <h4 class="headingText">Edit Group</h4>
-
+            <?php if($msg){ ?>
+                <p style="margin-left: 10px;"><?=$msg;?></p>
+            <?php } ?>
             <div style="padding: 15px;">
-                <form method="post" action="" enctype="multipart/form-data">
+                <form method="post" action="">
                     <div>
-                        <div class="divRight bluetext"><input type="text" name="name" placeholder="Full Name"></div>
-                        <div style="clear:both;"></div>
-                        <br>
-
-                        <div class="divRight bluetext"><input type="text" name="mobNumber" placeholder="Mobile Number" readonly>
+                        <div class="divRight bluetext"><input type="text" name="groupname" placeholder="Group Name" value="<?=$group['PoolName']?>">
+                        <input type="hidden" name="groupId" value="<?=$_REQUEST['id']?>">
                         </div>
-                        <div style="clear:both;"></div>
-                        <br>
-
-                        <div class="divRight bluetext"><input type="text" name="email" placeholder="Email"></div>
-                        <div style="clear:both;"></div>
-                        <br>
-
-                        <div class="divRight bluetext"><input type="text" name="groupname" placeholder="Group Name"></div>
                         <div style="clear:both;"></div>
                         <br>
 

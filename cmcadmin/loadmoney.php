@@ -1,7 +1,7 @@
 <?php
 include_once('connection.php');
 define("MID", "MBK9572");
-define("MERCHANT_NAME", "ClubMyCab");
+define("MERCHANT_NAME", "iShareRyde");
 define("API_SECRET", "bToO0UJ7OaijZ9g7a1Axr3J5OpEF");
 define("LOAD_MONEY_URL", "https://walletapi.mobikwik.com/loadmoney");
 define("WALLET_ID", "support@clubmycab.com");

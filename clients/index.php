@@ -9,13 +9,15 @@ if ((isset($_SESSION['username']) && $_SESSION['username'] !='')){
 if (isset($_POST['submit']) && isset($_POST['username']) && $_POST['username'] !='' && isset($_POST['password']) && $_POST['password'] !=''){
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
-    $sql = "SELECT username, password FROM clients WHERE username='$username' AND password='$password'";
+    $sql = "SELECT id, username, password FROM clients WHERE username='$username' AND password='$password'";
     $stmt = $con->prepare($sql);
     $stmt->execute();
     $rowCount = (int) $stmt->rowCount();
 
     if ($rowCount > 0){
-        $_SESSION['username'] = $_POST['username'];
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $_SESSION['userId'] = $result['id'];
+        $_SESSION['username'] = $result['username'];
         header('location:dashboard.php');
     } else {
         $_REQUEST['err']=1;
@@ -25,7 +27,7 @@ if (isset($_POST['submit']) && isset($_POST['username']) && $_POST['username'] !
 ?>
 
 <?php
-include_once('header.php');
+      include_once('header.php');
 ?>
 <div class="header-login pure-u-1-1 pure-u-md-3-4">
 Login
