@@ -111,22 +111,23 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                 $body = array('gcmText' => $RateNotificationMessageOwner, 'pushfrom' => 'tripcompleted', 'notificationId' => $notificationId, 'CabId' => $CabID);
 
                 if ($FriendPlatform == "A") {
-                    $gcm_array[] = $row['DeviceToken'];
-                    $objNotification->setVariables($gcm_array, $body);
-                    $res = $objNotification->sendGCMNotification();
 
                     if ($rideType !=1) {
+                        $gcm_array[] = $row['DeviceToken'];
+                        $objNotification->setVariables($gcm_array, $body);
+                        $res = $objNotification->sendGCMNotification();
+
                         $body['gcmText'] = $RateNotificationMessage;
                         $body['pushfrom'] = 'Cab_Rating';
                         $objNotification->setVariables($gcm_array, $body);
                         $res = $objNotification->sendGCMNotification();
                     }
                 } else {
-                    $apns_array[] = $row['DeviceToken'];
-                    $objNotification->setVariables($apns_array, $body);
-                    $res = $objNotification->sendIOSNotification();
-
                     if ($rideType !=1) {
+                        $apns_array[] = $row['DeviceToken'];
+                        $objNotification->setVariables($apns_array, $body);
+                        $res = $objNotification->sendIOSNotification();
+
                         $body['gcmText'] = $RateNotificationMessage;
                         $body['pushfrom'] = 'Cab_Rating';
                         $objNotification->setVariables($apns_array, $body);
