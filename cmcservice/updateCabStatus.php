@@ -81,6 +81,9 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
             $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
             if ($found >0){
                 $resp = claimFirstRideBonus($OwnerNumber, $objNotification, 1);
+                if ($rideType ==1) {
+                    offerCarpoolRideBonus($OwnerNumber, $objNotification);
+                }
             }
         }
         $stmt1 = $con->query("select a.* from registeredusers a, acceptedrequest b where a.PushNotification != 'off' and Trim(a.MobileNumber) = Trim(b.MemberNumber) and b.cabid = '$CabID'");
@@ -136,6 +139,11 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                 }
                 if ($resp=='success'){
                     claimFirstRideBonus($MemberNumber, $objNotification, '');
+
+                    if ($rideType ==1) {
+                        joinCarpoolRideBonus($MemberNumber, $objNotification);
+                    }
+
                 }
             }
         }

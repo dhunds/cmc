@@ -150,3 +150,103 @@ function claimFirstRideBonus($mobileNumber, $objNotification, $isOwner)
     }
     return $resp;
 }
+
+function offerCarpoolRideBonus($mobileNumber, $objNotification){
+    global $con;
+    $resp = '';
+
+    $sql = "SELECT id, amount, maxUse, maxUsePerUser, status FROM offers WHERE status=1 AND validThru > now() AND type='offercarpoolride'";
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($found > 0) {
+        $offer = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+        $sql = "SELECT COUNT(id) as useCount FROM credits WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "'";
+        $stmt = $con->query($sql);
+        $credits = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($credits['useCount'] < $offer['maxUsePerUser']) {
+            $sql = "INSERT INTO credits SET offerId=" . $offer['id'] . ", mobileNumber='" . $mobileNumber . "', credits=" . $offer['amount'] . ", created=now()";
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
+            $resp = 'success';
+        }
+        if ($resp=='success') {
+            $sql = "UPDATE registeredusers SET totalCredits = totalCredits +". $offer['amount']." WHERE MobileNumber='".$mobileNumber."'";
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
+
+            // Send Notification
+            $sql = "SELECT FullName, DeviceToken FROM registeredusers WHERE MobileNumber ='".$mobileNumber."'";
+            $stmt = $con->query($sql);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $Message = 'You got Reward Points worth Rs.' . $offer['amount'] . ' for offering ride ride in your car.';
+
+            $body = array('gcmText' => $Message, 'pushfrom' => 'genericnotificationoffers');
+            $gcm_array = array();
+            $gcm_array[] = $user['DeviceToken'];
+            $objNotification->setVariables($gcm_array, $body);
+            $objNotification->sendGCMNotification();
+
+            $params = array('NotificationType' => 'OfferCarpoolBonus', 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName' => $user['FullName'], 'ReceiveMemberNumber' => $mobileNumber, 'Message' => $Message, 'DateTime' => 'now()');
+            $objNotification->logNotification($params);
+        }
+    } else {
+        $resp = 'fail';
+    }
+
+    return $resp;
+}
+
+function joinCarpoolRideBonus($mobileNumber, $objNotification){
+    global $con;
+    $resp = '';
+
+    $sql = "SELECT id, amount, maxUse, maxUsePerUser, status FROM offers WHERE status=1 AND validThru > now() AND type='joincarpoolride'";
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($found > 0) {
+        $offer = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+        $sql = "SELECT COUNT(id) as useCount FROM credits WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "'";
+        $stmt = $con->query($sql);
+        $credits = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($credits['useCount'] < $offer['maxUsePerUser']) {
+            $sql = "INSERT INTO credits SET offerId=" . $offer['id'] . ", mobileNumber='" . $mobileNumber . "', credits=" . $offer['amount'] . ", created=now()";
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
+            $resp = 'success';
+        }
+        if ($resp=='success') {
+            $sql = "UPDATE registeredusers SET totalCredits = totalCredits +". $offer['amount']." WHERE MobileNumber='".$mobileNumber."'";
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
+
+            // Send Notification
+            $sql = "SELECT FullName, DeviceToken FROM registeredusers WHERE MobileNumber ='".$mobileNumber."'";
+            $stmt = $con->query($sql);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $Message = 'You got Reward Points worth Rs.' . $offer['amount'] . ' for joining carpool ride.';
+
+            $body = array('gcmText' => $Message, 'pushfrom' => 'genericnotificationoffers');
+            $gcm_array = array();
+            $gcm_array[] = $user['DeviceToken'];
+            $objNotification->setVariables($gcm_array, $body);
+            $objNotification->sendGCMNotification();
+
+            $params = array('NotificationType' => 'JoinCarpoolBonus', 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName' => $user['FullName'], 'ReceiveMemberNumber' => $mobileNumber, 'Message' => $Message, 'DateTime' => 'now()');
+            $objNotification->logNotification($params);
+        }
+    } else {
+        $resp = 'fail';
+    }
+
+    return $resp;
+}
