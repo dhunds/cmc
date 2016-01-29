@@ -28,7 +28,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
 
         $RateNotificationMessageOwner = "Trip from " . $FromShortAddress . " to  " . $ToShortAddress . " completed. Click here to send the fare split to your friends.";
 
-        $stmtOwner = $con->query("SELECT * FROM registeredusers WHERE Trim(MobileNumber) = Trim('$OwnerNumber') and PushNotification != 'off'");
+        $stmtOwner = $con->query("SELECT * FROM registeredusers WHERE Trim(MobileNumber) = Trim('$OwnerNumber')");
         $OwnerExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
         if ($OwnerExists > 0) {
             $gcm_array = array();
@@ -37,6 +37,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                 $OwnerDeviceToken = $row['DeviceToken'];
                 $Platform = $row['Platform'];
                 $OwnerName = $row['FullName'];
+                $pushNotification = $row['PushNotification'];
             }
             $NotificationType = "Cab_Rating";
 
@@ -53,34 +54,36 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
 
             $body = array('gcmText' => $RateNotificationMessageOwner, 'pushfrom' => 'ownerTripCompleted', 'notificationId' => $notificationId, 'CabId' => $CabID);
 
-            if ($Platform == "A") {
-                $gcm_array[] = $OwnerDeviceToken;
-                $objNotification->setVariables($gcm_array, $body);
-                $res = $objNotification->sendGCMNotification();
-
-                if ($rideType !=1) {
-                    $body['gcmText'] = $RateNotificationMessage;
-                    $body['pushfrom'] = 'Cab_Rating';
+            if ($pushNotification !='off') {
+                if ($Platform == "A") {
+                    $gcm_array[] = $OwnerDeviceToken;
                     $objNotification->setVariables($gcm_array, $body);
                     $res = $objNotification->sendGCMNotification();
-                }
-            } else {
-                $apns_array[] = $OwnerDeviceToken;
-                $objNotification->setVariables($apns_array, $body);
-                $res = $objNotification->sendIOSNotification();
 
-                if ($rideType !=1) {
-                    $body['gcmText'] = $RateNotificationMessage;
-                    $body['pushfrom'] = 'Cab_Rating';
+                    if ($rideType != 1) {
+                        $body['gcmText'] = $RateNotificationMessage;
+                        $body['pushfrom'] = 'Cab_Rating';
+                        $objNotification->setVariables($gcm_array, $body);
+                        $res = $objNotification->sendGCMNotification();
+                    }
+                } else {
+                    $apns_array[] = $OwnerDeviceToken;
                     $objNotification->setVariables($apns_array, $body);
                     $res = $objNotification->sendIOSNotification();
+
+                    if ($rideType != 1) {
+                        $body['gcmText'] = $RateNotificationMessage;
+                        $body['pushfrom'] = 'Cab_Rating';
+                        $objNotification->setVariables($apns_array, $body);
+                        $res = $objNotification->sendIOSNotification();
+                    }
                 }
             }
 
             $stmt1 = $con->query("select MemberName from acceptedrequest where cabid = '$CabID'");
             $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
             if ($found >0){
-                $resp = claimFirstRideBonus($OwnerNumber, $objNotification, 1);
+                //$resp = claimFirstRideBonus($OwnerNumber, $objNotification, 1);
                 if ($rideType ==1) {
                     offerCarpoolRideBonus($OwnerNumber, $objNotification);
                 }
@@ -137,14 +140,9 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
                         $res = $objNotification->sendIOSNotification();
                     }
                 }
-                if ($resp=='success'){
-                    claimFirstRideBonus($MemberNumber, $objNotification, '');
 
-                    if ($rideType ==1) {
-                        joinCarpoolRideBonus($MemberNumber, $objNotification);
-                    }
+                claimFirstRideBonus($MemberNumber, $objNotification, '');
 
-                }
             }
         }
 

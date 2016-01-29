@@ -26,13 +26,20 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
 
             if ($val['type']=='referral'){
                 $msg = "You have earned ".$val['credits']." Reward Points for inviting ".$credit['useCount']." friend(s). You can earn referral bonus for maximum ".$val['maxUsePerUser']." invitations";
-            } else {
+            } else if($val['type']=='ridecompletion') {
                 if ($credit['useCount']){
                     $msg = "You have earned ".$val['credits']." Reward Points for completing your first ride.";
                 } else {
                     $msg = "Your have not completed your first ride yet. Complete your ride to earn ".$val['amount']." Reward Points.";
                 }
+            }else if($val['type']=='offercarpoolride'){
+                if ($credit['useCount']){
+                    $msg = "You have earned ".$val['credits']." Reward Points for offering ride in your car.";
+                } else {
+                    $msg = "Your have not offered any ride in your car yet. Offer a ride to earn ".$val['amount']." Reward Points.";
+                }
             }
+
             $val['UserOfferStatus'] = $msg;
 
             $finalArray[] = $val;
