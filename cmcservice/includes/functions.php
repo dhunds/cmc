@@ -42,40 +42,64 @@ function save_split_fare($con, $arrMembersNumberAndFare, $totalFare, $cabId, $pa
         $res = $stmt->execute();
 
     //Send Notification
-        $sql = "SELECT FullName FROM registeredusers WHERE trim(MobileNumber) = '".$paidBy."'";
-        $stmt = $con->prepare($sql);
-        $stmt->execute();
-        $user = $stmt->fetch();
+        if (trim($fareToPay) !='0') {
+            $sql = "SELECT FullName FROM registeredusers WHERE trim(MobileNumber) = '" . $paidBy . "'";
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
+            $user = $stmt->fetch();
 
-        $notificationMessage = 'You need to pay Rs. '.$fareToPay.' for your ride. Click here for payment options.';
+            $notificationMessage = 'You need to pay Rs. ' . $fareToPay . ' for your ride. Click here for payment options.';
 
-        $stmt = $con->query("select FullName, Platform, MobileNumber, DeviceToken FROM registeredusers WHERE trim(MobileNumber)='".$memberNumber."'");
-        $noOfUsers = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+            $stmt = $con->query("select FullName, Platform, MobileNumber, DeviceToken FROM registeredusers WHERE trim(MobileNumber)='" . $memberNumber . "'");
+            $noOfUsers = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-        if ($noOfUsers > 0) {
-            while ($row = $stmt->fetch()) {
-                $gcm_array = [];
-                $FriendPlatform = $row['Platform'];
-                if ($FriendPlatform == "A" && trim($row['MobileNumber']) !=$paidBy)
-                {
-                    $MemberName=$row['FullName'];
-                    $MemberNumber=$row['MobileNumber'];
+            if ($noOfUsers > 0) {
+                while ($row = $stmt->fetch()) {
+                    $gcm_array = [];
+                    $FriendPlatform = $row['Platform'];
+                    if ($FriendPlatform == "A" && trim($row['MobileNumber']) != $paidBy) {
+                        $MemberName = $row['FullName'];
+                        $MemberNumber = $row['MobileNumber'];
 
-                    $sql = "INSERT INTO notifications(NotificationType,SentMemberName, SentMemberNumber,
-                    ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('tripcompleted','System','','$MemberName', '$MemberNumber','$notificationMessage', '$cabId', now())";
-                    $nStmt = $con->prepare($sql);
-                    $nStmt->execute();
-                    $notificationId = $con->lastInsertId();
+                        $sql = "INSERT INTO notifications(NotificationType,SentMemberName, SentMemberNumber,
+                        ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('tripcompleted','System','','$MemberName', '$MemberNumber','$notificationMessage', '$cabId', now())";
+                        $nStmt = $con->prepare($sql);
+                        $nStmt->execute();
+                        $notificationId = $con->lastInsertId();
 
-                    $body = array('gcmText' => $notificationMessage, 'pushfrom' => 'tripcompleted', 'notificationId' => $notificationId, 'CabId' => $cabId);
+                        $body = array('gcmText' => $notificationMessage, 'pushfrom' => 'tripcompleted', 'notificationId' => $notificationId, 'CabId' => $cabId);
 
-                    if ($row['PushNotification'] !='off') {
-                        $gcm_array[]= $row['DeviceToken'];
-                        $objNotification->setVariables($gcm_array, $body);
-                        $objNotification->sendGCMNotification();
-                        $res = true;
+                        if ($row['PushNotification'] != 'off') {
+                            $gcm_array[] = $row['DeviceToken'];
+                            $objNotification->setVariables($gcm_array, $body);
+                            $objNotification->sendGCMNotification();
+                            $res = true;
+                        }
                     }
                 }
+            }
+        } else{
+            //Update user settled status if he own Rs. 0 and also check if all users settled fare then archive ride.
+            if ($memberNumber==$owner){
+                $sql = "UPDATE cabopen SET settled=1 WHERE CabId = '".$cabId."' AND trim(MobileNumber) = '".$memberNumber."'";
+            } else {
+                $sql = "UPDATE cabmembers SET settled=1 WHERE CabId = '".$cabId."' AND trim(MemberNumber) = '".$memberNumber."'";
+            }
+
+            $stmt = $con->prepare($sql);
+            $res = $stmt->execute();
+
+            // If All members done fare settlement mark trip as Archived
+            $con->query("select MemberNumber FROM cabmembers where CabId = '".$cabId."' AND settled !=1");
+            $foundRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+            $con->query("select MobileNumber FROM cabopen where CabId = '".$cabId."' AND settled !=1");
+            $foundRows1 = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+            if($foundRows < 1 && $foundRows1 < 1){
+                $sql = "UPDATE cabopen set CabStatus = 'I' where CabId = '" . $cabId . "'";
+                $stmt = $con->prepare($sql);
+                $res = $stmt->execute();
             }
         }
     }
