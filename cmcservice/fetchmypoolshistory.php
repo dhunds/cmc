@@ -55,7 +55,7 @@ if ($lastcabid !='') {
 if ($totalRows > 0)
 {
     $arrFinal = [];
-    for ($i =$startLimit; $i < $resultsToShow; $i++){
+    for ($i =$startLimit; $i < ($startLimit + $resultsToShow); $i++){
         if (isset($data[$i])) {
             $val = $data[$i];
 
