@@ -19,8 +19,8 @@ if(empty($_POST['name'])  		||
 	echo "No arguments Provided!";
 	return false;
    }
-
-$emailBody = 'Hi Admin, <br/><br/> You have received a new message from your website contact form.<br/><br/> Here are the details:<br/><br/>';
+$name = $_POST['name'];
+$emailBody = 'Hello Admin, <br/><br/> You have received a new message from your website contact form.<br/><br/> Here are the details:<br/><br/>';
 $emailBody .= 'Name: ' . $_POST['name'] . '<br />';
 $emailBody .= 'Organization Name: ' . $_POST['organisation'] . '<br />';
 $emailBody .= 'Email: ' . $_POST['email'] . '<br />';
