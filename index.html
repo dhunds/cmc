@@ -1,152 +1,435 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="google-site-verification" content="aTIdSqHwTwKY1BNx3fUBfvkaDqomsCPggcTQyZggUoo" />
 
-<link rel="shortcut icon" href="images/favicon.ico" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <title>iShareRyde</title>
 
+    <link rel="icon" type="image/png" href="./img/CMC_fav.png" />    
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/agency.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+    </head>
+
+    <body id="page-top" class="index">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header page-scroll">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand page-scroll hidden-xs" href="#page-top">                       
+                        <img class="img-responsive logo-cmc logo-cmc-dt" width="20%" src="./img/cmc_logo_dt.png"  alt=""  /> 
+                        <img class="img-responsive  logo-cmc-dt11" width="20%" src="./img/cmc_logo.png"  alt=""  style="display:none"  />
+                        <span style="float:left;">iShareRyde<span> 
+                        </a>                          
+                        <a class="navbar-brand page-scroll visible-xs" href="#page-top"><img class="img-responsive" width="40%" style="margin-top:-10px" src="./img/cmc_logo.png" alt="" /></a>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="hidden">
+                                <a href="#page-top"></a>
+                            </li>
+                            <li>
+                                <a class="page-scroll" href="#services">How it works?</a>
+                            </li>
+                            <li>
+                                <a class="page-scroll" href="#portfolio">Features</a>
+                            </li>
+                            <li>
+                             <a class="page-scroll" href="#faq">FAQs</a>
+                         </li>                    
+                         <li>
+                            <a class="page-scroll" href="#contact">Contact</a>
+                        </li>
+                    </ul>               
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+
+        <!-- Header -->
+        <header>
+            <div class="container-fluid row">           
+                <div id="myCarousel" class="carousel slide " data-ride="carousel"  data-interval="5000" data-speed="1">
+                  <!-- Indicators -->
+                  <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1" class=""></li>
+                    <li data-target="#myCarousel" data-slide-to="2" class=""></li>
+                </ol>
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                      <img class="first-slide" src="./img/slider/01.jpg" alt="First slide">
+                      <div class="container">
+                        <div class="carousel-caption ">
+                          <h1>Get back your life!</h1>
+                          <p>Travel with friends, in the comfort of a car.</p>
+                          <!-- <p><a class="btn btn-lg page-scroll btn-xl" href="#services" role="button">Tell Me More</a></p> -->
+
+                      </div>
+                  </div>
+              </div>
+              <div class="item">
+                  <img class="second-slide" src="./img/slider/02.jpg" alt="Second slide">
+                  <div class="container">
+                    <div class="carousel-caption">
+                      <h1>Save money!</h1>
+                      <p>Share travel cost - Travel for as low as Rs. 3/km.</p>                 
+                  </div>
+              </div>
+          </div>
+          <div class="item">
+              <img class="third-slide" src="./img/slider/03.jpg" alt="Third slide">
+              <div class="container">
+                <div class="carousel-caption">
+                  <h1>Build a better future!</h1>
+                  <p>Contribute to a cleaner environment.</p>             
+              </div>
+          </div>
+      </div>
+  </div>
+  <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+</a>
+<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+</a>
+
+<div class="download-container">
+    <a href="javascript:;" class="" target="_blank"><img src="./img/iphone.png" /></a><a href="https://play.google.com/store/apps/details?id=com.clubmycab" target="_blank" class=""><img src="./img/android.png" /></a>
+</div>
+</div>
+</div>
+</header>
+
+<!-- Services Section -->
+<section id="services">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">How it works?</h2>                   
+            </div>
+        </div>        
+        <div class="row text-center section-margin-1">
+         <div class="col-md-3 col-sm-12">
+          <h3 class="section-subheading title">Taking your car?</h3>
+      </div>
+
+      <div class="col-md-3 col-sm-4">
+        <span class="fa-stack fa-4x">
+            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+            <i class="fa offer-ride fa-stack-1x fa-inverse"></i>
+        </span>
+        <h4 class="service-heading">Offer a ride to your friends in your car</h4>
+        <p class="text-muted"> </p>
+    </div>
+    <div class="col-md-3 col-sm-4">
+        <span class="fa-stack fa-4x">
+            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+            <i class="fa place fa-stack-1x fa-inverse"></i>
+        </span>
+        <h4 class="service-heading">Pick them up using inbuilt navigation</h4>
+        <p class="text-muted"></p>
+    </div>
+    <div class="col-md-3 col-sm-4">
+        <span class="fa-stack fa-4x">
+            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+            <i class="fa wallet fa-stack-1x fa-inverse"></i>
+        </span>
+        <h4 class="service-heading">Share the fuel cost. Use wallet transfer.</h4>
+        <p class="text-muted"></p>
+    </div>           
+</div>
+
+<!--section-2-->       
+<div class="row text-center section-margin-2">
+    <div class="col-md-3 col-sm-12">
+        <h3 class="section-subheading title">Don’t have a car?</h3>
+    </div>
+    <div class="col-md-3 col-sm-4">
+        <span class="fa-stack fa-4x">
+            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+            <i class="fa cab fa-stack-1x fa-inverse"></i>
+        </span>
+        <h4 class="service-heading">See if you have open <br/>rides</h4>
+        <p class="text-muted"> </p>
+    </div>
+    <div class="col-md-3 col-sm-4">
+        <span class="fa-stack fa-4x">
+            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+            <i class="fa co-passengers fa-stack-1x fa-inverse"></i>
+        </span>
+        <h4 class="service-heading">If the timing and route work for you, join one</h4>
+        <p class="text-muted"></p>
+    </div>
+    <div class="col-md-3 col-sm-4">
+        <span class="fa-stack fa-4x">
+            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+            <i class="fa invite-friends fa-stack-1x fa-inverse"></i>
+        </span>
+        <h4 class="service-heading">If there are no open rides, invite friends to share a cab</h4>
+        <p class="text-muted"></p>
+    </div>
+</div>
+<!--end-section-2-->
+</div>
+</section>
+
+<!-- Portfolio Grid Section -->
+<section id="portfolio" class="bg-light-gray">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Features</h2>                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-6 portfolio-item">
+                <div class="hover-shadow">                                     
+                    <img src="img/portfolio/groups.png" class="img-responsive" alt="">                   
+                    <div class="portfolio-caption">
+                     <!--  <h4></h4> -->
+                     <p class="text-muted"><strong>Create groups of people you feel safe with –</strong> friends, colleagues, neighbours
+                     </p>
+                 </div>
+             </div>
+         </div>
+         <div class="col-md-3 col-sm-6 portfolio-item">
+             <div class="hover-shadow">                              
+                <img src="img/portfolio/real-time-sharing.png" class="img-responsive" alt="">                
+                <div class="portfolio-caption">
+                 <!--  <h4></h4> -->
+                 <p class="text-muted"><strong>Real time sharing – </strong>Instant notifications to allow sharing at the last moment
+                 </p>
+             </div>
+         </div>
+     </div>
+     <div class="col-md-3 col-sm-6 portfolio-item">
+         <div class="hover-shadow">
+            <img src="img/portfolio/cab-meta.png" class="img-responsive" alt="">            
+            <div class="portfolio-caption">
+                <!-- <h4></h4> -->
+                <p class="text-muted"><strong>Cab meta – </strong>See cabs available from Uber, Ola, etc. – Sort by ETA or cost
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 portfolio-item">
+        <div class="hover-shadow">                   
+            <img src="img/portfolio/here-i-am.png" class="img-responsive" alt="">            
+            <div class="portfolio-caption">
+                <p class="text-muted"><strong>Here, I am – </strong>Safety feature to let your loved ones 
+                    know where you’ve reached
+                </p>
+            </div>
+        </div> 
+    </div>                              
+</div>
+</div>
+</section>
+
+<!-- FAQS Section -->
+<section id="faq">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">FAQs</h2>                    
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-md-6 fq-mg">
+                    <h4>What is iShareRyde?</h4>                                    
+                    <ul class="text-muted list-style">
+                        <li>iShareRyde makes ride sharing safe and convenient.</li>
+                        <li>You can carpool or share a cab – allows you to share ride even if you don’t have a car.</li>
+                        <li>Sharing a ride can reduce journey cost to as low as Rs. 3/km.</li>
+                        <li>Sharing works best with people you trust – your colleagues, friends and friends of friends.</li>
+                    </ul>
+                </div>
+                <div class="col-md-6 fq-mg">
+                    <h4>What are groups and why do I need them?</h4> 
+                    <ul class="text-muted list-style">
+                        <li>Sharing with a group gives you flexibility to leave at different times and not have to wait.</li>
+                        <li>Bigger groups increase chances of ride sharing. Someone or other will be ready to leave at same time as you.</li>
+                        <li>Keep groups focused to friends who travel same route as you.</li>
+                        <li>Name your groups to show destinations. Or just choose a fun name.</li>
+                        <li>Add a profile image - helps your friends identify you.</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 fq-mg">
+                   <h4>Why can’t I search for rides like other apps?</h4>                                    
+
+                   <ul class="text-muted list-style">
+                    <li>To keep rides safe for you, we show only rides in your groups. Therefore, no searching of rides from strangers.
+                    </li>
+                    <li>If there is no ride in your groups that you can join, you can start one.
+                    </li>                    
+                </ul>
+            </div>
+            <div class="col-md-6 fq-mg">
+                <h4> What will it cost and how do I pay?</h4> 
+                <ul class="text-muted list-style">
+                    <li>If it is a carpool, the person offering the ride asks for a per km rate. You can see this in ride details.</li>
+                    <li>If you are sharing a cab, the cost will depend on bill.</li>
+                    <li>Wallet to wallet transfer in the app is most convenient for paying.</li>                   
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+
+<!-- Contact Section -->
+<section id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Contact Us</h2>
+                <h3 class="section-subheading text-muted">Looking for ride sharing solution for your organization? Leave your details below and we’ll get back to you
+                </h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <form name="sentMessage" id="contactForm" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Your Name *" id="name" required data-validation-required-message="Please enter your name.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Name of the Organization*" id="organization_name" required data-validation-required-message="Please enter organization name.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control" placeholder="Your Email *" id="email" required data-validation-required-message="Please enter your email address.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" class="form-control" placeholder="Your Phone *" id="phone" required data-validation-required-message="Please enter your phone number.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <textarea class="form-control" placeholder="Tell us more about your requirement*" id="message" required data-validation-required-message="Please enter a message."></textarea>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="text-left">
+                                <div id="success"></div>
+                                <button type="submit" class="btn btn-xl col-xs-12 col-md-4 col-sm-4 btn-contact">Send Message</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <span class="copyright">Copyright &copy; iShareRyde 2016</span>
+            </div>
+            <div class="col-md-4">
+                <ul class="list-inline social-buttons">
+                    <li><a href="https://twitter.com/ishareryde" target="_blank"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <li><a href="https://www.facebook.com/ishareryde" target="_blank"><i class="fa fa-facebook"></i></a>
+                    </li>
+                    <li><a href="mailto:support@ishareryde.com"><i class="fa fa-envelope"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <ul class="list-inline quicklinks">
+                    <li><a href="privacy_policy.html#privacy-policy">Privacy Policy</a>
+                    </li>
+                    <li><a href="terms_conditions.html#terms-conditions">Terms &amp; Conditions</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="scrollup">Scroll</a>
+</footer>
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script src="js/classie.js"></script>
+<script src="js/cbpAnimatedHeader.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="js/jqBootstrapValidation.js"></script>
+<script src="js/contact_me.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="js/agency.js"></script>
 <script>
-  document.createElement('header');
-  document.createElement('section');
-  document.createElement('article');
-  document.createElement('aside');
-  document.createElement('nav');
-  document.createElement('footer');
+    $(document).ready(function () {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+                $('.scrollup').fadeIn();
+            } else {
+                $('.scrollup').fadeOut();
+            }
+        });
+
+        $('.scrollup').click(function () {
+            $("html, body").animate({
+                scrollTop: 0
+            }, 600);
+            return false;
+        });
+
+    });
 </script>
-
-<!--[if lt IE 9]>
-<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-	
-<script src="js/jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="js/jquery.fitvids.js" type="text/javascript"></script>
-<script src="js/slides.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-  $(document).ready(function(){
-    // Target your .container, .wrapper, .post, etc.
-    $("#wrapper").fitVids();	
-  });
-</script>
-
-<script>
-            $(function(){
-               $("#slides").slides({
-					play: 5000,
-					preload: true,
-					pagination: false,
-					generatePagination: false
-				});
-            });
-</script>
-
-<script type='text/javascript'>
-$(function(){$.fn.scrollToTop=function(){$(this).hide().removeAttr("href");if($(window).scrollTop()!="0"){$(this).fadeIn("slow")}var scrollDiv=$(this);$(window).scroll(function(){if($(window).scrollTop()=="0"){$(scrollDiv).fadeOut("slow")}else{$(scrollDiv).fadeIn("slow")}});$(this).click(function(){$("html, body").animate({scrollTop:0},"slow")})}});
-  $(function() {
-                $("#toTop").scrollToTop();
-            });
-</script>
-
-<title>iShareRyde</title>
-
-</head>
-<body>
-<div id="wrapper">
-	
-	<header>
-	
-			<section class="title">
-				<section class="content">
-					<a href="./" title=""><img src="images/icon.png" alt="iShareRyde" />
-					<h1>iShareRyde</h1></a>
-				</section><!-- content ENDS -->
-				
-				<section class="desc">
-					<h2>Share a ride</h2>
-					<p>
-iShareRyde is an app to help you travel in the comfort of a car, with people you trust and share the cost. Works anywhere in India. There are many people in your known circle of friends, colleagues and neighbours who often travel the same route at roughly the same time e.g. from Home to Office or back. iShareRyde makes it very easy and convenient to reach out to them to share a ride with. It does so through a simple process:
-	<ul>
-		<li>Create "Groups" of people who have similar travel requirements as you. </li>
-		<li>When you know what time you'll be leaving, create a ride and invite friends in your Groups. </li>
-		<li>Book a cab from a choice of Service Providers if you are sharing a ride.</li>
-		<li>Pickup friends on the way.</li>
-	</ul>
-</p>
-					<a class="button gplay" href="https://play.google.com/store/apps/details?id=com.clubmycab" target="_blank" title="Get it on Google Play">Get it on Google Play</a>
-					<a class="button appstore" href="javascript:;" title="Comming Soon on the AppStore">Available on the AppStore</a>		
-								
-				</section><!-- desc ENDS -->
-			</section><!-- title ENDS -->
-			
-			<section class="media">
-				 <div id="slides">
-					 <div class="slides_container">
-						<div><img src="images/slide1.png" alt="App Screenshot" /></div>
-						<div><img src="images/slide2.png" alt="App Screenshot 2" /></div>
-						<div><img src="images/slide3.png" alt="App Screenshot 3" /></div>
-						<div><img src="images/slide4.png" alt="App Screenshot 4" /></div>
-					</div>
-				</div>
-			</section><!-- media ENDS -->
-	
-	</header><!-- header ENDS -->
-	
-	
-	<!--<section class="video">
-		
-		<div class="video_width"><iframe width="700" height="394" src="https://www.youtube.com/embed/dekbzfnocC4" frameborder="0" allowfullscreen></iframe></div>
-	</section><!-- video ENDS -->
-			
-	<section class="feat_outer">
-		<section class="feat">
-			<section>
-			<img src="images/createclub.png" alt="Step 1" />
-			<h2>Create groups and add friends</h2>
-			<p>You can create groups of people who have similar travel requirements as you. Larger the group, greater your chances of finding people. If you don't want to create a group, don't worry - one of your friends could add you to their group and you'll be ready to go.</p>
-			</section>
-
-			<section class="middle">
-			<img src="images/createaride.png" alt="Step 2" />
-			<h2>Create ride and invite people to join the ride</h2>
-			<p>When you know what time you'll be leaving, create a group and invite friends in your Group. You can chose your phone contacts also if you don't have a group. Alternatively, if someone has invited you to share a ride (look out for those notifications), join their ride.</p>
-			</section>
-		
-			<section>
-			<img src="images/bookacab.png" alt="Step 3" />
-			<h2>Book a cab / offer ride in your car, pickup friends on the way</h2>
-			<p>Book a cab from a choice of Service Providers. Pickup friends on the way - Our integration with Google Maps makes it a breeze to identify where they will be. Split the fare at the end of the ride.</p>
-			</section>
-		</section><!-- feat ENDS -->
-		
-		<section class="getitnow">
-			<h2>Get it now!</h2>
-			<a class="button gplay" href="https://play.google.com/store/apps/details?id=com.clubmycab" target="_blank" title="Get it on Google Play">Get it on Google Play</a>
-			<a class="button appstore" href="javascript:;" title="Comming Soon on the AppStore">Available on the AppStore</a>		
-				
-		</section><!-- social ENDS -->
-		
-		<section class="social">
-			<h2>Don't hesitate to contact us!</h2>
-			<a href="https://www.facebook.com/ishareryde" title="Facebook"><span class="fb"></span></a>
-			<a href="https://twitter.com/ishareryde" title="Twitter"><span class="twitter"></span></a>
-			<a href="mailto:support@ishareryde.com" title="Mail"><span class="mail"></span></a>
-		</section><!-- social ENDS -->
-		
-	</section><!-- feat_outer ENDS -->
-
-	<footer class="footer_outer">	
-		<section class="footer">
-			<p><a href="terms.html" title="Terms & Conditions">Terms & Conditions</a> | <a href="privacy.html" title="Privacy Policy">Privacy Policy</a></p>
-			<p>&copy; 2015 iShareRyde. All rights reserved.</p>
-		</section>
-	</footer><!-- outer ENDS -->
-	
-	<a href="#" id="toTop"><img src="images/top.png" alt="Go to Top" /></a>
-	
-</div><!-- wrapper ENDS -->
 </body>
 </html>
