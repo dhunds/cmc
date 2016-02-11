@@ -13,7 +13,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
     $res = $stmt->execute();
 
 // Sending notifications
-    $stmt = $con->query("SELECT MobileNumber, FromShortName, ToShortName, rideType from cabopen where CabId='" . $CabID . "' AND RateNotificationSend = 0 AND CabStatus = 'A'");
+    $stmt = $con->query("SELECT MobileNumber, FromShortName, ToShortName, rideType, perKmCharge from cabopen where CabId='" . $CabID . "' AND RateNotificationSend = 0 AND CabStatus = 'A'");
     $CabsExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($CabsExists > 0) {
@@ -22,6 +22,12 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
             $ToShortAddress = $row['ToShortName'];
             $OwnerNumber = (string)$row['MobileNumber'];
             $rideType = $row['rideType'];
+            $perKmCharge = $row['perKmCharge'];
+        }
+        if ($rideType == 1 && $perKmCharge == 0){
+            $sql = "UPDATE cabopen SET CabStatus='I', status= 3 WHERE CabId = '".$CabID."'";
+            $stmt = $con->prepare($sql);
+            $res = $stmt->execute();
         }
 
         $RateNotificationMessage = "Trip from " . $FromShortAddress . " to  " . $ToShortAddress . " completed. Help us improve by rating the cab service.";
