@@ -6,6 +6,7 @@ $(function() {
             // additional error messages or events
         },
         submitSuccess: function($form, event) {
+            $('.btn-contact').html("Sending...");
             event.preventDefault(); // prevent default submit behaviour
             // get values from FORM
             var name = $("input#name").val();
@@ -31,6 +32,7 @@ $(function() {
                 cache: false,
                 success: function() {
                     // Success message
+                    $('.btn-contact').html("Send Message");
                     $('#success').html("<div class='alert alert-success'>");
                     $('#success > .alert-success').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
                         .append("</button>");
@@ -44,6 +46,7 @@ $(function() {
                 },
                 error: function() {
                     // Fail message
+                    $('.btn-contact').html("Send Message");
                     $('#success').html("<div class='alert alert-danger'>");
                     $('#success > .alert-danger').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
                         .append("</button>");
