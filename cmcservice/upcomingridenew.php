@@ -29,11 +29,11 @@ if ($CabsExists > 0) {
                 $body = array('gcmText' => $UpcomingTripNotification, 'pushfrom' => 'upcomingtrip', 'CabId' => $CabID);
 
                 if ($FriendPlatform == "A") {
-                    $gcm_array[] = $row['DeviceToken'];
+                    $gcm_array[] = $row1['DeviceToken'];
                     $objNotification->setVariables($gcm_array, $body);
                     $objNotification->sendGCMNotification();
                 } else {
-                    $apns_array[] = $row['DeviceToken'];
+                    $apns_array[] = $row1['DeviceToken'];
                     $objNotification->setVariables($apns_array, $body);
                     $objNotification->sendIOSNotification();
                 }
