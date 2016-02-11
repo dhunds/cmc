@@ -3,13 +3,13 @@ include('connection.php');
 include_once('classes/class.notification.php');
 $objNotification = new Notification();
 
-$stmt = $con->query("SELECT cabid,MobileNumber,fromshortname,toshortname from cabopen where TIMESTAMPDIFF(MINUTE, NOW(), ExpStartDateTime) < 10  AND uptripnotification = 0 and CabStatus = 'A'");
+$stmt = $con->query("SELECT CabId,MobileNumber,FromShortName,ToShortName from cabopen where TIMESTAMPDIFF(MINUTE, NOW(), ExpStartDateTime) < 10  AND uptripnotification = 0 and CabStatus = 'A'");
 $CabsExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 if ($CabsExists > 0) {
     while ($row = $stmt->fetch()) {
-        $CabID = $row['cabid'];
-        $FromShortAddress = $row['fromshortname'];
-        $ToShortAddress = $row['toshortname'];
+        $CabID = $row['CabId'];
+        $FromShortAddress = $row['FromShortName'];
+        $ToShortAddress = $row['ToShortName'];
         $OwnerNumber = (string)$row['MobileNumber'];
 
 
