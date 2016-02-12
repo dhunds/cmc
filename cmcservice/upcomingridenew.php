@@ -5,6 +5,7 @@ $objNotification = new Notification();
 
 $stmt = $con->query("SELECT CabId,MobileNumber,FromShortName,ToShortName from cabopen where TIMESTAMPDIFF(MINUTE, NOW(), ExpStartDateTime) < 10  AND uptripnotification = 0 and CabStatus = 'A'");
 $CabsExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
 if ($CabsExists > 0) {
     while ($row = $stmt->fetch()) {
         $CabID = $row['CabId'];
@@ -14,6 +15,8 @@ if ($CabsExists > 0) {
 
 
         $UpcomingTripNotification = "You have an upcoming trip from " . $FromShortAddress . " to " . $ToShortAddress . ". Click here to view details.";
+
+        $log2 = "select a.* from registeredusers a, acceptedrequest b where a.PushNotification != 'off' and Trim(a.MobileNumber) = Trim(b.MemberNumber) and b.cabid = '$CabID'";
 
         $stmt1 = $con->query("select a.* from registeredusers a, acceptedrequest b where a.PushNotification != 'off' and Trim(a.MobileNumber) = Trim(b.MemberNumber) and b.cabid = '$CabID'");
         $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
@@ -42,10 +45,12 @@ if ($CabsExists > 0) {
                 $cronsql = "INSERT INTO cronnotifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('$NotificationType','System','','$MemberName','$MemberNumber','$UpcomingTripNotification','$CabID',now())";
                 $cronstmt = $con->prepare($cronsql);
                 $cronres = $cronstmt->execute();
+                $j++;
             }
         }
+        $i++;
     }
-    $sql12 = "UPDATE cabopen set uptripnotification = '1' where cabid = '$CabID'";
+    $sql12 = "UPDATE cabopen set uptripnotification = '1' where CabId = '$CabID'";
     $stmt12 = $con->prepare($sql12);
     $res12 = $stmt12->execute();
 } else {
