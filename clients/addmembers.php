@@ -39,7 +39,7 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
                     $res2 = $stmt->execute();
 
                     if ($res2 == true) {
-                        $stmtUsr = $con->query("Select DeviceToken From registeredusers WHERE MobileNumber='" . $val[0] . "'");
+                        $stmtUsr = $con->query("Select DeviceToken From registeredusers WHERE MobileNumber='" . $val[0] . "' AND DeviceToken !=''");
                         $found = $con->query("SELECT FOUND_ROWS()");
 
                         if ($found > 0) {

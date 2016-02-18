@@ -35,6 +35,17 @@ class Notification {
      * Send GCM Notification
      */
     public function sendGCMNotification() {
+        global $con;
+
+        $tokenFound =0;
+        foreach ($this->_deviceIds as $gcmToken){
+            if ($gcmToken !=''){
+                $tokenFound =1;
+            }
+        }
+        if (!$tokenFound)
+            return;
+
         $fields = array(
             'registration_ids' => $this->_deviceIds,
             'data' => $this->_bodyParams
@@ -53,10 +64,22 @@ class Notification {
         $result = curl_exec($ch);
         curl_close($ch);
 
-        if ($result === FALSE)
+        if ($result === FALSE) {
             return curl_error($ch);
-        else
+        } else {
+            $data = json_decode($result);
+
+            if ($data->failure) {
+
+                foreach ($this->_deviceIds as $gcmToken){
+                    $sql = "UPDATE registeredusers SET DeviceToken='' WHERE DeviceToken='".trim($gcmToken)."'";
+                    $stmt = $con->prepare($sql);
+                    $stmt->execute();
+                }
+            }
             return $result;
+        }
+
     }
 
     /**

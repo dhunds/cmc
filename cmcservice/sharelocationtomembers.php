@@ -52,7 +52,7 @@ if ($strNo != '') {
     $objNotification->sendSMS($strNo . "]", $message);
 }
 
-$stmt = $con->query("SELECT * FROM registeredusers WHERE MobileNumber IN ($Membersnew) and PushNotification != 'off'");
+$stmt = $con->query("SELECT * FROM registeredusers WHERE MobileNumber IN ($Membersnew) and PushNotification != 'off' AND DeviceToken !=''");
 $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 if ($no_of_users > 0) {

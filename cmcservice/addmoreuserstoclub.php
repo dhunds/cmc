@@ -63,7 +63,7 @@ if ($PoolStatus == "OPEN") {
         for ($i = 0; $i < $length; $i++) {
             $MemberNumber = trim((string)$memNumber[$i]);
 
-            $stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = Trim('$MemberNumber') and PushNotification != 'off'");
+            $stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = Trim('$MemberNumber') and PushNotification != 'off' AND DeviceToken !=''");
             $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
             if ($FriendExists > 0) {
 
