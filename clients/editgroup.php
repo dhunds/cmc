@@ -3,6 +3,7 @@ include_once('connection.php');
 include_once('header.php');
 include_once('topmenu.php');
 
+$unauthorised =0;
 if (isset($_POST['submit']) && $_POST['groupname'] !='') {
     $sql = "SELECT PoolId, PoolName FROM userpoolsmaster JOIN clientGroups ON clientGroups.groupId=userpoolsmaster.PoolId AND clientGroups.clientId=".$_SESSION['userId']." AND userpoolsmaster.PoolId=".$_POST['groupId'];
     $stmt = $con->prepare($sql);
@@ -31,6 +32,7 @@ if (isset($_POST['submit']) && $_POST['groupname'] !='') {
 
     } else {
         $msg = 'You do not have permission to edit this group.';
+        $unauthorised =1;
     }
 }
 
@@ -43,6 +45,7 @@ if($rowCount > 0){
     $group = $stmt->fetch(PDO::FETCH_ASSOC);
 } else {
     $msg = 'You do not have permission to edit this group.';
+    $unauthorised =1;
 }
 
 ?>
@@ -55,6 +58,7 @@ if($rowCount > 0){
             <?php if($msg){ ?>
                 <p style="margin-left: 10px;"><?=$msg;?></p>
             <?php } ?>
+            <?php if (!$unauthorised) { ?>
             <div style="padding: 15px;">
                 <form method="post" action="">
                     <div>
@@ -72,6 +76,7 @@ if($rowCount > 0){
 
                 <br/>
             </div>
+            <?php } ?>
             <div style="clear:both;"></div>
         </div>
 

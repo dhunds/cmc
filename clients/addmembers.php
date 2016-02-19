@@ -4,6 +4,8 @@ include_once('functions.php');
 include_once('header.php');
 include_once('topmenu.php');
 
+$unauthorised =0;
+
 if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
 
     $MobileNumber = $_POST['mobNumber'];
@@ -86,6 +88,7 @@ if($rowCount > 0){
     $group = $stmt->fetch(PDO::FETCH_ASSOC);
 } else {
     $msg = 'You are not the owner of this group.';
+    $unauthorised =1;
 }
 ?>
 
@@ -97,6 +100,7 @@ if($rowCount > 0){
             <?php if($msg){ ?>
                 <p style="margin-left: 10px;"><?=$msg;?></p>
             <?php } ?>
+            <?php if (!$unauthorised) { ?>
             <div style="padding: 15px;">
                 <form method="post" action="">
                     <div>
@@ -116,6 +120,7 @@ if($rowCount > 0){
 
                 <br/>
             </div>
+            <?php } ?>
             <div style="clear:both;"></div>
         </div>
 
