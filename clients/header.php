@@ -14,8 +14,15 @@
 <div id="layout" class="pure-g">
     <div class="header pure-u-1-1 pure-u-md-3-4">
         <div style="padding:10px;">
-            <a href="index.php">
-                <img src="images/logo.png" alt="ClubMyCab"
-                     title="ClubMyCab" border="0" class="pure-img-responsive-home"/>
-            </a>
+            <div style="text-align: left;width: 50%;float: left;">
+                <a href="index.php">
+                    <img src="logo/ishareryde.png" alt="iShareRyde"
+                         title="iShareRyde" border="0" class="pure-img-responsive-home"/>
+                </a>
+            </div>
+            <div style="text-align: right;width: 50%; float: right;">
+                <img src="logo/<?=$_SESSION['logo'];?>" alt=""
+                     title="" border="0" class="pure-img-responsive-home" />
+            </div>
+
         </div>

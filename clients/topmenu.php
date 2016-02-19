@@ -7,4 +7,9 @@
         <li class="pure-menu-selected"><a href="logout.php">Logout</a></li>
     </ul>
 </div>
+<div style="text-align: right;float: right;margin:10px;">
+    <form method="post" action="search.php">
+        <input type="text" name="keyword" placeholder="search.." value="<?=($_POST['keyword'])?$_POST['keyword']:'';?>">
+    </form>
+</div>
 </div>
