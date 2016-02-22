@@ -30,7 +30,7 @@ if (isset($_POST['submitfrm'])){
     <div class="pure-u-4-4" id="mainContent">
 
         <div>
-            <h4 class="headingText">Change Password</h4>
+            <h4 class="tHeading">Change Password</h4>
             <p style="margin-left: 10px;" id="errormsg"><?=$msg;?></p>
             <div style="padding: 15px;">
                 <form method="post" action="" onsubmit="return changepswd();">

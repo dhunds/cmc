@@ -14,9 +14,9 @@ $rowCount = (int) $stmt->rowCount();
     <div class="pure-u-4-4" id="mainContent">
 
         <div>
-            <h4 class="headingText">Groups</h4>
+            <h2 class="headingText">Groups</h2>
             <!-- listing groups-->
-            <div class="articleBorder">
+            <div>
                 <div class="pure-u-1"><p style="text-align:right;margin-right: 10px;"><a href="addgroups.php">Add New Groups</a>
 
                     <div class="pure-g dashboard-summary-heading">

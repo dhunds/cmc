@@ -6,13 +6,13 @@ body {font-family: "Trebuchet MS", FreeSans, Arimo,"Droid Sans",Helvetica, Arial
 #mainLeft{padding: 0.5em;}
 #mainRight {margin: 0.3em 0em; text-align:center;}
 #mainContent {margin:0.2em; padding:0.2em;}
-.footer{min-height: 2em;color: #ffffff;font-size: 0.8em;margin-top: 0.8em;padding: 0.6em 0.5em 0.5em 0.5em;background: #3B5279;border-top: 1px solid #A0B6DB;}
+.footer{min-height: 2em;color: #ffffff;font-size: 0.8em;margin-top: 0.8em;padding: 0.6em 0.5em 0.5em 0.5em;background: #18a5de;border-top: 1px solid #A0B6DB;}
 .header-login{min-height: 1.7em;color: #ffffff;font-size: 1.3em;margin-top: 0.4em;padding: 0.2em 0.4em 0.2em 0.7em;background: #3B5279;border-top: 1px solid #A0B6DB;}
 .footer ul{padding: 0em;margin: 0em;list-style-type: none;}
 .footer ul li{float: left;}
 .articleBorder{border:1px solid #7FC542;padding: 20px 15px;border-radius: 3px;}
-.headingText{background: #7FC542; color: #FFFFFF; margin-top:0.3em;padding: 0.5em; font-size:80%; border:1px solid #7FC542; border-radius:3px;}
-.tHeading{background: #7FC542; color: #FFFFFF; margin-top:0.3em;padding: 0.5em; font-size:100%;}
+.headingText{color: #be7f12; margin-left:5px; margin-top: 0px; margin-bottom: 0px;}
+.tHeading{background: #FF9933; color: #FFFFFF; margin-top:0.3em;padding: 0.5em; font-size:100%;}
 .articleStyle{color: #333333;padding: 0em 0.5em 0.5em 0.5em;line-height:1.5em; font-size:80%;}
 .advertise{width:7.8em; padding:3em 2.3em; background:#e2e2e2; color: #b2b2b2; text-align:center; margin-bottom:0.2em;}
 .advertisel{width:16em; padding:3em 2.3em; background:#e2e2e2; color: #b2b2b2; text-align:center; margin-bottom:0.2em;}
@@ -45,21 +45,21 @@ a {color: #3D92C9;text-decoration: none;}
 .bluetext{color:#4279bd;}
 .textfield{border: 1px solid #dadada; border-radius: 3px; color: #333;font-size: 14px;font-weight: 500; height: auto; padding: 5px; width:95% !important;}
 .dropfield{border: 1px solid #dadada; border-radius: 3px; color: #333;font-size: 14px;font-weight: 500; height: auto; padding: 5px; width:95% !important;}
-.cBtn{border:1px solid #3B5279;padding: 3px 20px;border-radius: 3px;background:#3B5279; color:#fff;}
+.cBtn{border:1px solid #be7f12;padding: 3px 20px;border-radius: 3px;background:#be7f12; color:#fff;}
 .dashboard-summary-heading {font-size:13px; margin: 0px 5px 0px 5px;}
 .dashboard-summary-title {margin-left: 5px; margin-right: 10px;}
 .dashboard-summary-members {margin-left: 20px; margin-right: 10px;}
 @media screen and (min-width: 50.1em)
 {       
-    #demo-horizontal-menu{ background-color: #3B5279;font-size: 90%; clear:both; height:2.1em}
+    #demo-horizontal-menu{ background-color: #18a5de; font-size: 90%; clear:both; height:2.1em}
     #demo-horizontal-menu ul {margin:0;padding:0;list-style:none;}
-    #demo-horizontal-menu ul li{float:left;background-color:#3B5279;height:2em;line-height:2em;}
-    #demo-horizontal-menu ul li:hover{background-color:#7FC542;position:relative;}
+    #demo-horizontal-menu ul li{float:left;background-color:#18a5de;height:2em;line-height:2em;}
+    #demo-horizontal-menu ul li:hover{background-color:#FF9933;position:relative;}
     #demo-horizontal-menu ul li a{padding:0em 1em;color:#ffffff;display:inline-block;text-decoration:none;}
     #demo-horizontal-menu ul li ul{position:absolute;display:none;}
     #demo-horizontal-menu ul li:hover ul{left:0;top:2em;display:block;}
-    #demo-horizontal-menu ul li ul li{float:none;width:10em;background-color:#3B5279;}
-    #demo-horizontal-menu ul li:hover ul li:hover{background-color:#7FC542;}
+    #demo-horizontal-menu ul li ul li{float:none;width:10em;background-color:#FF9933;}
+    #demo-horizontal-menu ul li:hover ul li:hover{background-color:#FF9933;}
     #demo-horizontal-menu ul li ul li a{color:#FFFFFF;display:inline-block;width:auto}
     #demo-horizontal-menu ul li:hover ul li ul{position:absolute;display:none;}
     #demo-horizontal-menu ul li:hover ul li:hover ul{display:block;left:10em;top:0;}
@@ -71,7 +71,7 @@ a {color: #3D92C9;text-decoration: none;}
 @media screen and (max-width: 50.1em)
 {      
     #layout{padding: 0.2em;}
-    #demo-horizontal-menu { background: #3B5279 url(../images/menu-small-icon.png) no-repeat 10px 10px;min-height: 45px;height: auto;padding: 35px 0px 0px;margin-bottom: 5px;border-radius: 10px;cursor: pointer;clear:both;}
+    #demo-horizontal-menu { background: #18a5de url(../images/menu-small-icon.png) no-repeat 10px 10px;min-height: 45px;height: auto;padding: 35px 0px 0px;margin-bottom: 5px;border-radius: 10px;cursor: pointer;clear:both;}
     #demo-horizontal-menu > ul{padding: 10px 10px 5px;float: none;display: none;margin: 0px; font-size:90%;}
     #demo-horizontal-menu > ul > li {display: block;float: none;margin: 0px;}
     #demo-horizontal-menu > ul > li > a { color: #fcfcfe; display: block; line-height: 30px;padding: 0px;}

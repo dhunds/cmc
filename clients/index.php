@@ -18,6 +18,7 @@ if (isset($_POST['submit']) && isset($_POST['username']) && $_POST['username'] !
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $_SESSION['userId'] = $result['id'];
         $_SESSION['username'] = $result['username'];
+        $_SESSION['mobileNumber'] = '';
         $_SESSION['logo'] = $result['logo'];
         header('location:dashboard.php');
     } else {

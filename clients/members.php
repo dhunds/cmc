@@ -25,15 +25,18 @@ if ($rowCount > 0) {
     <div class="pure-u-4-4" id="mainContent">
 
         <div>
-            <h4 class="headingText">Members: Test Group</h4>
+            <h2 class="headingText">Members: Test Group</h2>
             <?php if ($msg) { ?>
                 <p style="margin-left: 10px;"><?= $msg; ?></p>
             <?php } ?>
             <!-- listing groups-->
-            <div class="articleBorder">
-                <div class="pure-u-1"><p style="text-align:right;margin-right: 10px;"><a
-                            href="addmembers.php?id=<?= $_REQUEST['id'] ?>">Add New Members</a>
-
+            <div>
+                <div class="pure-u-1"><p style="text-align:right;margin-right: 10px;">
+                        <a href="addmembers.php?id=<?= $_REQUEST['id'] ?>">Add New Members</a>
+                        <?php
+                        if ($memberCount > 0) { ?>
+                            <a href="export.php?id=<?= $_REQUEST['id'] ?>">Export</a>
+                        <?php } ?>
                     <div class="pure-g dashboard-summary-heading">
                         <div class="pure-u-12-24"><p class="tHeading">Member Name</p></div>
                         <div class="pure-u-8-24"><p class="tHeading">Mobile Number</p></div>

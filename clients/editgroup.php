@@ -54,7 +54,7 @@ if($rowCount > 0){
     <div class="pure-u-4-4" id="mainContent">
 
         <div>
-            <h4 class="headingText">Edit Group</h4>
+            <h4 class="tHeading">Edit Group</h4>
             <?php if($msg){ ?>
                 <p style="margin-left: 10px;"><?=$msg;?></p>
             <?php } ?>

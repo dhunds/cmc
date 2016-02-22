@@ -96,7 +96,7 @@ if($rowCount > 0){
     <div class="pure-u-4-4" id="mainContent">
 
         <div>
-            <h4 class="headingText">Add Members to group <?=ucfirst($group['PoolName'])?></h4>
+            <h4 class="tHeading">Add Members to group <?=ucfirst($group['PoolName'])?></h4>
             <?php if($msg){ ?>
                 <p style="margin-left: 10px;"><?=$msg;?></p>
             <?php } ?>
