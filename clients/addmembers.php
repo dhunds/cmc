@@ -105,7 +105,7 @@ if($rowCount > 0){
                 <form method="post" action="">
                     <div>
                         <div class="divRight bluetext"><textarea name="memberDetails" cols="60" rows="5"
-                                                                 placeholder="Enter members in format <Member Number>,<Member Name>. For adding multiple members enter each member number in new line"></textarea>
+                                                                 placeholder="Enter members in format <Member Number>,<Member Name> OR <<Member Number>>. For adding multiple members enter each member detail in new line"></textarea>
                             <input type="hidden" name="name" value="<?=$group['PoolName']?>">
                             <input type="hidden" name="mobNumber" value="<?=$group['OwnerNumber']?>">
                         </div>

@@ -38,7 +38,7 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
         }
     }
 
-    $msg = $i . ' groups added successfully';
+    $msg = $i . ' group(s) created successfully';
 }
 ?>
 

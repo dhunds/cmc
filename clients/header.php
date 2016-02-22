@@ -22,7 +22,7 @@
             </div>
             <div style="text-align: right;width: 50%; float: right;">
                 <img src="logo/<?=$_SESSION['logo'];?>" alt=""
-                     title="" border="0" class="pure-img-responsive-home" />
+                     title="" border="0" class="pure-img-responsive-home" onerror="this.src=''"/>
             </div>
 
         </div>

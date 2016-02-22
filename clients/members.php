@@ -12,6 +12,7 @@ $rowCount = (int)$stmt->rowCount();
 $memberCount = 0;
 
 if ($rowCount > 0) {
+    $group = $stmt->fetch(PDO::FETCH_ASSOC);
     $sql = "SELECT * FROM userpoolsslave WHERE PoolId =" . $_REQUEST['id'];
     $stmt = $con->prepare($sql);
     $stmt->execute();
@@ -25,7 +26,7 @@ if ($rowCount > 0) {
     <div class="pure-u-4-4" id="mainContent">
 
         <div>
-            <h2 class="headingText">Members: Test Group</h2>
+            <h2 class="headingText">Members: <?=$group['PoolName'];?></h2>
             <?php if ($msg) { ?>
                 <p style="margin-left: 10px;"><?= $msg; ?></p>
             <?php } ?>
@@ -72,7 +73,6 @@ if ($rowCount > 0) {
 
     </div>
 </div>
-
 <?php
 include_once('footer.php');
 ?>

@@ -7,7 +7,7 @@ body {font-family: "Trebuchet MS", FreeSans, Arimo,"Droid Sans",Helvetica, Arial
 #mainRight {margin: 0.3em 0em; text-align:center;}
 #mainContent {margin:0.2em; padding:0.2em;}
 .footer{min-height: 2em;color: #ffffff;font-size: 0.8em;margin-top: 0.8em;padding: 0.6em 0.5em 0.5em 0.5em;background: #18a5de;border-top: 1px solid #A0B6DB;}
-.header-login{min-height: 1.7em;color: #ffffff;font-size: 1.3em;margin-top: 0.4em;padding: 0.2em 0.4em 0.2em 0.7em;background: #3B5279;border-top: 1px solid #A0B6DB;}
+.header-login{min-height: 1.7em;color: #ffffff;font-size: 1.3em;margin-top: 0.4em;padding: 0.2em 0.4em 0.2em 0.7em;background: #18a5de;border-top: 1px solid #A0B6DB;}
 .footer ul{padding: 0em;margin: 0em;list-style-type: none;}
 .footer ul li{float: left;}
 .articleBorder{border:1px solid #7FC542;padding: 20px 15px;border-radius: 3px;}
