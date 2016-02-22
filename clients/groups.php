@@ -38,7 +38,12 @@ $rowCount = (int) $stmt->rowCount();
                         <div class="pure-u-4-24"><p><a href="editgroup.php?id=<?=$row['PoolId']?>">Edit</a> | <a href="addmembers.php?id=<?=$row['PoolId']?>">Add Members</a>
                                 | <a href="javascript:;" onclick="deleteGroup(<?=$row['PoolId']?>)">Delete</a></p></div>
                     </div>
-                    <?php } } ?>
+                                <?php
+                            }
+                        } else{ ?>
+
+                            <span style='color:#be7f12;font-size:13px; font-weight:bold; margin-left: 15px;'>No results to display!</span>
+                        <?php } ?>
 
                 </div>
 

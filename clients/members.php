@@ -58,8 +58,12 @@ if ($rowCount > 0) {
                                                                onclick="deleteMember(<?= $row['PoolId'] ?>, '<?= $row['MemberNumber'] ?>')">Delete</a>
                                     </p></div>
                             </div>
-                        <?php }
-                    } ?>
+                            <?php
+                        }
+                    } else{ ?>
+
+                        <span style='color:#be7f12;font-size:13px; font-weight:bold; margin-left: 15px;'>No results to display!</span>
+                    <?php } ?>
                 </div>
 
             </div>

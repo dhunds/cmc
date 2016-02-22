@@ -29,6 +29,10 @@ if ($OwnerExists > 0) {
     }
 }
 
+$sql = "DELETE FROM clientGroups WHERE groupId = '$poolid'";
+$stmt = $con->prepare($sql);
+$stmt2->execute();
+
 $stmtC = $con->query("SELECT * FROM userpoolsslave WHERE PoolId = '$poolid'");
 $MembersExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 $IsSuccess = false;
