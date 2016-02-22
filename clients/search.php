@@ -24,13 +24,13 @@ if (isset($_POST['keyword']) && $_POST['keyword'] !='') {
     <div class="pure-u-4-4" id="mainContent">
 
         <div>
-            <h4 class="headingText">Search</h4>
+            <h2 class="headingText" style="margin-bottom: 30px;">Search results for '<?=$_POST['keyword'];?>'</h2>
             <!-- listing groups-->
-            <div class="articleBorder">
+            <div>
                 <div class="pure-u-1">
                     <div class="pure-g dashboard-summary-heading">
-                        <div class="pure-u-7-24"><p class="tHeading">Name</p></div>
                         <div class="pure-u-7-24"><p class="tHeading">Number</p></div>
+                        <div class="pure-u-7-24"><p class="tHeading">Name</p></div>
                         <div class="pure-u-7-24"><p class="tHeading">Group Name</p></div>
                         <div class="pure-u-3-24"><p class="tHeading">Action</p></div>
                     </div>
@@ -43,8 +43,8 @@ if (isset($_POST['keyword']) && $_POST['keyword'] !='') {
                         {
                             ?>
                             <div class="pure-g pure-g1 dashboard-summary-heading">
-                                <div class="pure-u-7-24"><p class="dashboard-summary-title"><?=$row['MemberName']?></p></div>
                                 <div class="pure-u-7-24"><p class="dashboard-summary-title"><?=$row['MemberNumber']?></p></div>
+                                <div class="pure-u-7-24"><p class="dashboard-summary-title"><?=($row['MemberName'])?$row['MemberName']:'Not Registered';?></p></div>
                                 <div class="pure-u-7-24"><p class="dashboard-summary-members"><?=$row['PoolName']?></div>
                                 <div class="pure-u-3-24"><p><a href="javascript:;" onclick="deleteMember(<?= $row['PoolId'] ?>, '<?= $row['MemberNumber'] ?>')">Delete</a></p></div>
                             </div>

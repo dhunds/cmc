@@ -33,9 +33,9 @@ $rowCount = (int) $stmt->rowCount();
                             {
                     ?>
                     <div class="pure-g pure-g1 dashboard-summary-heading">
-                        <div class="pure-u-16-24"><p class="dashboard-summary-title"><?=$row['PoolName']?></p></div>
-                        <div class="pure-u-4-24"><p class="dashboard-summary-members"><a href="members.php?id=<?=$row['PoolId']?>" ><?=$row['totalMembers']?></a></p></div>
-                        <div class="pure-u-4-24"><p><a href="editgroup.php?id=<?=$row['PoolId']?>">Edit</a> |
+                        <div class="pure-u-16-24"><p class="dashboard-summary-title"><a href="members.php?id=<?=$row['PoolId']?>" ><?=$row['PoolName']?></a></p></div>
+                        <div class="pure-u-4-24"><p class="dashboard-summary-members"><?=$row['totalMembers']?></p></div>
+                        <div class="pure-u-4-24"><p>
                                 <a href="addmembers.php?id=<?=$row['PoolId']?>">Add Members</a> |
                                 <a href="javascript:;" onclick="deleteGroup(<?=$row['PoolId']?>)">Delete</a>
                                 <?php if ($row['totalMembers'] > 0) { ?>

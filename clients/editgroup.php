@@ -62,7 +62,7 @@ if($rowCount > 0){
             <div style="padding: 15px;">
                 <form method="post" action="">
                     <div>
-                        <div class="divRight bluetext"><input type="text" name="groupname" placeholder="Group Name" value="<?=$group['PoolName']?>">
+                        <div class="divRight bluetext">Group Name:  <input type="text" name="groupname" placeholder="Group Name" value="<?=$group['PoolName']?>">
                         <input type="hidden" name="groupId" value="<?=$_REQUEST['id']?>">
                         </div>
                         <div style="clear:both;"></div>

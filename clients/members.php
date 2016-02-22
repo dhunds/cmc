@@ -26,7 +26,7 @@ if ($rowCount > 0) {
     <div class="pure-u-4-4" id="mainContent">
 
         <div>
-            <h2 class="headingText">Members: <?=$group['PoolName'];?></h2>
+            <h2 class="headingText">Group Name: <?=$group['PoolName'];?> <span style="font-size: small;"><a href="editgroup.php?id=<?=$group['PoolId'];?>">(Edit)</a> </span></h2>
             <?php if ($msg) { ?>
                 <p style="margin-left: 10px;"><?= $msg; ?></p>
             <?php } ?>
@@ -36,11 +36,11 @@ if ($rowCount > 0) {
                         <a href="addmembers.php?id=<?= $_REQUEST['id'] ?>">Add New Members</a>
                         <?php
                         if ($memberCount > 0) { ?>
-                            <a href="export.php?id=<?= $_REQUEST['id'] ?>">Export</a>
+                            | <a href="export.php?id=<?= $_REQUEST['id'] ?>">Export</a>
                         <?php } ?>
                     <div class="pure-g dashboard-summary-heading">
-                        <div class="pure-u-12-24"><p class="tHeading">Member Name</p></div>
                         <div class="pure-u-8-24"><p class="tHeading">Mobile Number</p></div>
+                        <div class="pure-u-12-24"><p class="tHeading">Member Name</p></div>
                         <div class="pure-u-4-24"><p class="tHeading">Action</p></div>
                     </div>
                     <?php
@@ -51,10 +51,10 @@ if ($rowCount > 0) {
 
                             ?>
                             <div class="pure-g pure-g1 dashboard-summary-heading">
-                                <div class="pure-u-12-24"><p
-                                        class="dashboard-summary-title"><?= $row['MemberName'] ?></p></div>
                                 <div class="pure-u-8-24"><p
                                         class="dashboard-summary-members"><?= $row['MemberNumber'] ?></p></div>
+                                <div class="pure-u-12-24"><p
+                                        class="dashboard-summary-title"><?=($row['MemberName'])?$row['MemberName']:'Not Registered';?></p></div>
                                 <div class="pure-u-4-24"><p><a href="javascript:;"
                                                                onclick="deleteMember(<?= $row['PoolId'] ?>, '<?= $row['MemberNumber'] ?>')">Delete</a>
                                     </p></div>

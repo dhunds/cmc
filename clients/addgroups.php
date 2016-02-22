@@ -38,7 +38,7 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
         }
     }
 
-    $msg = $i . ' group(s) created successfully';
+    $msg = $i . ' group(s) created.';
 }
 ?>
 
@@ -53,8 +53,10 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
             <div style="padding: 15px;">
                 <form method="post" action="">
                     <div>
-                        <div class="divRight bluetext"><textarea name="clubNames" cols="30" rows="5"
-                                                                 placeholder="Group name, For adding multiple group enter each group name in new line"></textarea>
+                        <div class="divRight bluetext">
+                            Add Group name per line<br /><br />
+                            <textarea name="clubNames" cols="30" rows="5"
+                                                                 placeholder="Eg. Close Friends"></textarea>
                         </div>
                         <div style="clear:both;"></div>
                         <br>
