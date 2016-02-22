@@ -75,7 +75,7 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
             }
         }
     }
-    $msg =  $i . ' members added to this club';
+    $msg =  $i . ' member(s) added to this club';
 }
 
 
