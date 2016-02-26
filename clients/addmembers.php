@@ -3,6 +3,8 @@ include_once('connection.php');
 include_once('functions.php');
 include_once('header.php');
 include_once('topmenu.php');
+include_once('../cmcservice/classes/class.notification.php');
+$objNotification = new Notification();
 
 $unauthorised =0;
 
@@ -41,10 +43,20 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
                     $res2 = $stmt->execute();
 
                     if ($res2 == true) {
-                        $stmtUsr = $con->query("Select DeviceToken From registeredusers WHERE MobileNumber='" . $val[0] . "' AND DeviceToken !=''");
+                        $stmtUsr = $con->query("Select DeviceToken, Platform From registeredusers WHERE MobileNumber='" . $val[0] . "' AND DeviceToken !=''");
                         $found = $con->query("SELECT FOUND_ROWS()");
 
                         if ($found > 0) {
+                            $user = $stmtUsr->fetch();
+                            $gcm_arrayF = [];
+                            $apns_arrayF = [];
+
+                            if ($user['Platform'] == "A") {
+                                $gcm_arrayF[] = $user['DeviceToken'];
+                            } else {
+                                $apns_arrayF[] = $user['DeviceToken'];
+                            }
+
                             $deviceId[] = $stmtUsr->fetchColumn();
                             $NotificationType = "PoolId_Added";
                             $OwnerName = $row['FullName'];
@@ -59,15 +71,27 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
                             $notificationId = $con->lastInsertId();
 
                             $Msg = $OwnerName . ' added you to a club ' . $ClubName;
-                            $res = sendAndroidNotification($deviceId, $Msg, 'PoolId_');
-                            //echo $res.'<br />';
+
+                            $body = array('gcmText' => $Msg, 'pushfrom' => 'PoolId_', 'notificationId' => $notificationId);
+
+                            if (count($gcm_arrayF) > 0) {
+                                $objNotification->setVariables($gcm_arrayF, $body);
+                                $res = $objNotification->sendGCMNotification();
+                            }
+
+                            if (count($apns_arrayF) > 0) {
+                                $objNotification->setVariables($apns_arrayF, $body);
+                                $objNotification->sendIOSNotification();
+                            }
+
                             $i++;
                         } else {
                             $sqlSMS = "SELECT SmsMessage FROM smstemplates WHERE SmsshortCode = 'CLUBADD'";
                             $stmtSMS = $con->query($sqlSMS);
                             $messageSMS = $stmtSMS->fetchColumn();
                             $messageSMS = str_replace("OXXXXX", $row['FullName'], $messageSMS);
-                            sendSMS("[" . $val[0] . "]", $messageSMS);
+                            $MobileNumber = '[' . $val[0] . ']';
+                            $objNotification->sendSMS($MobileNumber, $messageSMS);
                             $i++;
                         }
                     }
