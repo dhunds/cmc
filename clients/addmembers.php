@@ -43,8 +43,8 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
                     $res2 = $stmt->execute();
 
                     if ($res2 == true) {
-                        $stmtUsr = $con->query("Select DeviceToken, Platform From registeredusers WHERE MobileNumber='" . $val[0] . "' AND DeviceToken !=''");
-                        $found = $con->query("SELECT FOUND_ROWS()");
+                        $stmt = $con->query("Select DeviceToken, Platform From registeredusers WHERE MobileNumber=" . $val[0] . " AND DeviceToken != ''");
+                        $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
                         if ($found > 0) {
                             $user = $stmtUsr->fetch();
@@ -90,7 +90,7 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
                             $stmtSMS = $con->query($sqlSMS);
                             $messageSMS = $stmtSMS->fetchColumn();
                             $messageSMS = str_replace("OXXXXX", $row['FullName'], $messageSMS);
-                            $MobileNumber = '[' . $val[0] . ']';
+                            $MobileNumber = '[' . substr(trim($val[0]), -10) . ']';
                             $objNotification->sendSMS($MobileNumber, $messageSMS);
                             $i++;
                         }

@@ -201,7 +201,7 @@ class Notification {
             $fp = stream_socket_client($push_url, $err, $errstr, 60, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
 
             if (!$fp) {
-                exit("Failed to connect: $err $errstr" . '<br />');
+                //exit("Failed to connect: $err $errstr" . '<br />');
             }
 
             $msg = chr(0) . pack('n', 32) . pack('H*', $item) . pack('n', strlen($payload)) . $payload;
