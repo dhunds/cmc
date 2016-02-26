@@ -13,7 +13,7 @@ $memberCount = 0;
 
 if ($rowCount > 0) {
     $group = $stmt->fetch(PDO::FETCH_ASSOC);
-    $sql = "SELECT * FROM userpoolsslave WHERE PoolId =" . $_REQUEST['id'];
+    $sql = "SELECT ps.PoolId, ps.MemberNumber, ru.FullName FROM userpoolsslave ps LEFT JOIN registeredusers ru ON ru.MobileNumber = ps.MemberNumber WHERE PoolId =" . $_REQUEST['id'];
     $stmt = $con->prepare($sql);
     $stmt->execute();
     $memberCount = (int)$stmt->rowCount();
@@ -54,7 +54,7 @@ if ($rowCount > 0) {
                                 <div class="pure-u-8-24"><p
                                         class="dashboard-summary-members"><?= $row['MemberNumber'] ?></p></div>
                                 <div class="pure-u-12-24"><p
-                                        class="dashboard-summary-title"><?=($row['MemberName'])?$row['MemberName']:'Not Registered';?></p></div>
+                                        class="dashboard-summary-title"><?=($row['FullName'])?$row['FullName']:'Not Registered';?></p></div>
                                 <div class="pure-u-4-24"><p><a href="javascript:;"
                                                                onclick="deleteMember(<?= $row['PoolId'] ?>, '<?= $row['MemberNumber'] ?>')">Delete</a>
                                     </p></div>
