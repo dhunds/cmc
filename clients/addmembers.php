@@ -65,8 +65,8 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
                             $FriendNumber = $val[0];
                             $poolid = $row['PoolId'];
 
-                            $Msg = $OwnerName . ' added you to a club ' . $clubName;
-                            
+                            $Msg = $OwnerName . ' added you to a group ' . $clubName;
+
                             $manFriend = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, PoolId, DateTime) VALUES ('$NotificationType','$OwnerName','$OwnerNumber','$FriendName','$FriendNumber','$Msg','$poolid',now())";
                             $manstmtFriend = $con->prepare($manFriend);
                             $manresFriend = $manstmtFriend->execute();
@@ -129,7 +129,7 @@ if($rowCount > 0){
                 <form method="post" action="">
                     <div>
                         <div class="divRight bluetext">
-                            Add member number per line<br /><br />
+                            Add member mobile number per line<br /><br />
                             <textarea name="memberDetails" cols="60" rows="5" placeholder="Eg. 9818934735"></textarea>
                             <input type="hidden" name="name" value="<?=$group['PoolName']?>">
                             <input type="hidden" name="mobNumber" value="<?=$group['OwnerNumber']?>">
