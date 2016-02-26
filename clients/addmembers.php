@@ -43,7 +43,7 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
                     $res2 = $stmt->execute();
 
                     if ($res2 == true) {
-                        $stmt = $con->query("Select DeviceToken, Platform From registeredusers WHERE MobileNumber=" . $val[0] . " AND DeviceToken != ''");
+                        $stmtUsr = $con->query("Select DeviceToken, Platform From registeredusers WHERE MobileNumber=" . $val[0] . " AND DeviceToken != ''");
                         $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
                         if ($found > 0) {
@@ -65,12 +65,12 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
                             $FriendNumber = $val[0];
                             $poolid = $row['PoolId'];
 
+                            $Msg = $OwnerName . ' added you to a club ' . $clubName;
+                            
                             $manFriend = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, PoolId, DateTime) VALUES ('$NotificationType','$OwnerName','$OwnerNumber','$FriendName','$FriendNumber','$Msg','$poolid',now())";
                             $manstmtFriend = $con->prepare($manFriend);
                             $manresFriend = $manstmtFriend->execute();
                             $notificationId = $con->lastInsertId();
-
-                            $Msg = $OwnerName . ' added you to a club ' . $ClubName;
 
                             $body = array('gcmText' => $Msg, 'pushfrom' => 'PoolId_', 'notificationId' => $notificationId);
 
