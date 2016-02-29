@@ -17,6 +17,7 @@ LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
 LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
 LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
 WHERE TRIM(cm.MemberNumber) = '" . $MobileNumber . "'
+AND ar.MemberNumber='" . $MobileNumber . "'
 AND cm.DropStatus !='Yes'
 AND cm.settled !=1
 AND co.CabStatus ='A'
