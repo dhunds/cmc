@@ -183,7 +183,7 @@ function offerCarpoolRideBonus($mobileNumber, $objNotification){
             $stmt = $con->query($sql);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $Message = 'You got Reward Points worth Rs.' . $offer['amount'] . ' for offering ride ride in your car.';
+            $Message = 'You got Reward Points worth Rs.' . $offer['amount'] . ' for offering ride in your car.';
 
             $body = array('gcmText' => $Message, 'pushfrom' => 'genericnotificationoffers');
             $gcm_array = array();

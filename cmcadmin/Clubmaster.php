@@ -57,7 +57,7 @@ include('functions.php');
 					$sql = "SELECT COUNT(*) as RegisteredUsers FROM registeredusers WHERE MobileNumber IN ($memberNumbers)";
 					$stmt = $con->query($sql);
 					$registeredMembers = $stmt->fetch(PDO::FETCH_ASSOC);
-					
+
 					$row['RegisteredUsers'] = $registeredMembers['RegisteredUsers']+1;
 					$row['NonRegisteredUsers'] = $row['NoOfUsers'] - $row['RegisteredUsers'];
 				} else {
