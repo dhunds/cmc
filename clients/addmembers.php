@@ -12,10 +12,12 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
 
     $MobileNumber = $_POST['mobNumber'];
     $clubName = $_POST['name'];
+    $duplicates = '';
 
     $stmt = $con->query("Select pm.*, ru.FullName From userpoolsmaster pm LEFT JOIN registeredusers ru ON ru.MobileNumber=pm.OwnerNumber WHERE PoolName='$clubName' AND OwnerNumber = '$MobileNumber'");
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
     $i = 0;
+    $arrDuplicate = [];
     if ($found > 0) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $members = [];
@@ -36,7 +38,7 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
                 $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
                 if ($found > 0) {
-                    echo "'" . $val[0] . "' is already member of this club.<br/>";
+                    $arrDuplicate[] =  substr(trim($val[0]), -10);
                 } else {
                     $sql = "INSERT INTO userpoolsslave(PoolId, MemberName, MemberNumber, IsActive) VALUES ('" . $row['PoolId'] . "', '" . $val[1] . "','" . $val[0] . "', '1')";
                     $stmt = $con->prepare($sql);
@@ -99,7 +101,20 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
             }
         }
     }
-    $msg =  $i . ' member(s) added to this club';
+
+    if (!empty($arrDuplicate))
+    {
+        $duplicates = implode(', ', $arrDuplicate);
+
+        if (count($arrDuplicate < 2)){
+            $ppendmsg = '  is already member of this club.';
+        } else {
+            $ppendmsg = '  are already member of this club.';
+        }
+        $duplicates = $duplicates.$ppendmsg;
+    }
+
+    $msg =  $i . ' member(s) added to this group. '.$duplicates;
 }
 
 

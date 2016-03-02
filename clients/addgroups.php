@@ -7,7 +7,8 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
     $MobileNumber = $_SESSION['mobileNumber'];
 
     $i = 0;
-
+    $duplicates = '';
+    $arrDuplicate = [];
     $clubs = explode(PHP_EOL, $_POST['clubNames']);
 
     foreach ($clubs as $val) {
@@ -17,7 +18,7 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
             $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
             if ($found > 0) {
-                echo "Club Name '".$val . "' Already Exist<br />";
+                $arrDuplicate[] =  $val;
             } else {
                 $val = preg_replace( '/[^[:print:]]/', '',$val);
 
@@ -38,7 +39,14 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
         }
     }
 
-    $msg = $i . ' group(s) created.';
+    if (!empty($arrDuplicate))
+    {
+        $duplicates = implode(', ', $arrDuplicate);
+
+        $duplicates = 'You already have group(s) with name '.$duplicates;
+    }
+
+    $msg = $i . ' group(s) created. '.$duplicates;
 }
 ?>
 

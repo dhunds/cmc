@@ -17,7 +17,7 @@ $rowCount = (int)$stmt->rowCount();
     <div class="pure-u-4-4" id="mainContent">
 
         <div>
-            <h2 class="headingText" style="margin-bottom: 30px;">Requests For Approval</h2>
+            <h2 class="headingText" style="margin-bottom: 30px;">Referred Members - Approval required to add to group</h2>
             <!-- listing groups-->
             <div>
                 <div class="pure-u-1">
@@ -69,7 +69,7 @@ $rowCount = (int)$stmt->rowCount();
     function approveUser(refId, name, number){
         $.post( "../cmcservice/referFriendStepTwo.php", {RefId: refId, OwnerName: name, OwnerNumber: number, Accepted:"Yes"}, function( data ) {
             if(data=='SUCCESS'){
-                alert('User approved to add to club.');
+                alert('User approved and added to club.');
                 location.reload();
             }
         });
