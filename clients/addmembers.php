@@ -107,9 +107,9 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
         $duplicates = implode(', ', $arrDuplicate);
 
         if (count($arrDuplicate < 2)){
-            $ppendmsg = '  is already member of this club.';
+            $ppendmsg = ' is already member of this club.';
         } else {
-            $ppendmsg = '  are already member of this club.';
+            $ppendmsg = ' are already member of this club.';
         }
         $duplicates = $duplicates.$ppendmsg;
     }
