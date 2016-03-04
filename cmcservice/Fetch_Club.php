@@ -31,17 +31,18 @@ if ($no_of_clubs > 0) {
         $unregistered=0;
         if ($totalClubs > 0) {
             while ($row1 = $stmt2->fetch()) {
+
                 if ($row1['FullName'] =='') {
                     $unregistered++;
+                } else {
+                    $arrTemp2 = [];
+                    $arrTemp2['FullName'] = $row1['FullName'];
+                    $arrTemp2['MemberNumber'] = $row1['MemberNumber'];
+                    $arrTemp2['ImageName'] = $row1['imagename'];
+                    $arrTemp2['OwnerNumber'] = $row['OwnerNumber'];
+                    $arrTemp2['OwnerName'] = $row['FullName'];
+                    $arrTemp1[] = $arrTemp2;
                 }
-
-                $arrTemp2 = [];
-                $arrTemp2['FullName'] = $row1['FullName'];
-                $arrTemp2['MemberNumber'] = $row1['MemberNumber'];
-                $arrTemp2['ImageName'] = $row1['imagename'];
-                $arrTemp2['OwnerNumber'] = $row['OwnerNumber'];
-                $arrTemp2['OwnerName'] = $row['FullName'];
-                $arrTemp1[] = $arrTemp2;
             }
         }
         $arrTemp['NoofMembers'] = ($totalClubs-$unregistered) +1;
