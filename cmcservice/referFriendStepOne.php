@@ -41,7 +41,7 @@ if ($no_of_users > 0) {
         $email = $row['Email'];
     }
 
-    if ($OwnerDeviceToken != '') {
+    if ($OwnerDeviceToken != '' || $isAdmin) {
         $gcm_array = array();
         $apns_array = array();
 

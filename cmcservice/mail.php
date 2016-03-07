@@ -61,7 +61,7 @@ function sendInviteApprovalMail ($email) {
                 <body>
                     <p>Dear Admin,</p>
 
-                    <p>You have new referred members requests pending for approval.</p>
+                    <p>Some new members referred in your group are waiting for approval.</p>
 
                     <p>Please login to iShareRyde to approve them. </p>
                     <p>Team iShareRyde</p>
@@ -73,7 +73,7 @@ function sendInviteApprovalMail ($email) {
     $msg = array();
     $msg['Source'] = "support@ishareryde.com";
     $msg['Destination']['ToAddresses'][] = $email;
-    $msg['Message']['Subject']['Data'] = "Welcome to iShareRyde - the smartest way to travel !!";
+    $msg['Message']['Subject']['Data'] = "New Referred Members waiting for approval";
     $msg['Message']['Body']['Html']['Data'] =$body;
     $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
 
