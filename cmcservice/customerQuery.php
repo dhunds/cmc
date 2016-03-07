@@ -1,7 +1,5 @@
 <?php
 include('connection.php');
-require("classes/class.phpmailer.php");
-$mail = new PHPMailer();
 
 if (isset($_POST['mobileNumber']) && isset($_POST['mobileNumber'])) {
     $sql = "SELECT Email FROM registeredusers WHERE MobileNumber='" . $_POST['mobileNumber'] . "'";

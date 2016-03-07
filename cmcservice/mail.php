@@ -51,3 +51,35 @@ function sendRegistrationMail ($name, $email) {
         //echo($e->getMessage());
     }
 }
+
+function sendInviteApprovalMail ($email) {
+    global $client;
+    $body = '<html>
+                <head>
+                    <title></title>
+                </head>
+                <body>
+                    <p>Dear Admin,</p>
+
+                    <p>You have new referred members requests pending for approval.</p>
+
+                    <p>Please login to iShareRyde to approve them. </p>
+                    <p>Team iShareRyde</p>
+
+                    <p> </p>
+                </body>
+             </html>';
+
+    $msg = array();
+    $msg['Source'] = "support@ishareryde.com";
+    $msg['Destination']['ToAddresses'][] = $email;
+    $msg['Message']['Subject']['Data'] = "Welcome to iShareRyde - the smartest way to travel !!";
+    $msg['Message']['Body']['Html']['Data'] =$body;
+    $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
+
+    try{
+        $client->sendEmail($msg);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+    }
+}

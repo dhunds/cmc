@@ -37,6 +37,8 @@ if ($no_of_users > 0) {
         $OwnerDeviceToken = $row['DeviceToken'];
         $Platform = $row['Platform'];
         $OwnerName = $row['FullName'];
+        $isAdmin = $row['isAdminType'];
+        $email = $row['Email'];
     }
 
     if ($OwnerDeviceToken != '') {
@@ -77,7 +79,15 @@ if ($no_of_users > 0) {
             }
         }
         if ($IsSuccess) {
-            if ($OwnerDeviceToken !='admin') {
+
+            if ($isAdmin) {
+
+                if ($email !=''){
+                    require_once 'mail.php';
+                    sendInviteApprovalMail($email);
+                }
+
+            } else {
                 $Message = $MemberName . " has referred friend(s) to join your group " . $ClubName;
                 $body = array('gcmText' => $Message);
                 if (count($gcm_array) > 0) {
