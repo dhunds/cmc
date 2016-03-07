@@ -73,7 +73,7 @@ function sendInviteApprovalMail ($email) {
     $msg = array();
     $msg['Source'] = "support@ishareryde.com";
     $msg['Destination']['ToAddresses'][] = $email;
-    $msg['Message']['Subject']['Data'] = "New Referred Members waiting for approval";
+    $msg['Message']['Subject']['Data'] = "New referred members waiting for approval";
     $msg['Message']['Body']['Html']['Data'] =$body;
     $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
 
