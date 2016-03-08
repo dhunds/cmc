@@ -5,9 +5,9 @@ $stmt->execute();
 $rowCount = (int) $stmt->rowCount();
 ?>
 
-<h1 class="headingText">Offers</h1>
-<div class='articleBorder'>
-<div class='pure-u-1'><p style='text-align:right;'><a href='mAddEditOffer.php'>Add New Offers</a>
+<h2 class="headingText" style="margin-bottom: 5px;  ">Offers</h2>
+<div>
+<div class='pure-u-1'><p style='text-align:right; margin-right: 5px;'><a href='mAddEditOffer.php'>Add New Offers</a>
 <div class="pure-g" style="font-size:13px; font-weight:bold;">
     <div class="pure-u-13-24"><p class="tHeading">Title</p></div>
     <div class="pure-u-3-24"><p class="tHeading">Amount</p></div>
@@ -24,8 +24,8 @@ $rowCount = (int) $stmt->rowCount();
         {
 ?>
             <div class="pure-g pure-g1" style="font-size:13px;">
-                <div class="pure-u-13-24"><p><?=$row['title']?></p></div>
-                <div class="pure-u-3-24"><p>Rs.<?=$row['amount']?></p></div>
+                <div class="pure-u-13-24"><p style="margin-left: 5px;"><?=$row['title']?></p></div>
+                <div class="pure-u-3-24"><p style="margin-left: 10px;">Rs.<?=$row['amount']?></p></div>
                 <div class="pure-u-4-24"><p><?=$row['validThru']?></p></div>
                 <div class="pure-u-4-24"><p><span><?php if($row['status']==1){echo 'Active (<a href="javascript:;" onclick="toggleOfferStatus('.$row['id'].')">Deactivate</a>)';}else{echo 'Inactive (<a href="javascript:;" onclick="toggleOfferStatus('.$row['id'].')">Activate</a>)';}?></span> | <a href="mAddEditOffer.php?id=<?=$row['id']?>">Edit</a></p></div>
             </div>
@@ -37,7 +37,7 @@ $rowCount = (int) $stmt->rowCount();
     }
     echo '</div>';
 ?>
-
+</div>
 <script>
     function toggleOfferStatus(offerId){
         $.post( "toggleOfferStatus.php", {"offerId": offerId}, function( data ) {

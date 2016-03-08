@@ -1,12 +1,12 @@
 <?php
 include ('connection.php');
 ?>
-<h4 class="headingText">Add Configuration Setting</H4>
-<div class="articleBorder">
+<h2 class="headingText">Add Configuration Setting</H4>
+<div>
 	<form action="#" method="post">
 		<table width="300">
 			<tr>
-				<td class="bluetext">Country</td>
+				<td>Country</td>
 				<td>
 					<select name="drpCountry" id="drpCountry" class="dropfield">
 						<option value="">--Select One--</option>
@@ -22,7 +22,7 @@ include ('connection.php');
 				<td colspan="2" height="10"></td>
 			</tr>
 			<tr>
-				<td class="bluetext">Item</td>
+				<td>Item</td>
 				<td>
 					<select name="drpItem" id="drpItem" class="dropfield">
 						<option value="">--Select One--</option>
@@ -36,7 +36,7 @@ include ('connection.php');
 				<td colspan="2" height="10"></td>
 			</tr>
 			<tr>
-				<td class="bluetext">Visibility</td>
+				<td>Visibility</td>
 				<td>
 					<select name="drpVisibility" id="drpVisibility" class="dropfield">
 						<option value="">--Select One--</option>

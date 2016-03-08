@@ -8,9 +8,9 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="pure-u-4-4" id="mainContent">
-    <h1 class="headingText">Approval Requests</h1>
+    <h2 class="headingText">Approval Requests</h2>
 
-    <div class="articleBorder">
+    <div>
         <div class="pure-g" style="font-size:13px; font-weight:bold;">
             <div class="pure-u-4-24"><p class="tHeading">Full Name</p></div>
             <div class="pure-u-4-24"><p class="tHeading">Mobile Number</p></div>
@@ -23,7 +23,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($result as $row) {
         ?>
         <div class="pure-g pure-g1" style="font-size:13px;">
-            <div class="pure-u-4-24"><p> <?=$row['FriendName'];?> </p></div>
+            <div class="pure-u-4-24"><p style="margin-left: 5px;"> <?=$row['FriendName'];?> </p></div>
             <div class="pure-u-4-24"><p> <?=$row['FriendNumber'];?> </p></div>
             <div class="pure-u-4-24"><p> <?=$row['SentMemberName'];?> </p></div>
             <div class="pure-u-8-24"><p> <?=$row['Message'];?> </p></div>
@@ -33,7 +33,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php
             }
         } else { ?>
-            <span style='color:Green;font-size:13px; font-weight:bold;'>No results to display!</span>
+            <span style='color:Green;font-size:13px; font-weight:bold; margin-left: 5px;'>No results to display!</span>
         <?php } ?>
     </div>
 </div>

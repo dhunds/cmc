@@ -1,18 +1,18 @@
 <?php
 include('functions.php');
 
-	echo "<h1 class='headingText'>Club Master</h1>";
-	echo "<div class='articleBorder'>";	
-	echo "<div class='pure-u-1'><p style='text-align:right;'><a href='exportClubMaster.php'><img src='images/icon_excel.gif'  border='0'/></a></p></div>";
+	echo "<h2 class='headingText' style='margin-bottom: 0px;'>Club Master</h2>";
+	echo "<div>";
+	echo "<div class='pure-u-1'><p style='text-align:right; margin-right: 5px;'><a href='exportClubMaster.php'><img src='images/icon_excel.gif'  border='0' width='25' height='25'/></a></p></div>";
 	echo "<div class='pure-g' style='font-size:13px; font-weight:bold;'>";
     echo "<div class='pure-u-5-24'><p class='tHeading'>Owner Name</p></div>";	
 	echo "<div class='pure-u-4-24'><p class='tHeading'>Owner Number</p></div>";
 	echo "<div class='pure-u-3-24'><p class='tHeading'>Club Name</p></div>";	
 	echo "<div class='pure-u-3-24'><p class='tHeading'>Club Status</p></div>";
 	echo "<div class='pure-u-2-24'><p class='tHeading'>No of Users</p></div>";
-	echo "<div class='pure-u-2-24'><p class='tHeading'>Registered Users</p></div>";
-	echo "<div class='pure-u-2-24'><p class='tHeading'>Non Registered Users</p></div>";
-	echo "<div class='pure-u-3-24'><p class='tHeading'>Action</p></div>";		
+	echo "<div class='pure-u-3-24'><p class='tHeading'>Registered Users</p></div>";
+	echo "<div class='pure-u-3-24'><p class='tHeading'>Non Registered Users</p></div>";
+	echo "<div class='pure-u-1-24'><p class='tHeading'>Action</p></div>";
 	echo "</div>";
 
 	$sql = "SELECT pm.*, ru.FullName FROM userpoolsmaster pm JOIN registeredusers ru ON pm.OwnerNumber=ru.MobileNumber";
@@ -66,14 +66,14 @@ include('functions.php');
 				}
 
 				echo "<div class='pure-g pure-g1' style='font-size:13px;'>";	
-				echo "<div class='pure-u-5-24'><p>" . $row['FullName'] . " </p></div>";
+				echo "<div class='pure-u-5-24'><p style='margin-left: 5px;'>" . $row['FullName'] . " </p></div>";
 				echo "<div class='pure-u-4-24'><p>" . $row['OwnerNumber'] . " </p></div>";	
-				echo "<div class='pure-u-3-24'><p>" . $row['PoolName'] . " </p></div>";
+				echo "<div class='pure-u-3-24'><p style='margin-left: 10px;'>" . $row['PoolName'] . " </p></div>";
 				echo "<div class='pure-u-3-24'><p>" . $row['PoolStatus'] . "</p></div>";
-				echo "<div class='pure-u-2-24'><p>" . $row['NoOfUsers'] . "</p></div>";
-				echo "<div class='pure-u-2-24'><p>" . $row['RegisteredUsers'] . "</p></div>";				
-				echo "<div class='pure-u-2-24'><p>" . $row['NonRegisteredUsers'] . "</p></div>";				
-				echo "<div class='pure-u-3-24'><p><a href='mEditClubMaster.php?id=" . $row['PoolId'] . "'>View</a></p></div>";						
+				echo "<div class='pure-u-2-24'><p style='text-align: center'>" . $row['NoOfUsers'] . "</p></div>";
+				echo "<div class='pure-u-3-24'><p style='text-align: center'>" . $row['RegisteredUsers'] . "</p></div>";
+				echo "<div class='pure-u-3-24'><p style='text-align: center'>" . $row['NonRegisteredUsers'] . "</p></div>";
+				echo "<div class='pure-u-1-24'><p style='text-align: center'><a href='mEditClubMaster.php?id=" . $row['PoolId'] . "'>View</a></p></div>";
 				echo "</div>";
 			}											
 		}				

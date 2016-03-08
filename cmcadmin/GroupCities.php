@@ -1,8 +1,8 @@
 <?php 
 	
-	echo "<h1 class='headingText'>Group Cities</h1>";
-	echo "<div class='articleBorder'>";
-	echo "<div class='pure-u-1'><p style='text-align:right;'><a href='mEditGroupCities.php'>Add New Cities</a></p></div>";
+	echo "<h2 class='headingText' style='margin-bottom: 5px;'>Group Cities</h2>";
+	echo "<div>";
+	echo "<div class='pure-u-1'><p style='text-align:right; margin-right: 5px;'><a href='mEditGroupCities.php'>Add New Cities</a></p></div>";
 	echo "<div class='pure-g' style='font-size:13px; font-weight:bold;'>";	
 	echo "<div class='pure-u-2-5'><p class='tHeading'>City</p></div>";
 	echo "<div class='pure-u-2-5'><p class='tHeading'>Super City</p></div>";
@@ -19,9 +19,9 @@
 			foreach ($result as $row) 
 			{																
 				echo "<div class='pure-g pure-g1' style='font-size:13px;'>";							
-				echo "<div class='pure-u-2-5'><p>" . $row['City'] . " </p></div>";	
-				echo "<div class='pure-u-2-5'><p>" . $row['CityGroup'] . " </p></div>";
-				echo "<div class='pure-u-1-5'><p><a href='mEditGroupCities.php?id=" . $row['CityID'] . "'>Edit</a></p></div>";
+				echo "<div class='pure-u-2-5'><p style='margin-left: 5px;'>" . $row['City'] . " </p></div>";
+				echo "<div class='pure-u-2-5'><p style='margin-left: 10px;'>" . $row['CityGroup'] . " </p></div>";
+				echo "<div class='pure-u-1-5'><p style='margin-left: 20px;'><a href='mEditGroupCities.php?id=" . $row['CityID'] . "'>Edit</a></p></div>";
 				echo "</div>";
 			}											
 		}				

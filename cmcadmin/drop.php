@@ -3,8 +3,8 @@ include ('connection.php');
 
 ?>
 
-<h4 class="headingText">Configuration Settings</H4>
-<div class="articleBorder">
+<h2 class="headingText">Configuration Settings</H4>
+<div>
       <form action="visibilty.php" method="post">
 		<table width="400">
 			<tr>

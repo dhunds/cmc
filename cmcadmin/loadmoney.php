@@ -77,13 +77,13 @@ if (isset($_POST['submit'])) {
         width: 90%;
     }
 </style>
-<div class="articleBorder">
+<div>
     <div>
         <div style="width:100%;height:100%;float:left;">
-            <h4 class="headingText">Wallet Recharge</h4>
+            <h2 class="headingText">Wallet Recharge</h2>
 
             <form method="post" action="" enctype="multipart/form-data">
-                <div>
+                <div style="margin-left: 5px;">
                     <div class="divLeft bluetext">&nbsp;&nbsp;* Mobile Number:</div>
                     <div class="divRight bluetext"><input type="text" name="cell" id="cell"></div>
                     <div style="clear:both;"></div>

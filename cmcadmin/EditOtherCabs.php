@@ -98,8 +98,8 @@
 		}
 	}
 ?>
-<h4 class='headingText'>Cab Master</h4>
-<div class="articleBorder">
+<h2 class='headingText'>Cab Master</h2>
+<div>
 <form action="" method="post">
 		<input type="hidden" name="id" value="<?php echo $id; ?>" />	
 		<div class='pure-g' style='font-size:13px; font-weight:bold;'>

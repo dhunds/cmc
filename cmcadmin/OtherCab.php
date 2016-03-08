@@ -1,9 +1,9 @@
 <?php
 include('functions.php');
 
-	echo "<h1 class='headingText'>Cab Details</h1>";
-	echo "<div class='articleBorder'>";
-	echo "<div class='pure-u-1'><p style='text-align:right;'><a href='mcabdetail.php'>Add New Cabs</a><a style='margin-left:20px;' href='exportCabDetails.php'><img src='images/icon_excel.gif'  border='0'/></a></p></div>";
+	echo "<h2 class='headingText' style='margin-bottom: 5px;'>Cab Details</h2>";
+	echo "<div>";
+	echo "<div class='pure-u-1'><p style='text-align:right; margin-right: 5px;'><a href='mcabdetail.php'>Add New Cabs</a><a style='margin-left:10px;' href='exportCabDetails.php'><img src='images/icon_excel.gif'  border='0' width='25' height='25'/></a></p></div>";
 	
 	
 	echo "<div class='pure-g' style='font-size:13px; font-weight:bold;'>";
@@ -23,7 +23,7 @@ include('functions.php');
 	echo "<div class='pure-g' style='font-size:13px; font-weight:bold;'>";
 	echo "<div class='pure-u-2-24'><p class='tHeading'>Cab Name</p></div>";	
 	echo "<div class='pure-u-2-24'><p class='tHeading'>Contact No</p></div>";
-	echo "<div class='pure-u-4-24'><p class='tHeading'>City</p></div>";		
+	echo "<div class='pure-u-4-24'><p class='tHeading'>City</p></div>";
 	echo "<div class='pure-u-2-24'><p class='tHeading'>OutStation</p></div>";			
 	echo "<div class='pure-u-2-24'><p class='tHeading'>Base Fare</p></div>";
 	echo "<div class='pure-u-2-24'><p class='tHeading'>Base Fare(KM)</p></div>";
@@ -60,9 +60,11 @@ include('functions.php');
 		if ($rowCount > 0)
 		{
 			foreach ($result as $row) 
-			{																
+			{
+				$active = ($row['Active'])?'Y':'N';
+
 				echo "<div class='pure-g pure-g1' style='font-size:13px;'>";
-				echo "<div class='pure-u-2-24'><p>" . $row['CabName'] . "</p></div>";	
+				echo "<div class='pure-u-2-24'><p style='margin-left: 5px;'>" . $row['CabName'] . "</p></div>";
 				echo "<div class='pure-u-2-24'><p>" . $row['CabContactNo'] . "</p></div>";				
 				echo "<div class='pure-u-4-24'><p>" . $row['City'] . "</p></div>";
 				echo "<div class='pure-u-2-24'><p style='text-align:center;'>" . $row['Outstation'] . "</p></div>";			
@@ -72,8 +74,8 @@ include('functions.php');
 				echo "<div class='pure-u-2-24'><p style='text-align:center;'>" . $row['NightTimeStartHours'] . "</p></div>";	
 				echo "<div class='pure-u-2-24'><p style='text-align:center;'>" . $row['NightTimeEndHours'] . "</p></div>";
 				echo "<div class='pure-u-2-24'><p style='text-align:center;'>" . $row['NightTimeRateMultiplier'] . "</p></div>";								
-				echo "<div class='pure-u-1-24'><p>" . $row['Active'] . "</p></div>";	
-				echo "<div class='pure-u-1-24'><p><a href='mcabdetail.php?id=" . $row['CabDetailID'] . "'>Edit</a></p></div>";
+				echo "<div class='pure-u-1-24'><p style='text-align:center;'>" . $active . "</p></div>";
+				echo "<div class='pure-u-1-24'><p style='text-align:center;'><a href='mcabdetail.php?id=" . $row['CabDetailID'] . "'>Edit</a></p></div>";
 				echo "</div>";
 			}											
 		}				

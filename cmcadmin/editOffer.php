@@ -48,13 +48,13 @@ if ($method =='update'){
         width: 80%;
     }
 </style>
-<div class="articleBorder">
+<div>
     <div>
         <div style="width:100%;height:100%;float:left;">
-            <h4 class="headingText"><?=($method=='update')?'Edit':'Add New'?> Offer</h4>
+            <h2 class="headingText"><?=($method=='update')?'Edit':'Add New'?> Offer</h2>
 
             <form method="post" action="">
-                <div>
+                <div style="margin-left: 5px;">
                     <div class="divLeft bluetext">&nbsp;&nbsp;* Title:</div>
                     <div class="divRight bluetext"><textarea name="title" cols="40" rows="3"><?=(isset($offer['title']))?$offer['title']:''?></textarea>
                     </div>

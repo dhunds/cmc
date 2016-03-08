@@ -1,7 +1,7 @@
 <?php
 include ('connection.php');
-echo "<h4 class='headingText'>Members Name</h4>";
-echo "<div class='articleBorder'>";
+echo "<h2 class='headingText'>Members Name</h2>";
+echo "<div>";
 echo "<table>";
 
 $id = urldecode($_GET['id']);
@@ -17,8 +17,8 @@ try
 	foreach ($result as $row) 
 	{	
 		echo "<tr>"; 
-		echo "<td><p>" . $row['MemberName']. "</p></td>";
-		echo "<td><p>" . $row['MemberNumber']. "</p></td>";
+		echo "<td><p style='margin-left: 10px;'>" . $row['MemberName']. "</p></td>";
+		echo "<td><p style='margin-left: 10px;'>" . $row['MemberNumber']. "</p></td>";
 		echo "</tr>";
 	}
     }

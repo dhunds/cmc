@@ -59,10 +59,10 @@ if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != 
 }
 ?>
 
-<h3 class="headingText">Send Notification</h3>
-<div class="articleBorder">
+<h2 class="headingText">Send Notification</h2>
+<div>
     <form action="sendNotification.php" method="POST" onsubmit="return validate()">
-        <table width="50%">
+        <table width="50%" style="margin-left: 5px;">
             <tr>
                 <td width="150px" class="bluetext">Mobile Number</td>
                 <td><input type="text" name="mobileNumber" id="mobileNumber"/> (Optional)<br/><br/></td>

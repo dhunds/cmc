@@ -35,12 +35,12 @@ $Credits = $stmt->fetch(PDO::FETCH_ASSOC);
 <script type="text/javascript" src="Calendar/calendar.js"></script>
 <script type="text/javascript" src="Calendar/lang/calendar-en.js"></script>
 <script type="text/javascript" src="Calendar/calendar-setup.js"></script>
-<div class="articleBorder">
+<div>
     <div>
         <div style="width:60%;float:left;height:200px;overflow:auto; min-height: 400px;">
-            <h4 class="headingText">Ride Summary</h4>
+            <h2 class="headingText">Ride Summary</h2>
 
-            <form method="post" action="">
+            <form method="post" action="" style="margin-left: 10px;">
                 <div>
                     <div style="float:left;width:45%;" class="bluetext">Date From: <input type="text" name="from"
                                                                                           value="<?= $_POST['from'] ?>"
@@ -73,41 +73,41 @@ $Credits = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
         <br/>
 
-        <div style="border:1px solid #ddd;">
-            <div style="float:left;width:49%;"><a
+        <div>
+            <div style="float:left;width:30%;margin-left: 10px;"><a
                     href="mpools.php?Mode=A&from=<?= $_POST['from'] ?>&to=<?= $_POST['to'] ?>">Active Rides</a></div>
             <div style="float:left;width:49%;"><?= $result['activeRides']; ?></div>
             <div style="clear:both;"></div>
         </div>
-        <div style="border:1px solid #ddd;border-top:none;">
-            <div style="float:left;width:49%;"><a
+        <div>
+            <div style="float:left;width:30%;margin-left: 10px;"><a
                     href="mpools.php?Mode=C&from=<?= $_POST['from'] ?>&to=<?= $_POST['to'] ?>">Completed Rides</a></div>
             <div style="float:left;width:49%;"><?= $result['completedRides']; ?></div>
             <div style="clear:both;"></div>
         </div>
-        <div style="border:1px solid #ddd;border-top:none;">
-            <div style="float:left;width:49%;"><a
+        <div>
+            <div style="float:left;width:30%;margin-left: 10px;"><a
                     href="mpools.php?Mode=I&from=<?= $_POST['from'] ?>&to=<?= $_POST['to'] ?>">Archived Rides </a></div>
             <div style="float:left;width:49%;"><?= $result['archievedRides']; ?></div>
             <div style="clear:both;"></div>
         </div>
-        <div style="border:1px solid #ddd;border-top:none;">
-            <div style="float:left;width:49%;"><a
+        <div>
+            <div style="float:left;width:30%;margin-left: 10px;"><a
                     href="mpools.php?Mode=S&from=<?= $_POST['from'] ?>&to=<?= $_POST['to'] ?>">Total Rides </a></div>
             <div style="float:left;width:49%;"><?= $result['totalRides']; ?></div>
             <div style="clear:both;"></div>
         </div>
     </div>
-    <div style="width:38%;float:right;overflow:auto;height:160px;">
-        <h4 class="headingText">Real Time</h4>
+    <div style="width:38%;float:right;overflow:auto;height:160px;margin-left: 10px;">
+        <h2 class="headingText">Real Time</h2>
 
-        <div style="border:1px solid #ddd;border-top:none;">
+        <div style="margin-left: 5px;">
             <div style="float:left;width:49%;"><a href="mpools.php?Mode=LLU">Last Logged In Users</a></div>
             <div
                 style="float:left;width:49%;"><?= ($activeUsers['NoOfLogInUsers']) ? $activeUsers['NoOfLogInUsers'] : '0'; ?></div>
             <div style="clear:both;"></div>
         </div>
-        <div style="border:1px solid #ddd;border-top:none;">
+        <div style="margin-left: 5px;">
             <div style="float:left;width:49%;"><a href="javascript:;">Total Credits in User Account</a></div>
             <div
                 style="float:left;width:49%;">Rs. <?= $Credits['totalCredits']; ?></div>

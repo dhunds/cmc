@@ -62,25 +62,25 @@
 	
 	
 ?>
-<h4 class='headingText'>Settings</h4>
-<div class="articleBorder">
+<h2 class='headingText'>Settings</h2>
+<div>
 <form action="" method="post">
 		<input type="hidden" name="id" value="<?php echo $id; ?>" />	
-		<div class='pure-g' style='font-size:13px; font-weight:bold;'>
+		<div class='pure-g' style='font-size:13px; font-weight:bold;margin-left: 5px;'>
 			<div class='pure-u-6-24'><p class='tHeading'>Name</p></div>
 			<div class='pure-u-6-24'><p class='tHeading'>Value</p></div>
-			<div class='pure-u-6-24'><p class='tHeading'>Description</p></div>
+			<div class='pure-u-12-24'><p class='tHeading'>Description</p></div>
 			</div>
-		<div class='pure-g' style='font-size:13px; font-weight:bold;'>		
+		<div class='pure-g' style='font-size:13px; margin-left: 10px;'>
 			<div class='pure-u-6-24'><input type="hidden" name="setID" size="12px" value="<?php echo $setID; ?>" class />
 			<?php echo $setName; ?></div>
 			<div class='pure-u-6-24'><input type="text" name="setValue" size="12px" value="<?php echo $setValue; ?>" class="textfield" /></div>
-			<div class='pure-u-6-24'><input type="text" name="setDescription" size="12px" value="<?php echo $setDescription; ?>" class="textfield" /></div>
+			<div class='pure-u-12-24'><input type="text" name="setDescription" size="12px" value="<?php echo $setDescription; ?>" class="textfield" /></div>
 
 		
 			</div>			
 		</div>
-		<div style="margin-top:20px;">
+		<div style="margin-top:20px; margin-left: 10px;">
 			<input type="submit" name="submit" value="Submit" class="cBtn" />	
 		</div>
 </form>

@@ -3,8 +3,8 @@
 <script type="text/javascript" src="Calendar/calendar.js"></script>
 <script type="text/javascript" src="Calendar/lang/calendar-en.js"></script>
 <script type="text/javascript" src="Calendar/calendar-setup.js"></script>  
-<h4 class="headingText">Top Origins/Top Destinations</h4>
-<div class="articleBorder">
+<h2 class="headingText">Top Origins / Top Destinations</h2>
+<div>
 <form action="mTopOrigins.php" method="POST">
 	<table width="550" cellspacing="2" cellpadding="2">
 		<tr>
@@ -46,10 +46,10 @@
 		</tr>
 		<tr>
 			<td colspan="3" align="right">
-				<input type="submit" class="cBtn" name="btnTopOrigin" value="TopOrigin">
+				<input type="submit" class="cBtn" name="btnTopOrigin" value="Top Origin">
 			</td>
 			<td colspan="3">
-				&nbsp;<input type="submit" class="cBtn" name="btnTopDestination" value="TopDestination">
+				&nbsp;<input type="submit" class="cBtn" name="btnTopDestination" value="Top Destination">
 			</td>
 		</tr>
 	</table>
@@ -79,9 +79,9 @@ if(isset($_POST['btnTopOrigin']))
 			$l1 = count($FromData);
 					
 			echo "<div class='pure-g pure-g1' style='font-size:13px;'>";
-			echo "<div class='pure-u-2-5'><p>" . $FromData[$l1-2] . "</p></div>";
-			echo "<div class='pure-u-2-5'><p>" . $row['NoOfCabs'] . "</p></div>";									
-			echo "<div class='pure-u-1-5'><p><a href='mTopOriginView.php?loc=" . urlencode($FromData[$l1-2]) . "&Date=" . $row['TravelDate'] . "'>View</a></p></div>";					
+			echo "<div class='pure-u-2-5'><p style='margin-left: 5px;'>" . $FromData[$l1-2] . "</p></div>";
+			echo "<div class='pure-u-2-5'><p style='margin-left: 30px;'>" . $row['NoOfCabs'] . "</p></div>";
+			echo "<div class='pure-u-1-5'><p style='margin-left: 10px;'><a href='mTopOriginView.php?loc=" . urlencode($FromData[$l1-2]) . "&Date=" . $row['TravelDate'] . "'>View</a></p></div>";
 			echo "</div>";  
 		}
 	}
@@ -103,10 +103,10 @@ if(isset($_POST['btnTopDestination']))
 		$stmt->execute();
 		 
 		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);	
-		echo "<div class='pure-g' style='font-size:13px; font-weight:bold;'>";
-		echo "<div class='pure-u-2-5'><p class='bluetext'>Address</p></div>";
-		echo "<div class='pure-u-2-5'><p class='bluetext'>No. of Cabs</p></div>";			
-		echo "<div class='pure-u-1-5'><p class='bluetext'>Action</p></div>";			
+		echo "<div class='pure-g' style='font-size:13px; font-weight:bold;margin-top:20px;'>";
+		echo "<div class='pure-u-2-5'><p class='tHeading'>Address</p></div>";
+		echo "<div class='pure-u-2-5'><p class='tHeading'>No. of Cabs</p></div>";
+		echo "<div class='pure-u-1-5'><p class='tHeading'>Action</p></div>";
 		echo "</div>";
 		foreach ($result as $row) 
 		{
@@ -115,9 +115,9 @@ if(isset($_POST['btnTopDestination']))
 			$l1 = count($ToData);
 			
 			echo "<div class='pure-g pure-g1' style='font-size:13px;'>";
-			echo "<div class='pure-u-2-5'><p>" . $ToData[$l1-2] . "</p></div>";
-			echo "<div class='pure-u-2-5'><p>" . $row['NoOfCabs'] . "</p></div>";									
-			echo "<div class='pure-u-1-5'><p><a href='mTopDestinationView.php?local=" . urlencode($ToData[$l1-2]) . "'>View</a></p></div>";					
+			echo "<div class='pure-u-2-5'><p style='margin-left: 5px;'>" . $ToData[$l1-2] . "</p></div>";
+			echo "<div class='pure-u-2-5'><p style='margin-left: 30px;'>" . $row['NoOfCabs'] . "</p></div>";
+			echo "<div class='pure-u-1-5'><p style='margin-left: 10px;'><a href='mTopDestinationView.php?local=" . urlencode($ToData[$l1-2]) . "'>View</a></p></div>";
 			echo "</div>";
 		}
 	}

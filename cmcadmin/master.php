@@ -14,7 +14,7 @@
 	<?php include('connection.php');?>
 	<div id="layout" class="pure-g">
         <div class="header pure-u-1-1 pure-u-md-3-4">
-            <div style="padding:10px;">
+            <div style="padding:5px;">
                 <a href="index.php">
                     <img src="images/logo.png" alt="ClubMyCab"
                         title="ClubMyCab" border="0" class="pure-img-responsive-home"/>

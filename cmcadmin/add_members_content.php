@@ -107,13 +107,13 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['memberDetails'] !=
         });
     }
 </script>
-<div class="articleBorder">
+<div>
     <div>
         <div style="width:100%;height:100%;float:left;">
-            <h4 class="headingText">Add Members to Club</h4>
+            <h2 class="headingText">Add Members to Club</h2>
 
             <form method="post" action="" enctype="multipart/form-data">
-                <div>
+                <div style="margin-left: 5px;">
                     <div class="divLeft bluetext">&nbsp;&nbsp;* Owner Number:</div>
                     <div class="divRight bluetext"><input type="text" name="mobNumber" id="mobNumber"></div>
                     <div style="clear:both;"></div>
