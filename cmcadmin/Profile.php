@@ -45,22 +45,22 @@ $dir = BASEURL.'/ProfileImages/';
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             echo "<div class='pure-g' style='font-size:13px; font-weight:bold; margin-top:10px;'>";
-            echo "<div class='pure-u-2-24'><p class='tHeading'>Name</p></div>";
+            echo "<div class='pure-u-4-24'><p class='tHeading'>Name</p></div>";
             echo "<div class='pure-u-3-24'><p class='tHeading'>Number</p></div>";
-            echo "<div class='pure-u-6-24'><p class='tHeading'>EmailID</p></div>";
+            echo "<div class='pure-u-5-24'><p class='tHeading'>EmailID</p></div>";
             echo "<div class='pure-u-2-24'><p class='tHeading'>Gender</p></div>";
-            echo "<div class='pure-u-4-24'><p class='tHeading'>Push Notification</p></div>";
+            echo "<div class='pure-u-3-24'><p class='tHeading'>Push Notification</p></div>";
             echo "<div class='pure-u-2-24'><p class='tHeading'>Platform</p></div>";
             echo "<div class='pure-u-3-24'><p class='tHeading'>Created On</p></div>";
             echo "<div class='pure-u-2-24'><p class='tHeading'>Action</p></div>";
             echo "</div>";
             foreach ($result as $row) {
                 echo "<div class='pure-g pure-g1' style='font-size:13px;padding-left: 5px;'>";
-                echo "<div class='pure-u-2-24'><p>" . $row['FullName'] . "</p></div>";
+                echo "<div class='pure-u-4-24'><p>" . $row['FullName'] . "</p></div>";
                 echo "<div class='pure-u-3-24'><p>" . $row['MobileNumber'] . " </p></div>";
-                echo "<div class='pure-u-6-24'><p>" . $row['Email'] . "</p></div>";
+                echo "<div class='pure-u-5-24'><p>" . $row['Email'] . "</p></div>";
                 echo "<div class='pure-u-2-24'><p>" . $row['Gender'] . "</p></div>";
-                echo "<div class='pure-u-4-24' style='padding-left:30px;'><p>" . $row['PushNotification'] . " </p></div>";
+                echo "<div class='pure-u-3-24' style='padding-left:30px;'><p>" . $row['PushNotification'] . " </p></div>";
                 echo "<div class='pure-u-2-24' style='padding-left:30px;'><p>" . $row['Platform'] . " </p></div>";
                 echo "<div class='pure-u-3-24'><p>" . date("jS M Y g:i a", strtotime($row['CreatedOn'])) . " </p></div>";
                 echo "<div class='pure-u-2-24'><p><a href='mEditProfile.php?id=" . $row['MobileNumber'] . "'>Edit</a></p></div>";
@@ -90,13 +90,13 @@ $dir = BASEURL.'/ProfileImages/';
 
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo "<div class='pure-g' style='font-size:13px; font-weight:bold; margin-top:10px;'>";
-            echo "<div class='pure-u-2-24'><p class='tHeading'>Name</p></div>";
+            echo "<div class='pure-u-4-24'><p class='tHeading'>Name</p></div>";
             echo "<div class='pure-u-3-24'><p class='tHeading'>Number</p></div>";
 
-            echo "<div class='pure-u-6-24'><p class='tHeading'>EmailID</p></div>";
+            echo "<div class='pure-u-5-24'><p class='tHeading'>EmailID</p></div>";
             echo "<div class='pure-u-2-24'><p class='tHeading'>Gender</p></div>";
 
-            echo "<div class='pure-u-4-24'><p class='tHeading'>Push Notification</p></div>";
+            echo "<div class='pure-u-3-24'><p class='tHeading'>Push Notification</p></div>";
 
             echo "<div class='pure-u-2-24'><p class='tHeading'>Platform</p></div>";
 
@@ -105,12 +105,12 @@ $dir = BASEURL.'/ProfileImages/';
             echo "</div>";
             foreach ($result as $row) {
                 echo "<div class='pure-g pure-g1' style='font-size:13px;padding-left:5px;'>";
-                echo "<div class='pure-u-2-24'><p>" . $row['FullName'] . "</p></div>";
+                echo "<div class='pure-u-4-24'><p>" . $row['FullName'] . "</p></div>";
                 echo "<div class='pure-u-3-24'><p>" . $row['MobileNumber'] . " </p></div>";
-                echo "<div class='pure-u-6-24'><p>" . $row['Email'] . "</p></div>";
+                echo "<div class='pure-u-5-24'><p>" . $row['Email'] . "</p></div>";
                 echo "<div class='pure-u-2-24' style='padding-left:10px;'><p>" . $row['Gender'] . "</p></div>";
 
-                echo "<div class='pure-u-4-24' style='padding-left:30px;'><p>" . $row['PushNotification'] . " </p></div>";
+                echo "<div class='pure-u-3-24' style='padding-left:30px;'><p>" . $row['PushNotification'] . " </p></div>";
 
                 echo "<div class='pure-u-2-24' style='padding-left:30px;'><p>" . $row['Platform'] . " </p></div>";
 
