@@ -80,9 +80,9 @@ $dir='http://122.160.103.25/php/ClubMyCab/ProfileImages/';
 	}
 
 ?>
-<h4 class='headingText'>Members Profile</h4>
-<div class="articleBorder">
-<form action="" method="post">
+<h2 class='headingText'>Members Profile</h2>
+<div>
+<form action="" method="post" style="margin-left: 5px;">
 		<input type="hidden" name="id" value="<?php echo $id; ?>" />	
 					<table width="30%">
 			
@@ -129,10 +129,10 @@ $dir='http://122.160.103.25/php/ClubMyCab/ProfileImages/';
 			</tr>
 			
 			<tr>
-				<td colspan="2" height="10"></td>
+				<td colspan="2" height="20"></td>
 			</tr>
 			<tr>
-				<td colspan="2" align="center">
+				<td colspan="2">
 					<input type="submit" name="submit" value="Submit" class="cBtn" />	
 				</td>
 			</tr>

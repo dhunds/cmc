@@ -153,12 +153,12 @@ if (isset($_GET['id']))
 	}	
 	
 ?>
-<h4 class='headingText'>Cab Detail</h4>
-<div class="articleBorder">
+<h2 class='headingText'>Cab Detail</h2>
+<div>
 	<form action="" method="post">
 		<input type="hidden" name="id" value="<?php echo $id; ?>" />
 		<input type="hidden" name="CabDetailID" size="8px" value="<?php echo $CabDetailID; ?>" class='textfield' />			
-		<table width="30%">
+		<table width="30%" style="margin-left: 10px;">
 			<tr>
 				<td>Cab Name</td>
 				<td>
@@ -329,7 +329,7 @@ if (isset($_GET['id']))
 				<td colspan="2" height="10"></td>
 			</tr>
 			<tr>
-				<td colspan="2" align="center">
+				<td colspan="2">
 					<input type="submit" name="submit" value="Submit" class="cBtn" />	
 				</td>
 			</tr>

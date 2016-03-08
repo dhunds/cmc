@@ -1,7 +1,7 @@
 <?php
 include ('connection.php');
-echo "<h4 class='headingText'>Top Origins</h4>";
-echo "<div class='articleBorder'>";
+echo "<h2 class='headingText'>Top Origins</h2>";
+echo "<div>";
 echo "<table>";
 echo "<tr><th class='tHeading'>OwnerName</th><th class='tHeading' width='30%'>From Location</th><th class='tHeading' width='30%'>To Location</th><th class='tHeading'>Travel Date</th><th class='tHeading'>Travel Time</th><th></tr>";
 $location = urldecode($_GET['loc']);

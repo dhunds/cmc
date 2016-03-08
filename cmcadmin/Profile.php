@@ -63,7 +63,7 @@ $dir = BASEURL.'/ProfileImages/';
                 echo "<div class='pure-u-3-24' style='padding-left:30px;'><p>" . $row['PushNotification'] . " </p></div>";
                 echo "<div class='pure-u-2-24' style='padding-left:30px;'><p>" . $row['Platform'] . " </p></div>";
                 echo "<div class='pure-u-3-24'><p>" . date("jS M Y g:i a", strtotime($row['CreatedOn'])) . " </p></div>";
-                echo "<div class='pure-u-2-24'><p><a href='mEditProfile.php?id=" . $row['MobileNumber'] . "'>Edit</a></p></div>";
+                echo "<div class='pure-u-2-24'><p style='margin-left: 20px;'><a href='mEditProfile.php?id=" . $row['MobileNumber'] . "'>Edit</a></p></div>";
                 echo "</div>";
             }
         } else {
@@ -115,7 +115,7 @@ $dir = BASEURL.'/ProfileImages/';
                 echo "<div class='pure-u-2-24' style='padding-left:30px;'><p>" . $row['Platform'] . " </p></div>";
 
                 echo "<div class='pure-u-3-24'><p>" . date("jS M Y g:i a", strtotime($row['CreatedOn'])) . " </p></div>";
-                echo "<div class='pure-u-2-24'><p><a href='mEditProfile.php?id=" . $row['MobileNumber'] . "'>Edit</a></p></div>";
+                echo "<div class='pure-u-2-24'><p style='margin-left: 20px;'><a href='mEditProfile.php?id=" . $row['MobileNumber'] . "'>Edit</a></p></div>";
                 echo "</div>";
             }
         }

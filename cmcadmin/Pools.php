@@ -72,13 +72,13 @@ if ($Mode == 'LLU') {
     echo "</div>";
 } else {
     if ($Mode == 'S') {
-        echo "<h4 class='headingText'>Created Rides</h4>";
+        echo "<h2 class='headingText'>Created Rides</h2>";
     }
     if ($Mode == 'C') {
-        echo "<h4 class='headingText'>Completed Rides</h4>";
+        echo "<h2 class='headingText'>Completed Rides</h2>";
     }
     if ($Mode == 'I') {
-        echo "<h4 class='headingText'>Archived Rides</h4>";
+        echo "<h2 class='headingText'>Archived Rides</h2>";
     }
     if ($Mode == 'A') {
         echo "<h2 class='headingText'>Active Rides</h2>";
