@@ -10,7 +10,7 @@ if (isset($_POST['keyword']) && $_POST['keyword'] !='') {
             JOIN userpoolsslave ps ON pm.PoolId=ps.PoolId
             JOIN clientGroups cg ON pm.PoolId=cg.groupId
             WHERE cg.clientId=".$_SESSION['userId']."
-            AND (ps.MemberName like '%".$_POST['keyword']."%' OR  ps.MemberNumber like '%".$_POST['keyword']."%')
+            AND (ps.MemberName like '%".$_POST['keyword']."%' OR  ps.MemberNumber like '%".substr(trim($_POST['keyword']), -10)."%')
             ";
     $stmt = $con->prepare($sql);
     $stmt->execute();
@@ -43,7 +43,7 @@ if (isset($_POST['keyword']) && $_POST['keyword'] !='') {
                         {
                             ?>
                             <div class="pure-g pure-g1 dashboard-summary-heading">
-                                <div class="pure-u-7-24"><p class="dashboard-summary-title"><?=$row['MemberNumber']?></p></div>
+                                <div class="pure-u-7-24"><p class="dashboard-summary-title"><?='+91-' . substr(trim($row['MemberNumber']), -10);?></p></div>
                                 <div class="pure-u-7-24"><p class="dashboard-summary-title"><?=($row['MemberName'])?$row['MemberName']:'Not Registered';?></p></div>
                                 <div class="pure-u-7-24"><p class="dashboard-summary-members"><?=$row['PoolName']?></div>
                                 <div class="pure-u-3-24"><p><a href="javascript:;" onclick="deleteMember(<?= $row['PoolId'] ?>, '<?= $row['MemberNumber'] ?>')">Delete</a></p></div>

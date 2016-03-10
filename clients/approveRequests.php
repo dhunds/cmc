@@ -39,7 +39,7 @@ $rowCount = (int)$stmt->rowCount();
                             ?>
                             <div class="pure-g pure-g1 dashboard-summary-heading">
                                 <div class="pure-u-4-24"><p> <?=$row['FriendName'];?> </p></div>
-                                <div class="pure-u-4-24"><p> <?=$row['FriendNumber'];?> </p></div>
+                                <div class="pure-u-4-24"><p> <?='+91-' . substr(trim($row['FriendNumber']), -10);?> </p></div>
                                 <div class="pure-u-4-24"><p> <?=$row['SentMemberName'];?> </p></div>
                                 <div class="pure-u-8-24"><p> <?=$row['PoolName'];?> </p></div>
                                 <div class="pure-u-3-24"><p> <?=date("M-j-y h:i A", strtotime($row['DateTime']));?> </p></div>

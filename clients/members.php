@@ -52,7 +52,7 @@ if ($rowCount > 0) {
                             ?>
                             <div class="pure-g pure-g1 dashboard-summary-heading">
                                 <div class="pure-u-8-24"><p
-                                        class="dashboard-summary-members"><?= $row['MemberNumber'] ?></p></div>
+                                        class="dashboard-summary-members"><?='+91-' . substr(trim($row['MemberNumber']), -10); ?></p></div>
                                 <div class="pure-u-12-24"><p
                                         class="dashboard-summary-title"><?=($row['FullName'])?$row['FullName']:'Not Registered';?></p></div>
                                 <div class="pure-u-4-24"><p><a href="javascript:;"
