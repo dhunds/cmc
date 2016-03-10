@@ -1,8 +1,8 @@
 <?php
-
 include_once('connection.php');
 include_once('header.php');
 include_once('topmenu.php');
+include_once('functions.php');
 
 $sql = "SELECT PoolId, PoolName FROM userpoolsmaster JOIN clientGroups ON clientGroups.groupId=userpoolsmaster.PoolId AND clientGroups.clientId=" . $_SESSION['userId'] . " AND userpoolsmaster.PoolId=" . $_REQUEST['id'];
 $stmt = $con->prepare($sql);
@@ -17,6 +17,21 @@ if ($rowCount > 0) {
     $stmt = $con->prepare($sql);
     $stmt->execute();
     $memberCount = (int)$stmt->rowCount();
+
+    $totalpages = ceil($memberCount / PAGESIZE);
+
+    if (isset($_REQUEST['page']) && $_REQUEST['page'] != '') {
+        $page = $_REQUEST['page'];
+    } else {
+        $page = 1;
+    }
+
+    $start = ($page - 1) * PAGESIZE;
+    $sql .= " LIMIT $start , " . PAGESIZE;
+
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+
 } else {
     $msg = 'You do not have permission to see members of this group.';
 }
@@ -61,6 +76,7 @@ if ($rowCount > 0) {
                             </div>
                             <?php
                         }
+                        echo pagination_search($totalpages, $page, 'members.php?id='.$_REQUEST['id']);
                     } else{ ?>
 
                         <span style='color:#be7f12;font-size:13px; font-weight:bold; margin-left: 15px;'>No results to display!</span>

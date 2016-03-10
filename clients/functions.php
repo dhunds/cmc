@@ -73,7 +73,7 @@ function pagination_search($totalpage, $page, $url = '?')
                 if ($counter == $page)
                     $pagination .= "<span class='current'>$counter</span>";
                 else
-                    $pagination .= "<a href='?page=$counter'>$counter</a>";
+                    $pagination .= "<a href='$url&page=$counter'>$counter</a>";
             }
         } elseif ($lastpage > 5 + ($adjacents * 2)) {
             if ($page < 1 + ($adjacents * 2)) {
@@ -81,40 +81,40 @@ function pagination_search($totalpage, $page, $url = '?')
                     if ($counter == $page)
                         $pagination .= "<span class='current'>$counter</span>";
                     else
-                        $pagination .= "<a href='?page=$counter'>$counter</a>";
+                        $pagination .= "<a href='$url&page=$counter'>$counter</a>";
                 }
                 $pagination .= "<span class='current'>...</span>";
-                $pagination .= "<a href='?page=$lpm1'>$lpm1</a></a>";
-                $pagination .= "<a href='?page=$lastpage'>$lastpage</a></li>";
+                $pagination .= "<a href='$url&page=$lpm1'>$lpm1</a></a>";
+                $pagination .= "<a href='$url&page=$lastpage'>$lastpage</a></li>";
             } elseif ($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2)) {
-                $pagination .= "<a href='?page=1'>1</a></li>";
-                $pagination .= "<a href='?page=2'>2</a></li>";
+                $pagination .= "<a href='$url&page=1'>1</a></li>";
+                $pagination .= "<a href='$url&page=2'>2</a></li>";
                 $pagination .= "<span class='current'>...</span>";
                 for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++) {
                     if ($counter == $page)
                         $pagination .= "<span class='current'>$counter</span>";
                     else
-                        $pagination .= "<a href='?page=$counter'>$counter</a>";
+                        $pagination .= "<a href='$url&page=$counter'>$counter</a>";
                 }
                 $pagination .= "<span class='current'>...</span>";
-                $pagination .= "<a href='?page=$lpm1'>$lpm1</a>";
-                $pagination .= "<a href='?page=$lastpage'>$lastpage</a>";
+                $pagination .= "<a href='$url&page=$lpm1'>$lpm1</a>";
+                $pagination .= "<a href='$url&page=$lastpage'>$lastpage</a>";
             } else {
-                $pagination .= "<a href='?page=1'>1</a></li>";
-                $pagination .= "<a href='?page=2'>2</a></li>";
+                $pagination .= "<a href='$url&page=1'>1</a></li>";
+                $pagination .= "<a href='$url&page=2'>2</a></li>";
                 $pagination .= "<span class='current'>...</span>";
                 for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
                     if ($counter == $page)
                         $pagination .= "<span class='current'>$counter</span>";
                     else
-                        $pagination .= "<a href='?page=$counter'>$counter</a>";
+                        $pagination .= "<a href='$url&page=$counter'>$counter</a>";
                 }
             }
         }
 
         if ($page < $counter - 1) {
-            $pagination .= "<a href='?page=$next' class='next'>Next &gt;</a></li>";
-            $pagination .= "<a href='?page=$lastpage' class='next'>Last</a></li>";
+            $pagination .= "<a href='$url&page=$next' class='next'>Next &gt;</a></li>";
+            $pagination .= "<a href='$url&page=$lastpage' class='next'>Last</a></li>";
         } else {
             $pagination .= "<span class='current'>Next</span>";
             $pagination .= "<span class='current'>Last</span>";
