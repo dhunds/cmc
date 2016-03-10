@@ -48,7 +48,10 @@ if (isset($_POST['keyword']) && $_POST['keyword'] !='') {
                                 <div class="pure-u-7-24"><p class="dashboard-summary-members"><?=$row['PoolName']?></div>
                                 <div class="pure-u-3-24"><p><a href="javascript:;" onclick="deleteMember(<?= $row['PoolId'] ?>, '<?= $row['MemberNumber'] ?>')">Delete</a></p></div>
                             </div>
-                        <?php } } ?>
+                        <?php }
+                    } else{ ?>
+                        <span style='color:#be7f12;font-size:13px; font-weight:bold; margin-left: 15px;'>No results to display!</span>
+                    <?php } ?>
 
                 </div>
 

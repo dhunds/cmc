@@ -32,7 +32,7 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
             if (!(isset($val[1]) && $val[1] != '')) {
                 $val[1] = '';
             }
-            if ($val[0] != '') {
+            if (trim($val[0]) != '') {
                 $val[0] = '0091' . substr(trim($val[0]), -10);
                 $stmt = $con->query("Select * From userpoolsslave WHERE PoolId=" . $row['PoolId'] . " AND MemberNumber = '" . $val[0] . "'");
                 $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
