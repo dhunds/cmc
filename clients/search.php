@@ -6,11 +6,12 @@ include_once('topmenu.php');
 $rowCount=0;
 
 if (isset($_POST['keyword']) && $_POST['keyword'] !='') {
-    $sql = "SELECT pm.PoolId, pm.PoolName, ps.MemberName, ps.MemberNumber FROM userpoolsmaster pm
+    $sql = "SELECT pm.PoolId, pm.PoolName, ps.MemberName, ps.MemberNumber, ru.FullName FROM userpoolsmaster pm
             JOIN userpoolsslave ps ON pm.PoolId=ps.PoolId
+            LEFT JOIN registeredusers ru ON ru.MobileNumber = ps.MemberNumber
             JOIN clientGroups cg ON pm.PoolId=cg.groupId
             WHERE cg.clientId=".$_SESSION['userId']."
-            AND (ps.MemberName like '%".$_POST['keyword']."%' OR  ps.MemberNumber like '%".substr(trim($_POST['keyword']), -10)."%')
+            AND (ps.MemberName like '%".$_POST['keyword']."%' OR ru.FullName like '%".$_POST['keyword']."%' OR  ps.MemberNumber like '%".substr(trim($_POST['keyword']), -10)."%')
             ";
     $stmt = $con->prepare($sql);
     $stmt->execute();
@@ -44,7 +45,7 @@ if (isset($_POST['keyword']) && $_POST['keyword'] !='') {
                             ?>
                             <div class="pure-g pure-g1 dashboard-summary-heading">
                                 <div class="pure-u-7-24"><p class="dashboard-summary-title"><?='+91-' . substr(trim($row['MemberNumber']), -10);?></p></div>
-                                <div class="pure-u-7-24"><p class="dashboard-summary-title"><?=($row['MemberName'])?$row['MemberName']:'Not Registered';?></p></div>
+                                <div class="pure-u-7-24"><p class="dashboard-summary-title"><?=($row['FullName'])?$row['FullName']:'Not Registered';?></p></div>
                                 <div class="pure-u-7-24"><p class="dashboard-summary-members"><?=$row['PoolName']?></div>
                                 <div class="pure-u-3-24"><p><a href="javascript:;" onclick="deleteMember(<?= $row['PoolId'] ?>, '<?= $row['MemberNumber'] ?>')">Delete</a></p></div>
                             </div>
