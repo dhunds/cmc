@@ -17,17 +17,8 @@ $myArrayname = explode(',', $MembersNamenew);
 
 if (isset($_POST['routeId']) && $_POST['routeId'] !=''){
     $routeId = $_POST['routeId'];
-    $newCoordinates = '~'.$latlongstr;
-
-    $sql = "UPDATE routelogs SET coordinates = concat(coordinates, '$newCoordinates') WHERE routeId = '".$routeId."'";
-    $stmt = $con->prepare($sql);
-    $stmt->execute();
 } else {
     $routeId = rand().time();
-
-    $sql = "INSERT INTO routelogs(coordinates, routeId) VALUES ('".$latlongstr."', '".$routeId."')";
-    $stmt = $con->prepare($sql);
-    $stmt->execute();
 }
 
 $NotificationType = "Share_LocationUpdate";
@@ -91,6 +82,16 @@ if ($no_of_users > 0) {
             $objNotification->setVariables($apns_array, $body);
             $objNotification->sendIOSNotification();
         }
+    }
+    if (isset($_POST['routeId']) && $_POST['routeId'] !=''){
+        $newCoordinates = '~'.$latlongstr;
+        $sql = "UPDATE routelogs SET coordinates = concat(coordinates, '$newCoordinates') WHERE routeId = '".$routeId."'";
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
+    } else {
+        $sql = "INSERT INTO routelogs(coordinates, routeId) VALUES ('".$latlongstr."', '".$routeId."')";
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
     }
     echo $routeId;
 } else {
