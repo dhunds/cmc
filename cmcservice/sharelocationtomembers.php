@@ -15,11 +15,26 @@ $MembersNamenew = substr($MembersName, 1, -1);
 $myArraynumber = explode(',', $Membersnew);
 $myArrayname = explode(',', $MembersNamenew);
 
+if (isset($_POST['routeId']) && $_POST['routeId'] !=''){
+    $routeId = $_POST['routeId'];
+    $newCoordinates = '~'.$latlongstr;
+
+    $sql = "UPDATE routelogs SET coordinates = concat(coordinates, '$newCoordinates') WHERE routeId = '".$routeId."'";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+} else {
+    $routeId = rand().time();
+
+    $sql = "INSERT INTO routelogs(coordinates, routeId) VALUES ('".$latlongstr."', '".$routeId."')";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+}
+
 $NotificationType = "Share_LocationUpdate";
-$sqlquery = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, UserLatLong, DateTime) VALUES ";
+$sqlquery = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, UserLatLong, DateTime, routeId) VALUES ";
 
 for ($j = 0; $j < count($myArraynumber); $j++) {
-    $sqlquery .= "('" . $NotificationType . "','" . $FullName . "','" . $MobileNumber . "','" . $myArrayname[$j] . "','" . trim((string)$myArraynumber[$j]) . "','" . $Message . "','" . $latlongstr . "', now()),";
+    $sqlquery .= "('" . $NotificationType . "','" . $FullName . "','" . $MobileNumber . "','" . $myArrayname[$j] . "','" . trim((string)$myArraynumber[$j]) . "','" . $Message . "','" . $latlongstr . "', now(), '".$routeId."'),";
 }
 $sqlquery = trim($sqlquery, ",");
 $manstmt = $con->prepare($sqlquery);
@@ -77,7 +92,7 @@ if ($no_of_users > 0) {
             $objNotification->sendIOSNotification();
         }
     }
+    echo $routeId;
 } else {
     echo "no one in database";
 }
-?>
