@@ -32,7 +32,15 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
             if (!(isset($val[1]) && $val[1] != '')) {
                 $val[1] = '';
             }
-            if (trim($val[0]) != '') {
+
+            $validNumber=0;
+            $regex = "/^(\+91-|\+91|0091|0)?\d{10}$/";
+
+            if (preg_match($regex, trim($val[0]))) {
+                $validNumber = 1;
+            }
+
+            if (trim($val[0]) != '' && $validNumber) {
                 $val[0] = '0091' . substr(trim($val[0]), -10);
                 $stmt = $con->query("Select * From userpoolsslave WHERE PoolId=" . $row['PoolId'] . " AND MemberNumber = '" . $val[0] . "'");
                 $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
