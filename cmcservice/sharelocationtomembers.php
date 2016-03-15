@@ -62,7 +62,7 @@ $stmt = $con->query("SELECT * FROM registeredusers WHERE MobileNumber IN ($Membe
 $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 if ($no_of_users > 0) {
-    $body = array('gcmText' => $Message, 'pushfrom' => 'Share_LocationUpdate', 'latLong' => $latlongstr);
+    $body = array('gcmText' => $Message, 'pushfrom' => 'Share_LocationUpdate', 'latLong' => $latlongstr, 'routeId'=>$routeId);
 
     while ($row = $stmt->fetch()) {
         $rs = $con->query("SELECT NotificationId FROM notifications WHERE UserLatLong = '".$latlongstr."' AND ReceiveMemberNumber='".$row['MobileNumber']."'");
