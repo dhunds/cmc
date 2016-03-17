@@ -25,7 +25,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
           + sin ( radians($eLat) )
           * sin( radians( endLat ) )
         )
-      ) AS destination,
+      ) AS destination
 
     FROM userpoolsmaster
     WHERE poolType=2

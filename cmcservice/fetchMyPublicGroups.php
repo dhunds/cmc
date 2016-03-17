@@ -4,7 +4,7 @@ include ('connection.php');
 if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='') {
     $mobileNumber = $_REQUEST['mobileNumber'];
 
-    $sql = "SELECT pm.PoolId, pm.PoolName FROM userpoolsmaster pm JOIN userpoolsslave ps ON ps.PoolId = pm.PoolId WHERE trim(ps.MemberNumber)='".trim($mobileNumber)."'";
+    $sql = "SELECT pm.PoolId, pm.PoolName FROM userpoolsmaster pm JOIN userpoolsslave ps ON ps.PoolId = pm.PoolId WHERE trim(ps.MemberNumber)='".trim($mobileNumber)."' AND poolType=2";
 
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
