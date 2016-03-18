@@ -86,7 +86,7 @@ if ($no_of_users > 0) {
     if (isset($_POST['routeId']) && $_POST['routeId'] !=''){
         $newCoordinates = '~'.$latlongstr;
         $atTime = '~'.date('jS M Y h:i A');
-        $sql = "UPDATE routelogs SET coordinates = concat(coordinates, '$newCoordinates'), atTime=concat(atTime, '$newCoordinates') WHERE routeId = '".$routeId."'";
+        $sql = "UPDATE routelogs SET coordinates = concat(coordinates, '$newCoordinates'), atTime=concat(atTime, '$atTime') WHERE routeId = '".$routeId."'";
         $stmt = $con->prepare($sql);
         $stmt->execute();
     } else {
