@@ -68,6 +68,12 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
         float: left;
         width: 90%;
     }
+
+     #map {
+         width: 600px;
+         height: 400px;
+     }
+
 </style>
 <div>
     <div>
@@ -76,34 +82,45 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
 
             <form method="post" action="" enctype="multipart/form-data">
                 <div style="margin-left: 5px;">
-                    <div class="divLeft bluetext">&nbsp;&nbsp;Full Name:</div>
-                    <div class="divRight bluetext"><input type="text" name="name"></div>
+                    <div class="divLeft bluetext">&nbsp;&nbsp;Club Name:</div>
+                    <div class="divRight bluetext"><input type="text" name="clubNames"></div>
                     <div style="clear:both;"></div>
                     <br/>
 
-                    <div class="divLeft bluetext">* Mobile Number:</div>
-                    <div class="divRight bluetext"><input type="text" name="mobNumber"></div>
+                    <div class="divLeft bluetext">&nbsp;&nbsp;Map:</div>
+                    <div class="divRight bluetext" id="map"></div>
                     <div style="clear:both;"></div>
                     <br/>
 
-                    <div class="divLeft bluetext">&nbsp;&nbsp;Email:</div>
-                    <div class="divRight bluetext"><input type="text" name="email"></div>
-                    <div style="clear:both;"></div>
-                    <br/>
+                    <!-- <div class="divLeft bluetext">&nbsp;&nbsp;Email:</div>
+                     <div class="divRight bluetext"><input type="text" name="email"></div>
+                     <div style="clear:both;"></div>
+                     <br/>
 
-                    <div class="divLeft bluetext">&nbsp;&nbsp;Club Names:</div>
-                    <div class="divRight bluetext"><textarea name="clubNames" cols="30" rows="5"></textarea></div>
-                    <div style="clear:both;"></div>
-                    <br/>
+                     <div class="divLeft bluetext">&nbsp;&nbsp;Club Name:</div>
+                     <div class="divRight bluetext">
+                         <input type="text" name="clubNames">
+                     <div style="clear:both;"></div>
+                     <br/>
+                         <div class="divLeft bluetext">&nbsp;&nbsp;Club Name:</div>
+                         <div class="divRight bluetext">
+                             <input type="text" name="clubNames">
+                             <div style="clear:both;"></div>
+                             <br/>
+                     <div class="divLeft bluetext">&nbsp;&nbsp;Map:</div>
+                     <div class="divRight bluetext">
+                     Google Map
+                     <div style="clear:both;"></div>
+                     <br/>
 
-                    <div class="divLeft bluetext" style="padding-left: 15%">OR</div>
-                    <div style="clear:both;"></div>
-                    <br/>
+                 <!--<div class="divLeft bluetext" style="padding-left: 15%">OR</div>
+                     <div style="clear:both;"></div>
+                     <br/>
 
-                    <div class="divLeft bluetext">&nbsp;&nbsp;File (csv):</div>
-                    <div class="divRight bluetext"><input type="file" name="clubs"></div>
-                    <div style="clear:both;"></div>
-                    <br/>
+                     <div class="divLeft bluetext">&nbsp;&nbsp;File (csv):</div>
+                     <div class="divRight bluetext"><input type="file" name="clubs"></div>
+                     <div style="clear:both;"></div>
+                     <br/>-->
 
                     <div class="divLeft bluetext">&nbsp;&nbsp;<input type="submit" name="submit" value="Create Club"
                                                                      class="cBtn"></div>
@@ -118,3 +135,14 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
         <div style="clear:both;"></div>
     </div>
 </div>
+<script>
+    function initMap() {
+        var mapDiv = document.getElementById('map');
+        var map = new google.maps.Map(mapDiv, {
+            center: {lat: 28.4940472, lng: 77.0820822},
+            zoom: 9
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+        async defer></script>

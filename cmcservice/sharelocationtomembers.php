@@ -85,11 +85,13 @@ if ($no_of_users > 0) {
     }
     if (isset($_POST['routeId']) && $_POST['routeId'] !=''){
         $newCoordinates = '~'.$latlongstr;
-        $sql = "UPDATE routelogs SET coordinates = concat(coordinates, '$newCoordinates') WHERE routeId = '".$routeId."'";
+        $atTime = '~'.date('jS M Y h:i A');
+        $sql = "UPDATE routelogs SET coordinates = concat(coordinates, '$newCoordinates'), atTime=concat(atTime, '$newCoordinates') WHERE routeId = '".$routeId."'";
         $stmt = $con->prepare($sql);
         $stmt->execute();
     } else {
-        $sql = "INSERT INTO routelogs(coordinates, routeId) VALUES ('".$latlongstr."', '".$routeId."')";
+        $atTime = date('jS M Y h:i A');
+        $sql = "INSERT INTO routelogs(coordinates, atTime, routeId) VALUES ('".$latlongstr."', '".$atTime."', '".$routeId."')";
         $stmt = $con->prepare($sql);
         $stmt->execute();
     }
