@@ -1,63 +1,39 @@
 <?php
-if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '') && $_POST['mobNumber'] != '') {
-    $_POST['mobNumber'] = '0091' . substr(trim($_POST['mobNumber']), -10);
-    $MobileNumber = $_POST['mobNumber'];
-    $FullName = $_POST['name'];
-    $Email = $_POST['email'];
-    $Platform = 'A';
-    $deviceId = 'admin';
+if (isset($_POST['submit']) && $_POST['clubName'] != '') {
+
+    $MobileNumber = '00911234567890';
+    $FullName = 'Admin';
+    $groupName = $_POST['clubName'];
+    $slat = $_POST['slat'];
+    $slon = $_POST['slon'];
+    $elat = $_POST['elat'];
+    $elon = $_POST['elon'];
+
 
     $stmt = $con->query("select FullName, MobileNumber FROM registeredusers WHERE trim(MobileNumber)='" . $MobileNumber . "'");
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-    if ($found < 1) {
-        $sql = "INSERT INTO registeredusers(FullName, MobileNumber, Email, Platform, DeviceToken, CreatedOn, isAdminType) VALUES ('$FullName', '$MobileNumber','$Email','$Platform','$deviceId',now(),1)";
-        $stmt = $con->prepare($sql);
-        $res = $stmt->execute();
+    if ($found > 0) {
+        $stmt = $con->query("Select * From userpoolsmaster WHERE PoolName='$groupName' AND OwnerNumber = '$MobileNumber'");
+        $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-        $sql = "INSERT INTO userprofileimage(MobileNumber, imagename) VALUES ('$MobileNumber','')";
-        $stmt = $con->prepare($sql);
-        $res2 = $stmt->execute();
-    }
-    $i = 0;
-    if (($found > 0) || ($res == true)) {
-        $clubs = [];
-
-        if (is_uploaded_file($_FILES['clubs']['tmp_name'])) {
-            $file = fopen($_FILES['clubs']['tmp_name'], "r");
-
-            while (!feof($file)) {
-                $club = fgetcsv($file);
-                $clubs[] = $club[0];
-            }
-            fclose($file);
+        if ($found > 0) {
+            echo "Group Name '" . $groupName . "' Already Exist<br />";
         } else {
-            $clubs = explode(PHP_EOL, $_POST['clubNames']);
-        }
 
-        foreach ($clubs as $val) {
-            $val = trim($val);
-            if ($val != '') {
-                $stmt = $con->query("Select * From userpoolsmaster WHERE PoolName='$val' AND OwnerNumber = '$MobileNumber'");
-                $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+            $sql = "INSERT INTO userpoolsmaster(OwnerNumber, PoolName, PoolStatus, poolType, startLat, startLon, endLat, endLon, Active) VALUES ('$MobileNumber', '$groupName','OPEN', 2, '$slat', '$slon', '$elat', '$elon','1')";
 
-                if ($found > 0) {
-                    echo "Club Name '".$val . "' Already Exist<br />";
-                } else {
-                    $val = preg_replace( '/[^[:print:]]/', '',$val);
-                    $sql = "INSERT INTO userpoolsmaster(OwnerNumber, PoolName, Active) VALUES ('$MobileNumber', '$val','1')";
-                    $stmt = $con->prepare($sql);
-                    $res2 = $stmt->execute();
-                    if ($res2 == true) {
-                        $i++;
-                    }
-                }
+            $stmt = $con->prepare($sql);
+            $res2 = $stmt->execute();
+
+            if ($res2 == true) {
+                echo "Group Created.";
             }
         }
     }
-    echo $i . ' Clubs added Successfully';
 }
 ?>
+
 <style>
     .divLeft {
         float: left;
@@ -69,21 +45,21 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
         width: 90%;
     }
 
-     #map {
-         width: 600px;
-         height: 400px;
-     }
+    #map {
+        width: 600px;
+        height: 400px;
+    }
 
 </style>
 <div>
     <div>
         <div style="width:100%;height:100%;float:left;">
-            <h2 class="headingText">Add Clubs</h2>
+            <h2 class="headingText">Add Public Group</h2>
 
-            <form method="post" action="" enctype="multipart/form-data">
+            <form id="groups" method="post" action="">
                 <div style="margin-left: 5px;">
-                    <div class="divLeft bluetext">&nbsp;&nbsp;Club Name:</div>
-                    <div class="divRight bluetext"><input type="text" name="clubNames"></div>
+                    <div class="divLeft bluetext">&nbsp;&nbsp;Group Name:</div>
+                    <div class="divRight bluetext"><input type="text" name="clubName"></div>
                     <div style="clear:both;"></div>
                     <br/>
 
@@ -92,41 +68,25 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
                     <div style="clear:both;"></div>
                     <br/>
 
-                    <!-- <div class="divLeft bluetext">&nbsp;&nbsp;Email:</div>
-                     <div class="divRight bluetext"><input type="text" name="email"></div>
-                     <div style="clear:both;"></div>
-                     <br/>
+                    <div class="divLeft bluetext">&nbsp;&nbsp;Start Lat Long:</div>
+                    <div class="divRight bluetext"><input type="text" name="slat" id="slat">&nbsp;&nbsp;<input
+                            type="text" name="slon" id="slon"></div>
+                    <div style="clear:both;"></div>
+                    <br/>
 
-                     <div class="divLeft bluetext">&nbsp;&nbsp;Club Name:</div>
-                     <div class="divRight bluetext">
-                         <input type="text" name="clubNames">
-                     <div style="clear:both;"></div>
-                     <br/>
-                         <div class="divLeft bluetext">&nbsp;&nbsp;Club Name:</div>
-                         <div class="divRight bluetext">
-                             <input type="text" name="clubNames">
-                             <div style="clear:both;"></div>
-                             <br/>
-                     <div class="divLeft bluetext">&nbsp;&nbsp;Map:</div>
-                     <div class="divRight bluetext">
-                     Google Map
-                     <div style="clear:both;"></div>
-                     <br/>
+                    <div class="divLeft bluetext">&nbsp;&nbsp;End Lat Long:</div>
+                    <div class="divRight bluetext">
+                        <input type="text" name="elat" id="elat">&nbsp;&nbsp;<input type="text" name="elon" id="elon">
+                        <div style="clear:both;"></div>
+                        <br/>
+                        <div class="divLeft bluetext">
+                            <div style="float:left"><input type="submit" name="submit" value="Create Club" class="cBtn"></div>
+                            <div style="float:right"><input type="button" name="Reset" value="Reset" class="cBtn"
+                                                            onclick="frmReset();"></div>
+                        </div>
+                        <div class="divRight bluetext"></div>
 
-                 <!--<div class="divLeft bluetext" style="padding-left: 15%">OR</div>
-                     <div style="clear:both;"></div>
-                     <br/>
-
-                     <div class="divLeft bluetext">&nbsp;&nbsp;File (csv):</div>
-                     <div class="divRight bluetext"><input type="file" name="clubs"></div>
-                     <div style="clear:both;"></div>
-                     <br/>-->
-
-                    <div class="divLeft bluetext">&nbsp;&nbsp;<input type="submit" name="submit" value="Create Club"
-                                                                     class="cBtn"></div>
-                    <div class="divRight bluetext"></div>
-
-                </div>
+                    </div>
             </form>
 
             <br/>
@@ -136,6 +96,7 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
     </div>
 </div>
 <script>
+    var source = 0;
     function initMap() {
         var mapDiv = document.getElementById('map');
         var map = new google.maps.Map(mapDiv, {
@@ -143,6 +104,45 @@ if (isset($_POST['submit']) && (count($_FILES) > 0 || $_POST['clubNames'] != '')
             zoom: 9
         });
     }
+    window.onload = function () {
+        var mapOptions = {
+            center: new google.maps.LatLng(28.4940472, 77.0820822),
+            zoom: 9,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        google.maps.event.addListener(map, 'click', function (e) {
+
+            var lat = e.latLng.lat();
+            var lng = e.latLng.lng()
+
+            var latlng = new google.maps.LatLng(lat, lng);
+            var geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({'latLng': latlng}, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+                        if (confirm("Confirm this address..\r\n\r\n" + results[1].formatted_address)) {
+                            if (source) {
+                                document.getElementById("elat").value = lat;
+                                document.getElementById("elon").value = lng;
+                            } else {
+                                document.getElementById("slat").value = lat;
+                                document.getElementById("slon").value = lng;
+                                source = 1;
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    function frmReset() {
+        document.getElementById("groups").reset();
+        source = 0;
+    }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&callback=initMap"
         async defer></script>
