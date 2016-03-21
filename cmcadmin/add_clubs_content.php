@@ -80,7 +80,7 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
                         <div style="clear:both;"></div>
                         <br/>
                         <div class="bluetext">
-                            <input type="submit" name="submit" value="Create Club" class="cBtn">
+                            <input type="submit" name="submit" value="Create Group" class="cBtn">
                             <input type="button" name="Reset" value="Reset" class="cBtn"  onclick="frmReset();">
                         </div>
                         <div class="divRight bluetext"></div>
