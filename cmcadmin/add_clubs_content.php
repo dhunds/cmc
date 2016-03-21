@@ -79,10 +79,9 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
                         <input type="text" name="elat" id="elat">&nbsp;&nbsp;<input type="text" name="elon" id="elon">
                         <div style="clear:both;"></div>
                         <br/>
-                        <div class="divLeft bluetext">
-                            <div style="float:left"><input type="submit" name="submit" value="Create Club" class="cBtn"></div>
-                            <div style="float:right"><input type="button" name="Reset" value="Reset" class="cBtn"
-                                                            onclick="frmReset();"></div>
+                        <div class="bluetext">
+                            <input type="submit" name="submit" value="Create Club" class="cBtn">
+                            <input type="button" name="Reset" value="Reset" class="cBtn"  onclick="frmReset();">
                         </div>
                         <div class="divRight bluetext"></div>
 
