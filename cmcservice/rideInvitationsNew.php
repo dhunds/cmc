@@ -5,11 +5,10 @@ $nearbyRides = array();
 $publicGroupRides = array();
 $privateRides = array();
 
-if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
+if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
 
     $mobileNumber = $_POST['mobileNumber'];
     list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
-    //list($eLat, $eLon) = explode(',', $_POST['eLatLon']);
 
     $sql = "SELECT
           PoolId,
