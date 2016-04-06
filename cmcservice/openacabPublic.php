@@ -76,8 +76,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     $createGroup = 0;
 
     if ($found < 1) {
-        $groupName = $FromShortName . ' to ' . $ToShortName;
-        $createGroup = createPublicGroups($con, $groupName, $sLat, $sLon, $eLat, $eLon);
+
+        $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
     }
 
     if ($found > 0 || $createGroup) {

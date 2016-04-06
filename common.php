@@ -1,9 +1,10 @@
 <?php
 
-function createPublicGroups($con, $groupName, $sLat, $sLon, $eLat, $eLon) {
+function createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $From, $To) {
 
     $MobileNumber = '00911234567890';
 
+    $groupName = $From . ' to ' . $To;
 
     $sql = "INSERT INTO userpoolsmaster(OwnerNumber, PoolName, PoolStatus, poolType, startLat, startLon, endLat, endLon, Active) VALUES ('$MobileNumber', '$groupName','OPEN', 2, '$sLat', '$sLon', '$eLat', '$eLon','1')";
 
@@ -12,6 +13,7 @@ function createPublicGroups($con, $groupName, $sLat, $sLon, $eLat, $eLon) {
     $gId =  $con->lastInsertId();
 
     if ($gId) {
+        $groupName = $To . ' to ' . $From;
         $sql = "INSERT INTO userpoolsmaster(OwnerNumber, PoolName, PoolStatus, poolType, startLat, startLon, endLat, endLon, Active, rGid) VALUES ('$MobileNumber', '$groupName','OPEN', 2, '$eLat', '$eLon', '$sLat', '$sLon','1', $gId)";
 
         $stmt = $con->prepare($sql);
