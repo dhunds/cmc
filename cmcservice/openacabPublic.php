@@ -76,13 +76,14 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     $createGroup = 0;
 
     if ($found < 1) {
-
         $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
+        $groupId = $createGroup;
+    } else {
+        $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $groupId = $nearbyGroup[0]['PoolId'];
     }
 
     if ($found > 0 || $createGroup) {
-        $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $groupId = $nearbyGroup[0]['PoolId'];
 
         $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
 

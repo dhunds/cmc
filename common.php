@@ -28,7 +28,7 @@ function createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $From, $To) {
     }
 
     if ($res)
-        return true;
+        return $gId;
     else
         return false;
 }
