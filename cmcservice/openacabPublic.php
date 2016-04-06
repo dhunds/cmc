@@ -67,7 +67,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
 
             FROM userpoolsmaster
             WHERE poolType=2
-            HAVING origin < 5 AND destination < 5
+            HAVING origin < ".SEARCH_RIDE_PROXIMITY." AND destination < ".SEARCH_RIDE_PROXIMITY."
             ORDER BY origin, destination LIMIT 0,1";
 
 

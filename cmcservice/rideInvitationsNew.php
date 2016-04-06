@@ -26,7 +26,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
 
         FROM userpoolsmaster
         WHERE poolType=2
-        HAVING origin < 5 AND destination < 5
+        HAVING origin < ".SEARCH_RIDE_PROXIMITY."
         ORDER BY origin";
 
     $stmt = $con->query($sql);
