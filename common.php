@@ -11,7 +11,7 @@ function createPublicGroups($con, $groupName, $sLat, $sLon, $eLat, $eLon) {
     $res = $stmt->execute();
     $gId =  $con->lastInsertId();
 
-    if ($rGid) {
+    if ($gId) {
         $sql = "INSERT INTO userpoolsmaster(OwnerNumber, PoolName, PoolStatus, poolType, startLat, startLon, endLat, endLon, Active, rGid) VALUES ('$MobileNumber', '$groupName','OPEN', 2, '$eLat', '$eLon', '$sLat', '$sLon','1', $gId)";
 
         $stmt = $con->prepare($sql);
