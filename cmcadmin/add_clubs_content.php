@@ -1,13 +1,15 @@
 <?php
+include('../common.php');
+
 if (isset($_POST['submit']) && $_POST['clubName'] != '') {
 
     $MobileNumber = '00911234567890';
     $FullName = 'Admin';
     $groupName = $_POST['clubName'];
-    $slat = $_POST['slat'];
-    $slon = $_POST['slon'];
-    $elat = $_POST['elat'];
-    $elon = $_POST['elon'];
+    $sLat = $_POST['slat'];
+    $sLon = $_POST['slon'];
+    $eLat = $_POST['elat'];
+    $eLon = $_POST['elon'];
 
 
     $stmt = $con->query("select FullName, MobileNumber FROM registeredusers WHERE trim(MobileNumber)='" . $MobileNumber . "'");
@@ -20,13 +22,8 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
         if ($found > 0) {
             echo "Group Name '" . $groupName . "' Already Exist<br />";
         } else {
-
-            $sql = "INSERT INTO userpoolsmaster(OwnerNumber, PoolName, PoolStatus, poolType, startLat, startLon, endLat, endLon, Active) VALUES ('$MobileNumber', '$groupName','OPEN', 2, '$slat', '$slon', '$elat', '$elon','1')";
-
-            $stmt = $con->prepare($sql);
-            $res2 = $stmt->execute();
-
-            if ($res2 == true) {
+            $createGroup = createPublicGroups($con, $groupName, $sLat, $sLon, $eLat, $eLon);
+            if ($createGroup == true) {
                 echo "Group Created.";
             }
         }
