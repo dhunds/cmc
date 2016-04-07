@@ -49,7 +49,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
     LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
     LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
-    LEFT JOIN acceptedrequest ar ON cm.CabId = ar.CabId
+    LEFT JOIN acceptedrequest ar ON co.CabId = ar.CabId
     WHERE gc.groupId IN (" . $nearbyPublicGroups . ")
     AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
     AND co.status < 2
@@ -57,6 +57,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     AND co.RemainingSeats >0
     AND ar.CabId IS NULL";
 
+        
         $stmt = $con->query($sql);
         $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -97,7 +98,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
     LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
     LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
-    LEFT JOIN acceptedrequest ar ON cm.CabId = ar.CabId
+    LEFT JOIN acceptedrequest ar ON co.CabId = ar.CabId
     WHERE gc.groupId IN (" . $nearbyPublicGroups . ")
     AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
     AND co.status < 2
@@ -136,39 +137,49 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
         $privateRides = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    $groupWiseNearbyRides = array ();
+    $publicRides = [];
 
     foreach ($nearbyGroupIds as $id){
+        $tempArr = [];
+        $tempRides = [];
+
         foreach($nearbyRides as $ride){
             if ($id == $ride['PoolId']) {
-                $tempArr = array();
                 $tempArr['id'] = $ride['PoolId'];
                 $tempArr['rGid'] = $ride['rGid'];
                 $tempArr['name'] = $ride['PoolName'];
-                $tempArr['rides'] = $ride;
-
-                $groupWiseNearbyRides[$ride['PoolName']][] = $tempArr;
+                
+                $tempRides[] = $ride;
             }
         }
+        if (!empty($tempRides)) {
+            $tempArr['rides'] = $tempRides;
+            $publicRides[] = $tempArr;
+        }
+        
     }
-
-    $groupWisePublicGroupRides = array ();
 
     foreach ($myGroupIds as $id){
+        
+        $tempArr = [];
+        $tempRides = [];
+        
         foreach($publicGroupRides as $ride){
+            
             if ($id == $ride['PoolId']) {
-                $tempArr = array();
                 $tempArr['id'] = $ride['PoolId'];
                 $tempArr['rGid'] = $ride['rGid'];
                 $tempArr['name'] = $ride['PoolName'];
-                $tempArr['rides'] = $ride;
-
-                $groupWisePublicGroupRides[$ride['PoolName']][] = $tempArr;
+                
+                $tempRides[] = $ride;
             }
+        }
+        if (!empty($tempRides)) {
+            $tempArr['rides'] = $tempRides;
+            $publicRides[] = $tempArr;
         }
     }
 
-    $publicRides = array_merge($groupWiseNearbyRides, $groupWisePublicGroupRides);
     $AllRides['privateRides'] = $privateRides;
     $AllRides['publicRides'] = $publicRides;
 
