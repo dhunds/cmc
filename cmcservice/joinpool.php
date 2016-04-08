@@ -14,6 +14,7 @@ $MemberEndLocationAddress = $_POST['MemberEndLocationAddress'];
 $MemberEndLocationlatlong = $_POST['MemberEndLocationlatlong'];
 $Status = $_POST['Status'];
 $Message = $_POST['Message'];
+$PoolId = $_POST['PoolId'];
 
 $sqlI = "SELECT imagename FROM userprofileimage WHERE Trim(MobileNumber) = Trim('$MemberNumber')";
 $stmtI = $con->query($sqlI);
@@ -28,6 +29,19 @@ $sth1->execute();
 $Seats = (int)$sth1->fetchColumn();
 
 if (($Seats - $RemainingSeats) > 0) {
+
+    if (isset($_POST['rideType']) && $_POST['rideType'] !='' && ($_POST['rideType']=='4' || $_POST['rideType']=='5')){
+        $sql = "INSERT INTO cabmembers(CabId, MemberName, MemberNumber) VALUES ('$CabId', '$MemberName', '$MemberNumber')";
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
+
+        if ($PoolId) {
+            $sql = "INSERT INTO userpoolsslave(PoolId, MemberName, MemberNumber, IsActive) VALUES ('$PoolId', '$MemberName', '$MemberNumber', '1')";
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
+        }
+    }
+
     $sql2 = "INSERT INTO acceptedrequest(CabId, OwnerName, OwnerNumber, MemberName, MemberNumber, MemberLocationAddress, MemberLocationlatlong, MemberEndLocationAddress, MemberEndLocationlatlong, MemberImageName, Status) VALUES ('$CabId', '$OwnerName','$OwnerNumber','$MemberName', '$MemberNumber','$MemberLocationAddress', '$MemberLocationlatlong','$MemberEndLocationAddress','$MemberEndLocationlatlong', '$MemberImageName','$Status')";
     $stmt2 = $con->prepare($sql2);
     $res2 = $stmt2->execute();
