@@ -138,6 +138,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     }
 
     $publicRides = [];
+    $privateRides = [];
 
     foreach ($nearbyGroupIds as $id){
         $tempArr = [];
@@ -176,7 +177,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
         }
         if (!empty($tempRides)) {
             $tempArr['rides'] = $tempRides;
-            $publicRides[] = $tempArr;
+            $privateRides[] = $tempArr;
         }
     }
 
