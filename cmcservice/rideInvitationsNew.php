@@ -1,5 +1,6 @@
 <?php
 include('connection.php');
+include('../common.php');
 
 $nearbyRides = array();
 $publicGroupRides = array();
@@ -9,6 +10,9 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
 
     $mobileNumber = $_POST['mobileNumber'];
     list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
+
+
+    $proximity = rideProximity();
 
     $sql = "SELECT
           PoolId,
@@ -25,7 +29,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
 
         FROM userpoolsmaster
         WHERE poolType=2
-        HAVING origin < ".SEARCH_RIDE_PROXIMITY."
+        HAVING origin < ".$proximity."
         ORDER BY origin";
 
     $stmt = $con->query($sql);

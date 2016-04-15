@@ -7,6 +7,9 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
     list($eLat, $eLon) = explode(',', $_POST['eLatLon']);
 
+
+    $proximity = rideProximity();
+
     $CabId = $_POST['CabId'];
     $MobileNumber = $_POST['MobileNumber'];
     $OwnerName = $_POST['OwnerName'];
@@ -67,7 +70,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
 
             FROM userpoolsmaster
             WHERE poolType=2
-            HAVING origin < ".SEARCH_RIDE_PROXIMITY." AND destination < ".SEARCH_RIDE_PROXIMITY."
+            HAVING origin < ".$proximity." AND destination < ".$proximity."
             ORDER BY origin, destination LIMIT 0,1";
 
 

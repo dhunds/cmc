@@ -32,3 +32,11 @@ function createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $From, $To) {
     else
         return false;
 }
+
+function rideProximity(){
+    global $con;
+    $stmt = $con->prepare("select setValue from settings Where setName='SEARCH_RIDE_PROXIMITY'");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result[0]['setValue'];
+}
