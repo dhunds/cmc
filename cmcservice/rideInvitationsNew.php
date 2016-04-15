@@ -52,6 +52,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN acceptedrequest ar ON co.CabId = ar.CabId
     WHERE gc.groupId IN (" . $nearbyPublicGroups . ")
     AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
+    AND co.MobileNumber !='$mobileNumber'
     AND co.status < 2
     AND co.CabStatus ='A'
     AND co.RemainingSeats >0
@@ -100,6 +101,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
     LEFT JOIN acceptedrequest ar ON co.CabId = ar.CabId
     WHERE gc.groupId IN (" . $nearbyPublicGroups . ")
+    AND co.MobileNumber !='$mobileNumber'
     AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
     AND co.status < 2
     AND co.CabStatus ='A'
@@ -125,6 +127,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN acceptedrequest ar ON cm.CabId = ar.CabId
     WHERE TRIM(cm.MemberNumber) = '" . $mobileNumber . "'
     AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
+    AND co.MobileNumber !='$mobileNumber'
     AND co.status < 2
     AND co.CabStatus ='A'
     AND co.RemainingSeats >0
@@ -138,7 +141,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     }
 
     $publicRides = [];
-    
+
     foreach ($nearbyGroupIds as $id){
         $tempArr = [];
         $tempRides = [];
