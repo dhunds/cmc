@@ -13,11 +13,13 @@ $Gender = $_POST['Gender'];
 $DOB = $_POST['DOB'];
 $Platform = $_POST['Platform'];
 $referralCode = '';
+$socialId = $_POST['socialId'];
+$socialType = $_POST['socialType'];
 
 $singleusepassword = rand(100000, 999999);
 $timestamp = date('Y-m-d H:i:s', strtotime('+1 day'));
 
-if ($FullName != '' && $MobileNumber != '') {
+if ($FullName != '' && ($MobileNumber != '' || $socialId !='')) {
     if (isset($_POST['referralCode']) && $_POST['referralCode'] != '') {
         $referralCode = $_POST['referralCode'];
 
@@ -45,21 +47,34 @@ if ($FullName != '' && $MobileNumber != '') {
         $code = randomString();
     } while (!isReferralCodeUnique($code));
 
-    $sql = "SELECT FullName FROM registeredusers WHERE MobileNumber='" . $MobileNumber . "'";
+    if ($socialId !="") {
+        $sql = "SELECT FullName FROM registeredusers WHERE socialId='" . $socialId . "'";
+    } else {
+        $sql = "SELECT FullName FROM registeredusers WHERE MobileNumber='" . $MobileNumber . "'";
+    }
+
+    
     $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($found > 0) {
         http_response_code(500);
         header('Content-Type: application/json');
-        echo '{"status":"fail", "message":"Mobile number already exists. Please try to login or register with a different mobile number"}';
+        //echo '{"status":"fail", "message":"Mobile number already exists. Please try to login or register with a different mobile number"}';
+        echo '{"status":"fail", "message":"Account already exists."}';
         exit;
     }
 
-    $stmt = $con->prepare("DELETE FROM  tmp_register WHERE MobileNumber='" . $MobileNumber . "'");
+    if ($socialId !="") {
+        $sql = "DELETE FROM  tmp_register WHERE socialId='" . $socialId . "'";
+    } else {
+        $sql = "DELETE FROM  tmp_register WHERE MobileNumber='" . $MobileNumber . "'";
+    }
+
+    $stmt = $con->prepare($sql);
     $stmt->execute();
 
-    $sql = "INSERT INTO tmp_register(FullName, Password, MobileNumber, DeviceToken, Email, Gender, DOB, Platform, SingleUsePassword,SingleUseExpiry,CreatedOn, referralCode, usedReferralCode) VALUES ('$FullName','$Password', '$MobileNumber','$DeviceToken','$Email','$Gender', '$DOB','$Platform','$singleusepassword', '$timestamp',now(),'$code', '$referralCode')";
+    $sql = "INSERT INTO tmp_register(FullName, Password, MobileNumber, DeviceToken, Email, Gender, DOB, Platform, SingleUsePassword,SingleUseExpiry,CreatedOn, referralCode, usedReferralCode, socialId, socialType) VALUES ('$FullName','$Password', '$MobileNumber','$DeviceToken','$Email','$Gender', '$DOB','$Platform','$singleusepassword', '$timestamp',now(),'$code', '$referralCode', '$socialId', '$socialType')";
     $stmt = $con->prepare($sql);
     $res = $stmt->execute();
 
