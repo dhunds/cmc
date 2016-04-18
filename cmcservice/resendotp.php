@@ -12,6 +12,7 @@ $socialId = $_POST['socialId'];
 
 if ($socialId !='') {
     $sql = "SELECT FullName FROM tmp_register WHERE socialId = Trim('$socialId')";
+
 } else{
     $sql = "SELECT FullName FROM tmp_register WHERE Trim(MobileNumber) = Trim('$MobileNumber')";
 }
@@ -25,7 +26,12 @@ if ($found) {
     $tableName = 'registeredusers';
 }
 
-$sql2 = "UPDATE $tableName SET SingleUsePassword = '$singleusepassword',SingleUseExpiry = '$timestamp' where MobileNumber = '$MobileNumber'";
+if ($socialId !='') { 
+    $sql2 = "UPDATE $tableName SET SingleUsePassword = '$singleusepassword', SingleUseExpiry = '$timestamp', MobileNumber = '$MobileNumber' where socialId = '$socialId'";
+} else {
+    $sql2 = "UPDATE $tableName SET SingleUsePassword = '$singleusepassword',SingleUseExpiry = '$timestamp' where MobileNumber = '$MobileNumber'";
+}
+
 $stmt2 = $con->prepare($sql2);
 $res2 = $stmt2->execute();
 
