@@ -66,6 +66,7 @@ if ($FullName != '' && ($MobileNumber != '' || $socialId !='')) {
     }
 
     if ($socialId !="") {
+        $singleusepassword="";
         $sql = "DELETE FROM  tmp_register WHERE socialId='" . $socialId . "'";
     } else {
         $sql = "DELETE FROM  tmp_register WHERE MobileNumber='" . $MobileNumber . "'";

@@ -8,7 +8,15 @@ $timestamp = date('Y-m-d H:i:s', strtotime('+1 day'));
 
 $MobileNumber = $_POST['MobileNumber'];
 
-$stmt = $con->query("SELECT FullName FROM tmp_register WHERE Trim(MobileNumber) = Trim('$MobileNumber')");
+$socialId = $_POST['socialId'];
+
+if ($socialId !='') {
+    $sql = "SELECT FullName FROM tmp_register WHERE socialId = Trim('$socialId')";
+} else{
+    $sql = "SELECT FullName FROM tmp_register WHERE Trim(MobileNumber) = Trim('$MobileNumber')";
+}
+
+$stmt = $con->query($sql);
 $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 if ($found) {

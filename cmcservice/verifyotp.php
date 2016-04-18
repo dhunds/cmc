@@ -43,7 +43,7 @@ and SingleUseExpiry > NOW()");
     } else {
         $user = $stmt2->fetch();
 
-        $sql = "INSERT INTO registeredusers(FullName, Password, MobileNumber, DeviceToken, Email, Gender, DOB, Platform, SingleUsePassword, SingleUseVerified, SingleUseExpiry,CreatedOn, referralCode, usedReferralCode) VALUES ('" . $user['FullName'] . "','" . $user['Password'] . "', '" . $user['MobileNumber'] . "','" . $user['DeviceToken'] . "','" . $user['Email'] . "','" . $user['Gender'] . "', '" . $user['DOB'] . "','" . $user['Platform'] . "','" . $user['SingleUsePassword'] . "', '1', '" . $user['SingleUseExpiry'] . "',now(),'" . $user['referralCode'] . "','" . $user['usedReferralCode'] . "')";
+        $sql = "INSERT INTO registeredusers(FullName, Password, MobileNumber, DeviceToken, Email, Gender, DOB, Platform, SingleUsePassword, SingleUseVerified, SingleUseExpiry,CreatedOn, referralCode, usedReferralCode, socialId, socialType) VALUES ('" . $user['FullName'] . "','" . $user['Password'] . "', '" . $user['MobileNumber'] . "','" . $user['DeviceToken'] . "','" . $user['Email'] . "','" . $user['Gender'] . "', '" . $user['DOB'] . "','" . $user['Platform'] . "','" . $user['SingleUsePassword'] . "', '1', '" . $user['SingleUseExpiry'] . "',now(),'" . $user['referralCode'] . "','" . $user['usedReferralCode'] . "', '" . $user['socialId'] . "','" . $user['socialType'] . "')";
         $stmt = $con->prepare($sql);
         $res = $stmt->execute();
 
