@@ -1,13 +1,16 @@
 <?php
 include('connection.php');
 
-if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='' && isset($_POST['vehicleId']) && $_POST['vehicleId'] !='' && isset($_POST['isCommercial']) && $_POST['isCommercial'] !='') {
+if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='' && isset($_POST['vehicleId']) && $_POST['vehicleId'] !='' && isset($_POST['isCommercial']) && $_POST['isCommercial'] !='' && isset($_POST['registrationNumber']) && $_POST['registrationNumber'] !='') {
 
     $mobileNumber = $_POST['mobileNumber'];
     $vehicleId = $_POST['vehicleId'];
     $isCommercial = $_POST['isCommercial'];
+    $registrationNumber = $_POST['registrationNumber'];
 
-    $sql = "INSERT INTO userVehicleDetail(mobileNumber,vehicleId, isCommercial, created) VALUES ('$mobileNumber','$vehicleId','$isCommercial', now())";
+    $sql = "SELECT vehicleId FROM userVehicleDetail WHERE mobileNumber='" . $mobileNumber . "'";
+
+    $sql = "INSERT INTO userVehicleDetail(mobileNumber,vehicleId, registrationNumber, isCommercial, created) VALUES ('$mobileNumber','$vehicleId', '$registrationNumber', '$isCommercial', now())";
     $nStmt = $con->prepare($sql);
 
     if ($nStmt->execute()){
