@@ -63,19 +63,28 @@ and SingleUseExpiry > NOW()");
             }
 
             $sql = "UPDATE registeredusers SET FullName = '" . $FullName . "', Email = '" . $email . "', DeviceToken = '".$user['DeviceToken']."', Platform='".$user['Platform']."', socialId = '".$user['socialId']."', socialType='".$user['socialType']."' WHERE MobileNumber = '".$MobileNumber."'";
+            $stmt = $con->prepare($sql);
+            $res = $stmt->execute();
         } else {
 
             $sql = "INSERT INTO registeredusers(FullName, Password, MobileNumber, DeviceToken, Email, Gender, DOB, Platform, SingleUsePassword, SingleUseVerified, SingleUseExpiry,CreatedOn, referralCode, usedReferralCode, socialId, socialType) VALUES ('" . $user['FullName'] . "','" . $user['Password'] . "', '" . $user['MobileNumber'] . "','" . $user['DeviceToken'] . "','" . $user['Email'] . "','" . $user['Gender'] . "', '" . $user['DOB'] . "','" . $user['Platform'] . "','" . $user['SingleUsePassword'] . "', '1', '" . $user['SingleUseExpiry'] . "',now(),'" . $user['referralCode'] . "','" . $user['usedReferralCode'] . "', '" . $user['socialId'] . "','" . $user['socialType'] . "')";
+
+            $stmt = $con->prepare($sql);
+            $res = $stmt->execute();
+
+            $sql = "INSERT INTO userprofileimage(MobileNumber, imagename) VALUES ('" . $user['MobileNumber'] . "','')";
+            $stmt = $con->prepare($sql);
+            $res2 = $stmt->execute();
+
+            if ($user['Email'] != '') {
+                require_once 'mail.php';
+                sendRegistrationMail ($FullName, $Email);
+            }
         }
         
-        $stmt = $con->prepare($sql);
-        $res = $stmt->execute();
+        
 
-        $sql = "INSERT INTO userprofileimage(MobileNumber, imagename) VALUES ('" . $user['MobileNumber'] . "','')";
-        $stmt = $con->prepare($sql);
-        $res2 = $stmt->execute();
-
-        if ($res == true && $res2 == true) {
+        if ($res == true) {
             $stmt = $con->prepare("DELETE FROM  tmp_register WHERE MobileNumber='" . $user['MobileNumber'] . "'");
             $stmt->execute();
 

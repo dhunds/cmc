@@ -54,14 +54,18 @@ if ($FullName != '' && ($MobileNumber != '' || $socialId !='')) {
     }
 
     
-    $con->query($sql);
+    $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($found > 0) {
+        $user = $stmt->fetch();
+        $resp['status'] = 'success';
+        $resp['message'] = 'Account already exists.';
+        $resp['mobileNumber'] = $user['MobileNumber'];
+
         http_response_code(500);
         header('Content-Type: application/json');
-        //echo '{"status":"fail", "message":"Mobile number already exists. Please try to login or register with a different mobile number"}';
-        echo '{"status":"fail", "message":"Account already exists."}';
+        echo json_encode($resp);
         exit;
     }
 
@@ -87,17 +91,6 @@ if ($FullName != '' && ($MobileNumber != '' || $socialId !='')) {
         $message = str_replace("XXXXXX", $singleusepassword, $message);
         $MobileNumber = '[' . $MobileNumber . ']';
         $objNotification->sendSMS($MobileNumber, $message);
-
-        /*if ($Email != '') {
-            $emailBody = 'Hi ' . $FullName . ',<br/><br/>' . $message . '<br/><br/>Thanks,<br/>iShareRyde Team';
-            $params = array('to' => $Email, 'body' => $emailBody);
-            $resp = $objNotification->sendEmailOTP($params);
-        }*/
-
-        if ($Email != '') {
-            require_once 'mail.php';
-            sendRegistrationMail ($FullName, $Email);
-        }
 
         http_response_code(200);
         header('Content-Type: application/json');
