@@ -48,9 +48,9 @@ if ($FullName != '' && ($MobileNumber != '' || $socialId !='')) {
     } while (!isReferralCodeUnique($code));
 
     if ($socialId !="") {
-        $sql = "SELECT FullName FROM registeredusers WHERE socialId='" . $socialId . "'";
+        $sql = "SELECT FullName, MobileNumber FROM registeredusers WHERE socialId='" . $socialId . "'";
     } else {
-        $sql = "SELECT FullName FROM registeredusers WHERE MobileNumber='" . $MobileNumber . "'";
+        $sql = "SELECT FullName, MobileNumber FROM registeredusers WHERE MobileNumber='" . $MobileNumber . "'";
     }
 
     

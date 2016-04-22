@@ -236,4 +236,3 @@ function addToClub($poolId, $memberName, $memberNumber){
 		return $resp;
 	}
 }
-

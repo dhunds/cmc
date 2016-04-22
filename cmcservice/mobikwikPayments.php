@@ -57,7 +57,7 @@ if (!$error) {
 
 	$fields = array('amount' => $amount, 'fee' => $fee, 'merchantname' => $merchantname, 'mid' => $mid, 'orderid' => $orderid, 'receivercell' => $receivercell, 'sendercell' => $sendercell, 'token' => $token, 'checksum' => $checksum);
 
-	//$headers = 'payloadtype=json';
+	//$headers = 'payloadtype:json';
 	$strParams = http_build_query($fields);
     $url = PEER_TRANSFER_URL . '?' . $strParams;
 		
@@ -69,7 +69,8 @@ if (!$error) {
     ));
     $result = curl_exec($curl);
     curl_close($curl);
-
+    //echo $result;
+    //die;
     if ($result === FALSE) {
         http_response_code(500);
 	    header('Content-Type: application/json');
@@ -84,19 +85,10 @@ if (!$error) {
             $nStmt = $con->prepare($sql);
             $nStmt->execute();
 
-            $jsonResp = array('status'=>$resp->status, 'statuscode'=>$resp->statuscode, 'statusdescription'=>$resp->statusdescription, 'amount'=>$resp->amount, 'orderid'=>$resp->orderid, 'refId'=>$resp->refId, 'checksum'=>$resp->checksum);
+            $jsonResp = array('status'=>(string)$resp->status, 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription, 'amount'=>(string)$resp->amount, 'orderid'=>(string)$resp->orderid, 'refId'=>(string)$resp->refId, 'checksum'=>(string)$resp->checksum);
         } else {
-        	$jsonResp = array('status'=>$resp->status, 'statuscode'=>$resp->statuscode, 'statusdescription'=>$resp->statusdescription);
+        	$jsonResp = array('status'=>(string)$resp->status, 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription);
         }
-        //$jsonResp = [];
-        //$jsonResp['status'] = $resp->status;
-        //$jsonResp['statuscode'] = $resp->statuscode;
-        
-        //echo json_encode($jsonResp);
-        //die;
-        //echo $resp->status;die;
-        //$response['status'] = 'success';
-		//$response['data'] = $jsonResp;
 
 		http_response_code(200);
 		header('Content-Type: application/json');

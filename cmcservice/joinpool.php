@@ -13,7 +13,7 @@ $MemberLocationlatlong = $_POST['MemberLocationlatlong'];
 $MemberEndLocationAddress = $_POST['MemberEndLocationAddress'];
 $MemberEndLocationlatlong = $_POST['MemberEndLocationlatlong'];
 $Status = $_POST['Status'];
-$Message = $_POST['Message'];
+//$Message = $_POST['Message'];
 $PoolId = $_POST['PoolId'];
 
 $sqlI = "SELECT imagename FROM userprofileimage WHERE Trim(MobileNumber) = Trim('$MemberNumber')";
