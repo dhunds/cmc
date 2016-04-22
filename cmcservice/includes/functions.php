@@ -236,3 +236,25 @@ function addToClub($poolId, $memberName, $memberNumber){
 		return $resp;
 	}
 }
+
+function mobikwikTransfers($amount, $fee, $merchantname, $mid, $orderid, $receivercell, $sendercell, $token, $checksum){
+    $string = "'".$amount ."''". $fee ."''". $merchantname ."''". $mid ."''". $orderid ."''". $receivercell ."''". $sendercell ."''". $token ."'";
+
+    $checksum = hash_hmac('sha256', $string, API_SECRET);
+
+    $fields = array('amount' => $amount, 'fee' => $fee, 'merchantname' => $merchantname, 'mid' => $mid, 'orderid' => $orderid, 'receivercell' => $receivercell, 'sendercell' => $sendercell, 'token' => $token, 'checksum' => $checksum);
+
+    $strParams = http_build_query($fields);
+    $url = PEER_TRANSFER_URL . '?' . $strParams;
+        
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => $url,
+        CURLOPT_HTTPHEADER => array('Content-Type: application/json')
+    ));
+    $result = curl_exec($curl);
+    curl_close($curl);
+    return $result;
+}
+

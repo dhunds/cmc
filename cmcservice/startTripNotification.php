@@ -19,7 +19,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
         $NotificationType = "Trip started";
         $tripNotification = "Ride Started. For payment, ask co-riders to confirm when they board the vehicle.\n";
 
-        $stmt1 = $con->query("select a.* from registeredusers a, acceptedrequest b where a.PushNotification != 'off' and Trim(a.MobileNumber) = Trim(b.MemberNumber) and b.cabid = '$CabID'");
+        $stmt1 = $con->query("select a.*, b.hasBoarded from registeredusers a, acceptedrequest b where a.PushNotification != 'off' and Trim(a.MobileNumber) = Trim(b.MemberNumber) and b.cabid = '$CabID'");
         $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         $gcm_array = array();
@@ -29,8 +29,13 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
 
         if ($no_of_users > 0) {
             while ($row = $stmt1->fetch()) {
+
+                if ($row['hasBoarded']) {
+                    $msgAppend .= $row['FullName']. ' has boarded.\n';
+                } else {
+                    $msgAppend .= $row['FullName']. ' has not boarded.\n';
+                }
                 
-                $msgAppend .= $row['FullName']. ' has joined.\n';
             }
         }
         $tripNotification .= $msgAppend;
