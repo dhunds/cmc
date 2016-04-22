@@ -46,7 +46,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
         $nearbyPublicGroups = implode(',', $nearbyGroupIds);
 
         $sql = "SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType,
-  pm.PoolId, pm.PoolName, pm.rGid, vd.vehicleId, vd.registrationNumber, vd.isCommercial
+  pm.PoolId, pm.PoolName, pm.rGid
     FROM cabopen co
     JOIN groupCabs gc ON co.CabId = gc.cabId
     JOIN userpoolsmaster pm ON gc.groupId = pm.PoolId
@@ -54,7 +54,6 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
     LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
     LEFT JOIN acceptedrequest ar ON co.CabId = ar.CabId
-    LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
     WHERE gc.groupId IN (" . $nearbyPublicGroups . ")
     AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
     AND co.MobileNumber !='$mobileNumber'
