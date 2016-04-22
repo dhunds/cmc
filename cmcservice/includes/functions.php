@@ -258,3 +258,13 @@ function mobikwikTransfers($amount, $fee, $merchantname, $mid, $orderid, $receiv
     return $result;
 }
 
+function checkPostForBlank($arrParams){
+    $error = 0;
+    foreach ($arrParams as $value) {
+        if (!isset($_POST[$value]) || $_POST[$value] =='') {
+            $error = 1;
+        }
+    }
+    return $error;
+}
+
