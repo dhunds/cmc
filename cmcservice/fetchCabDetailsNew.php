@@ -831,8 +831,17 @@ if ($no_of_rows > 0) {
                         }
                     }
                 }
-            } else if ($cabItem == 4) //Taxi For Sure
+            }
+            else if ($cabItem == 4) //Taxi For Sure
             {
+                //Code added to remove TFS from api response after they changed their API
+                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Hatchback');
+                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Sedan');
+                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'SUV');
+                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Nano');
+                    $mainCabsData = RemoveStdClass($cabItem, $mainCabsData, 'Tata Indica AC');
+                // End Code
+            /*
                 $getMainCabsData = [];
                 $cabTypes = [];
                 $getMainCabsData['hatchback'] = ReturnStdClass($cabItem, $mainCabsData, 'Hatchback');
@@ -872,7 +881,7 @@ if ($no_of_rows > 0) {
                             $mainCabsData[] = $CabsAllData;
                         }
                     }
-                }
+                } */
             }
             else if ($cabItem == 6) //Mega Cabs
             {
