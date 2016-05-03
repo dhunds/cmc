@@ -59,7 +59,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     WHERE gc.groupId IN (" . $nearbyPublicGroups . ")
     AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
     AND co.MobileNumber !='$mobileNumber'
-    AND co.status < 2
+    AND co.status < 1
     AND co.CabStatus ='A'
     AND co.RemainingSeats >0
     AND ar.CabId IS NULL";
@@ -111,7 +111,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     WHERE gc.groupId IN (" . $nearbyPublicGroups . ")
     AND co.MobileNumber !='$mobileNumber'
     AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
-    AND co.status < 2
+    AND co.status < 1
     AND co.CabStatus ='A'
     AND co.RemainingSeats >0
     AND ar.CabId IS NULL";
@@ -138,7 +138,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     WHERE TRIM(cm.MemberNumber) = '" . $mobileNumber . "'
     AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
     AND co.MobileNumber !='$mobileNumber'
-    AND co.status < 2
+    AND co.status < 1
     AND co.CabStatus ='A'
     AND co.RemainingSeats >0
     AND ar.CabId IS NULL";
