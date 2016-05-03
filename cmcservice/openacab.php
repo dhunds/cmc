@@ -1,6 +1,7 @@
 <?php
 include('connection.php');
 include_once('classes/class.notification.php');
+include('../common.php');
 $objNotification = new Notification();
 
 $CabId = $_POST['CabId'];
@@ -21,7 +22,8 @@ $FromShortName = $_POST['FromShortName'];
 $ToShortName = $_POST['ToShortName'];
 
 $rideType = '';
-$perKmCharge = '';
+
+$perKmCharge = perKMChargeIntercity();
 
 if(isset($_POST['rideType']) && $_POST['rideType'] !='') {
     $rideType = $_POST['rideType'];

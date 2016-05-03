@@ -40,3 +40,19 @@ function rideProximity(){
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $result[0]['setValue'];
 }
+
+function perKMChargeIntercity(){
+    global $con;
+    $stmt = $con->prepare("select setValue from settings Where setName='PER_KM_CHARGE_INTERCITY'");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result[0]['setValue'];
+}
+
+function perKMChargeIntracity(){
+    global $con;
+    $stmt = $con->prepare("select setValue from settings Where setName='PER_KM_CHARGE_INTRACITY'");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result[0]['setValue'];
+}

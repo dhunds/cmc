@@ -26,7 +26,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     $ToShortName = $_POST['ToShortName'];
 
     $rideType = '';
-    $perKmCharge = '';
+    $perKmCharge = perKMChargeIntracity();
 
     if (isset($_POST['rideType']) && $_POST['rideType'] != '') {
         $rideType = $_POST['rideType'];
