@@ -13,7 +13,7 @@ $MemberLocationlatlong = $_POST['MemberLocationlatlong'];
 $MemberEndLocationAddress = $_POST['MemberEndLocationAddress'];
 $MemberEndLocationlatlong = $_POST['MemberEndLocationlatlong'];
 $Status = $_POST['Status'];
-//$Message = $_POST['Message'];
+$Message = $_POST['Message'];
 $PoolId = $_POST['PoolId'];
 
 $sqlI = "SELECT imagename FROM userprofileimage WHERE Trim(MobileNumber) = Trim('$MemberNumber')";
@@ -53,7 +53,7 @@ if (($Seats - $RemainingSeats) > 0) {
             $upstmt2 = $con->prepare($upsql2);
             $upres2 = $upstmt2->execute();
         }
-        /*$NotificationType = "CabId_Joined";
+        $NotificationType = "CabId_Joined";
 
         $params = array('NotificationType' => $NotificationType, 'SentMemberName' => $MemberName, 'SentMemberNumber' => $MemberNumber, 'ReceiveMemberName'=>$OwnerName, 'ReceiveMemberNumber'=>$OwnerNumber, 'Message'=>$Message, 'CabId'=>$CabId, 'DateTime'=>'now()');
         $notificationId = $objNotification->logNotification($params);
@@ -82,7 +82,7 @@ if (($Seats - $RemainingSeats) > 0) {
             }
         } else {
             echo "no one in database";
-        }*/
+        }
     } else {
         echo 'Error';
     }

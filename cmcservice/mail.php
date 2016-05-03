@@ -52,6 +52,35 @@ function sendRegistrationMail ($name, $email) {
     }
 }
 
+function sendGroupCreationMail ($groupName) {
+    global $client;
+    $body = '<html>
+                <head>
+                    <title></title>
+                </head>
+                <body>
+                    <p>Hello Admin,</p>
+
+                    <p>A new group with the name <strong>'.$groupName.'</strong>has been created</p>
+                    <p>&nbsp;</p>
+                    <p>Team iShareRyde</p>
+                </body>
+             </html>';
+
+    $msg = array();
+    $msg['Source'] = "support@ishareryde.com";
+    $msg['Destination']['ToAddresses'][] = "support@ishareryde.com";
+    $msg['Message']['Subject']['Data'] = "New Group created";
+    $msg['Message']['Body']['Html']['Data'] =$body;
+    $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
+
+    try{
+        $client->sendEmail($msg);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+    }
+}
+
 function sendInviteApprovalMail ($email) {
     global $client;
     $body = '<html>

@@ -81,6 +81,14 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     if ($found < 1) {
         $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
         $groupId = $createGroup;
+
+        if ($groupId) {
+            // Send Mail to support
+            require_once 'mail.php';
+            $groupName = $FromShortName . ' to ' . $ToShortName;
+            sendGroupCreationMail ($groupName);
+        }
+
     } else {
         $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $groupId = $nearbyGroup[0]['PoolId'];
