@@ -73,7 +73,7 @@ include('functions.php');
 				echo "<div class='pure-u-2-24'><p style='text-align: center'>" . $row['NoOfUsers'] . "</p></div>";
 				echo "<div class='pure-u-3-24'><p style='text-align: center'>" . $row['RegisteredUsers'] . "</p></div>";
 				echo "<div class='pure-u-3-24'><p style='text-align: center'>" . $row['NonRegisteredUsers'] . "</p></div>";
-				echo "<div class='pure-u-1-24'><p style='text-align: center'><a href='mEditClubMaster.php?id=" . $row['PoolId'] . "'>View</a></p></div>";
+				echo "<div class='pure-u-1-24'><p style='text-align: center'><a href='mEditClub.php?id=" . $row['PoolId'] . "'>Edit</a><a href='mEditClubMaster.php?id=" . $row['PoolId'] . "'>View</a></p></div>";
 				echo "</div>";
 			}											
 		}				

@@ -60,5 +60,15 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
         $sql12 = "UPDATE cabopen set uptripnotification = '1', status=1 where CabId = '" . $CabID . "'";
         $stmt12 = $con->prepare($sql12);
         $res12 = $stmt12->execute();
+
+        http_response_code(200);
+        header('Content-Type: application/json');
+        echo '{"status":"success", "message":"Trip Started."}';
+        exit;
     }
+} else {
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo '{"status":"fail", "message":"Invalid Params."}';
+    exit;
 }
