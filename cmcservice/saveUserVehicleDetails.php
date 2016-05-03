@@ -10,7 +10,18 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='' && isset($_POST
 
     $sql = "SELECT vehicleId FROM userVehicleDetail WHERE mobileNumber='" . $mobileNumber . "'";
 
-    $sql = "INSERT INTO userVehicleDetail(mobileNumber,vehicleId, registrationNumber, isCommercial, created) VALUES ('$mobileNumber','$vehicleId', '$registrationNumber', '$isCommercial', now())";
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($found)
+    {
+        $sql = "UPDATE userVehicleDetail SET vehicleId='".$vehicleId."', registrationNumber='".$registrationNumber."', isCommercial='".$isCommercial."' WHERE mobileNumber='".$mobileNumber."'";
+
+    } else {
+        $sql = "INSERT INTO userVehicleDetail(mobileNumber,vehicleId, registrationNumber, isCommercial, created) VALUES ('$mobileNumber','$vehicleId', '$registrationNumber', '$isCommercial', now())";
+
+    }
+
     $nStmt = $con->prepare($sql);
 
     if ($nStmt->execute()){
