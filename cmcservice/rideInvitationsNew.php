@@ -57,7 +57,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
     JOIN vehicle v ON v.id = vd.vehicleId
     WHERE gc.groupId IN (" . $nearbyPublicGroups . ")
-    AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
+    AND NOW() < DATE_ADD(co.TravelTime, INTERVAL 1 HOUR)
     AND co.MobileNumber !='$mobileNumber'
     AND co.status < 1
     AND co.CabStatus ='A'
@@ -110,7 +110,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     JOIN vehicle v ON v.id = vd.vehicleId
     WHERE gc.groupId IN (" . $nearbyPublicGroups . ")
     AND co.MobileNumber !='$mobileNumber'
-    AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
+    AND NOW() < DATE_ADD(co.TravelTime, INTERVAL 1 HOUR)
     AND co.status < 1
     AND co.CabStatus ='A'
     AND co.RemainingSeats >0
@@ -136,7 +136,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
     JOIN vehicle v ON v.id = vd.vehicleId
     WHERE TRIM(cm.MemberNumber) = '" . $mobileNumber . "'
-    AND NOW() < DATE_ADD(co.ExpEndDateTime, INTERVAL 1 HOUR)
+    AND NOW() < DATE_ADD(co.TravelTime, INTERVAL 1 HOUR)
     AND co.MobileNumber !='$mobileNumber'
     AND co.status < 1
     AND co.CabStatus ='A'
