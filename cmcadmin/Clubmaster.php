@@ -1,9 +1,15 @@
 <?php
 include('functions.php');
 
+if (isset($_REQUEST['group']) && $_REQUEST['group'] !='') {
+ $keyword = $_REQUEST['group'];
+} else {
+	$keyword = $_REQUEST['group'];
+}
+
 	echo "<form><h2 class='headingText' style='margin-bottom: 0px;'>Club Master</h2>";
 	echo "<div>";
-	echo "<div class='pure-u-1'><p style='text-align:right; margin-right: 5px;'><input type='text' name='group'> &nbsp;&nbsp;<a href='exportClubMaster.php'><img src='images/icon_excel.gif'  border='0' width='25' /></a></p></div>";
+	echo "<div class='pure-u-1'><p style='text-align:right; margin-right: 5px;'><input type='text' name='group' placeholder='Group name' value='".$keyword."'> &nbsp;&nbsp;<a href='exportClubMaster.php'><img src='images/icon_excel.gif'  border='0' width='25' /></a></p></div>";
 	echo "<div class='pure-g' style='font-size:13px; font-weight:bold;'>";
     echo "<div class='pure-u-5-24'><p class='tHeading'>Owner Name</p></div>";	
 	echo "<div class='pure-u-4-24'><p class='tHeading'>Owner Number</p></div>";
