@@ -11,13 +11,20 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
     $eLat = $_POST['elat'];
     $eLon = $_POST['elon'];
 
-
     $stmt = $con->query("select FullName, MobileNumber FROM registeredusers WHERE trim(MobileNumber)='" . $MobileNumber . "'");
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($found > 0) {
-        $stmt = $con->query("Select * From userpoolsmaster WHERE PoolName='$groupName' AND OwnerNumber = '$MobileNumber'");
-        $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+        $stmt = $con->query("Select PoolName From userpoolsmaster WHERE PoolId=".$_REQUEST['id']);
+        $group = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (trim($group['PoolName']) == trim($groupName)) {
+            $found = 0;
+        } else {
+            $stmt = $con->query("Select * From userpoolsmaster WHERE PoolName='$groupName' AND OwnerNumber = '$MobileNumber'");
+            $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+        }
 
         if ($found > 0) {
             echo "Group Name '" . $groupName . "' Already Exist<br />";
