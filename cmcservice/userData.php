@@ -5,7 +5,7 @@ $resp = array('header' => 500, 'status' => 'fail', 'message' => '', 'data' => ar
 
 if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
 
-    $sql = "SELECT FullName, Email, referralCode, totalCredits, usedReferralCode as signedUpUsingCode, DeviceToken FROM registeredusers WHERE MobileNumber='".$_POST['mobileNumber']."'";
+    $sql = "SELECT FullName, Email, referralCode, totalCredits, usedReferralCode as signedUpUsingCode, DeviceToken, status  FROM registeredusers WHERE MobileNumber='".$_POST['mobileNumber']."'";
     $stmt = $con->query($sql);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
