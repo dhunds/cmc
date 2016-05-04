@@ -108,52 +108,47 @@ $group = $stmt->fetch(PDO::FETCH_ASSOC);
     </div>
 </div>
 <script>
-    var source = 0;
     function initMap() {
         var mapDiv = document.getElementById('map');
         var map = new google.maps.Map(mapDiv, {
-            center: {lat: <?=($group['startLat'])?$group['startLat']:'28.4940472';?>, lng: <?=($group['startLat'])?$group['startLon']:'77.0820822';?>},
-            zoom: 9
+            center: {lat: <?=($group['startLat'])?$group['startLat']:'28.5267268';?>, lng: <?=($group['startLon'])?$group['startLon']:'77.1358162';?>},
+            zoom: 10
         });
     }
     window.onload = function () {
         var mapOptions = {
-            center: new google.maps.LatLng(28.4940472, 77.0820822),
-            zoom: 9,
+            center: new google.maps.LatLng(<?=($group['startLat'])?$group['startLat']:'28.5267268';?>, <?=($group['startLon'])?$group['startLon']:'77.1358162';?>),
+            zoom: 10,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
         var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-        google.maps.event.addListener(map, 'click', function (e) {
 
-            var lat = e.latLng.lat();
-            var lng = e.latLng.lng()
+        var marker1 = new google.maps.Marker({
+            draggable: true,
+            position: new google.maps.LatLng(<?=($group['startLat'])?$group['startLat']:'28.5267268';?>, <?=($group['startLon'])?$group['startLon']:'77.1358162';?>),
+            map: map
+        });
 
-            var latlng = new google.maps.LatLng(lat, lng);
-            var geocoder = new google.maps.Geocoder();
+        var marker2 = new google.maps.Marker({
+            draggable: true,
+            position: new google.maps.LatLng(<?=($group['endLat'])?$group['endLat']:'28.4936018';?>, <?=($group['endLon'])?$group['endLon']:'77.0861363';?>),
+            map: map
+        });
 
-            geocoder.geocode({'latLng': latlng}, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    if (results[1]) {
-                        if (confirm("Confirm this address..\r\n\r\n" + results[1].formatted_address)) {
-                            if (source) {
-                                document.getElementById("elat").value = lat;
-                                document.getElementById("elon").value = lng;
-                            } else {
-                                document.getElementById("slat").value = lat;
-                                document.getElementById("slon").value = lng;
-                                source = 1;
-                            }
-                        }
-                    }
-                }
-            });
+        google.maps.event.addListener(marker1, 'dragend', function (event) {
+            document.getElementById("slat").value = event.latLng.lat();
+            document.getElementById("slon").value = event.latLng.lng();
+        });
+
+        google.maps.event.addListener(marker2, 'dragend', function (event) {
+            document.getElementById("elat").value = event.latLng.lat();
+            document.getElementById("elon").value = event.latLng.lng();
         });
     }
 
     function frmReset() {
         document.getElementById("groups").reset();
-        source = 0;
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&callback=initMap"
