@@ -1,9 +1,9 @@
 <?php
 include('functions.php');
 
-	echo "<h2 class='headingText' style='margin-bottom: 0px;'>Club Master</h2>";
+	echo "<form><h2 class='headingText' style='margin-bottom: 0px;'>Club Master</h2>";
 	echo "<div>";
-	echo "<div class='pure-u-1'><p style='text-align:right; margin-right: 5px;'><a href='exportClubMaster.php'><img src='images/icon_excel.gif'  border='0' width='25' height='25'/></a></p></div>";
+	echo "<div class='pure-u-1'><p style='text-align:right; margin-right: 5px;'><input type='text' name='group'> &nbsp;&nbsp;<a href='exportClubMaster.php'><img src='images/icon_excel.gif'  border='0' width='25' /></a></p></div>";
 	echo "<div class='pure-g' style='font-size:13px; font-weight:bold;'>";
     echo "<div class='pure-u-5-24'><p class='tHeading'>Owner Name</p></div>";	
 	echo "<div class='pure-u-4-24'><p class='tHeading'>Owner Number</p></div>";
@@ -13,9 +13,14 @@ include('functions.php');
 	echo "<div class='pure-u-3-24'><p class='tHeading'>Registered Users</p></div>";
 	echo "<div class='pure-u-3-24'><p class='tHeading'>Non Registered Users</p></div>";
 	echo "<div class='pure-u-2-24'><p class='tHeading'>Action</p></div>";
-	echo "</div>";
+	echo "</div></form>";
 
-	$sql = "SELECT pm.*, ru.FullName FROM userpoolsmaster pm JOIN registeredusers ru ON pm.OwnerNumber=ru.MobileNumber";
+	if (isset($_REQUEST['group']) && $_REQUEST['group'] !='') {
+		$sql = "SELECT pm.*, ru.FullName FROM userpoolsmaster pm JOIN registeredusers ru ON pm.OwnerNumber=ru.MobileNumber WHERE pm.PoolName LIKE '%".trim($_REQUEST['group'])."%'";
+	} else {
+		$sql = "SELECT pm.*, ru.FullName FROM userpoolsmaster pm JOIN registeredusers ru ON pm.OwnerNumber=ru.MobileNumber";
+	}
+
 	$stmt = $con->prepare($sql);
 	if ($stmt->execute())
 	{

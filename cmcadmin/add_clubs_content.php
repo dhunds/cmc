@@ -120,6 +120,29 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
             map: map
         });
 
+        var circle1 = new google.maps.Circle({
+            map: map,
+            strokeColor: '#4285F4',
+            strokeOpacity: 0.6,
+            strokeWeight: 1,
+            radius: 2500,    // 10 miles in metres
+            fillColor: '#7caeff',
+            fillOpacity: 0.2,
+        });
+
+        var circle2 = new google.maps.Circle({
+            map: map,
+            strokeColor: '#4285F4',
+            strokeOpacity: 0.6,
+            strokeWeight: 1,
+            radius: 2500,    // 10 miles in metres
+            fillColor: '#7caeff',
+            fillOpacity: 0.2,
+        });
+
+        circle1.bindTo('center', marker1, 'position');
+        circle2.bindTo('center', marker2, 'position');
+
         google.maps.event.addListener(marker1, 'dragend', function (event) {
             document.getElementById("slat").value = event.latLng.lat();
             document.getElementById("slon").value = event.latLng.lng();

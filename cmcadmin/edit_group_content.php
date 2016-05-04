@@ -112,13 +112,13 @@ $group = $stmt->fetch(PDO::FETCH_ASSOC);
         var mapDiv = document.getElementById('map');
         var map = new google.maps.Map(mapDiv, {
             center: {lat: <?=($group['startLat'])?$group['startLat']:'28.5267268';?>, lng: <?=($group['startLon'])?$group['startLon']:'77.1358162';?>},
-            zoom: 10
+            zoom: 11
         });
     }
     window.onload = function () {
         var mapOptions = {
             center: new google.maps.LatLng(<?=($group['startLat'])?$group['startLat']:'28.5267268';?>, <?=($group['startLon'])?$group['startLon']:'77.1358162';?>),
-            zoom: 10,
+            zoom: 11,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
@@ -135,6 +135,29 @@ $group = $stmt->fetch(PDO::FETCH_ASSOC);
             position: new google.maps.LatLng(<?=($group['endLat'])?$group['endLat']:'28.4936018';?>, <?=($group['endLon'])?$group['endLon']:'77.0861363';?>),
             map: map
         });
+
+        var circle1 = new google.maps.Circle({
+            map: map,
+            strokeColor: '#4285F4',
+            strokeOpacity: 0.6,
+            strokeWeight: 1,
+            radius: 2500,    // 10 miles in metres
+            fillColor: '#7caeff',
+            fillOpacity: 0.2,
+        });
+
+        var circle2 = new google.maps.Circle({
+            map: map,
+            strokeColor: '#4285F4',
+            strokeOpacity: 0.6,
+            strokeWeight: 1,
+            radius: 2500,    // 10 miles in metres
+            fillColor: '#7caeff',
+            fillOpacity: 0.2,
+        });
+
+        circle1.bindTo('center', marker1, 'position');
+        circle2.bindTo('center', marker2, 'position');
 
         google.maps.event.addListener(marker1, 'dragend', function (event) {
             document.getElementById("slat").value = event.latLng.lat();
