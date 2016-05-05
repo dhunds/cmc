@@ -237,7 +237,8 @@ function addToClub($poolId, $memberName, $memberNumber){
 	}
 }
 
-function mobikwikTransfers($amount, $fee, $merchantname, $mid, $orderid, $receivercell, $sendercell, $token, $checksum){
+function mobikwikTransfers($amount, $fee, $merchantname, $mid, $orderid, $receivercell, $sendercell, $token){
+
     $string = "'".$amount ."''". $fee ."''". $merchantname ."''". $mid ."''". $orderid ."''". $receivercell ."''". $sendercell ."''". $token ."'";
 
     $checksum = hash_hmac('sha256', $string, API_SECRET);

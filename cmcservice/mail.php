@@ -112,3 +112,63 @@ function sendInviteApprovalMail ($email) {
         error_log($e->getMessage());
     }
 }
+
+function sendPaymentMailMember ($name, $email, $ride, $distance, $perkmCharge,  $fare ) {
+    global $client;
+    $body = '<html>
+                <head>
+                    <title></title>
+                </head>
+                <body>
+                    <p>Dear '.$name.',</p>
+                    <p>Thanks for choosing iShareRyde. Below is your ride summary</p>
+                    <p>Ride : '.$ride.'</p>
+                    <p>Total Distance (KM) : '.$distance.' </p>
+                    <p>Rate per Km : '.$perkmCharge.' </p>
+                    <p>Total Fare : '.$fare.' </p>
+                    <p>Team iShareRyde</p>
+                </body>
+             </html>';
+
+    $msg = array();
+    $msg['Source'] = "support@ishareryde.com";
+    $msg['Destination']['ToAddresses'][] = $email;
+    $msg['Message']['Subject']['Data'] = "iShareRyde Payment Details";
+    $msg['Message']['Body']['Html']['Data'] =$body;
+    $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
+
+    try{
+        $client->sendEmail($msg);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+    }
+}
+
+function sendPaymentMailOwner ($groupName) {
+    global $client;
+    $body = '<html>
+                <head>
+                    <title></title>
+                </head>
+                <body>
+                    <p>Hello Admin,</p>
+
+                    <p>A new group with the name <strong>'.$groupName.'</strong>has been created</p>
+                    <p>&nbsp;</p>
+                    <p>Team iShareRyde</p>
+                </body>
+             </html>';
+
+    $msg = array();
+    $msg['Source'] = "support@ishareryde.com";
+    $msg['Destination']['ToAddresses'][] = "support@ishareryde.com";
+    $msg['Message']['Subject']['Data'] = "New Group created";
+    $msg['Message']['Body']['Html']['Data'] =$body;
+    $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
+
+    try{
+        $client->sendEmail($msg);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+    }
+}

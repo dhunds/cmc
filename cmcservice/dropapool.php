@@ -1,7 +1,7 @@
 <?php
 include('connection.php');
 include_once('classes/class.notification.php');
-include_once('includes/functions.php')
+include_once('includes/functions.php');
 $objNotification = new Notification();
 
 $CabId = $_POST['CabId'];
