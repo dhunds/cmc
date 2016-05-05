@@ -44,7 +44,6 @@ if (!$error) {
         // Start Merchant Transaction
             $merchantOrderid = microtime();
 
-            $merchantTransferResp = mobikwikTransfers($totalDeductible, $fee, $merchantname, $mid, $merchantOrderid, $receivercell, $sendercell, $token);
 
             $merchantResp = simplexml_load_string($merchantTransferResp);
 
@@ -104,7 +103,7 @@ if (!$error) {
                 if($row['Email'] !='') {
                     require_once 'mail.php';
 
-                    $stmt = $con->query("SELECT Distance, perKmCharge, FromShortName, ToShortName FROM registeredusers WHERE CabId = '".$_POST['cabId']."'");
+                    $stmt = $con->query("SELECT Distance, perKmCharge, FromShortName, ToShortName FROM cabopen WHERE CabId = '".$_POST['cabId']."'");
                     $cabDetail = $stmt->fetch();
                     $ride  = $cabDetail['FromShortName'].' To '.$cabDetail['ToShortName'];
 
@@ -124,19 +123,16 @@ if (!$error) {
     $res = $stmt->execute();
 
     if ($curlFailed || $paymentFailed) {
-        http_response_code(500);
-        header('Content-Type: application/json');
-        echo '{"status":"failed", "message":"Payment Failed, please settle Rs. '.$fare.' in cash"}';
-        exit;
-    } else {
-        http_response_code(200);
-        header('Content-Type: application/json');
-        echo json_encode($jsonResp);
-        exit;
+        $jsonResp = array('status'=>'fail', 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription, 'message'=>"Payment Failed, please settle Rs.'.$fare.' in cash");
     }
 
+    http_response_code(200);
+    header('Content-Type: application/json');
+    echo json_encode($jsonResp);
+    exit;
+
 } else {
-    http_response_code(500);
+    http_response_code(200);
     header('Content-Type: application/json');
     echo '{"status":"failed", "message":"Invalid Params."}';
     exit;
