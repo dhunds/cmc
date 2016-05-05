@@ -55,7 +55,7 @@ if (!$error) {
 
         // End Merchant Transaction
 
-            $jsonResp = array('status'=>"success", 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription, 'amount'=>(string)$resp->amount, 'orderid'=>(string)$resp->orderid, 'refId'=>(string)$resp->refId, 'checksum'=>(string)$resp->checksum);
+            $jsonResp = array('status'=>"success", 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription, 'amount'=>(string)$resp->amount, 'orderid'=>(string)$resp->orderid, 'refId'=>(string)$resp->refId, 'checksum'=>(string)$resp->checksum, 'message'=>'Payment Received');
 
         //Send Notification
             $stmt = $con->query("SELECT MobileNumber, FullName, DeviceToken, Platform FROM registeredusers WHERE MobileNumber = '0091".$_POST['receivercell']."'");
@@ -70,7 +70,7 @@ if (!$error) {
                 $receiverDeviceToken = $row['DeviceToken'];
 
                 $NotificationType = "Payment_Received";
-                $Message = "Payment Failed, please settle in cash";
+                $Message = "Payment received.";
 
                 $paramsReceiver = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$receiverName, 'ReceiveMemberNumber'=>$receiverMobileNumber, 'Message'=>$Message, 'CabId'=>$_POST['cabId'], 'DateTime'=>'now()');
 
@@ -123,7 +123,7 @@ if (!$error) {
     $res = $stmt->execute();
 
     if ($curlFailed || $paymentFailed) {
-        $jsonResp = array('status'=>'fail', 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription, 'message'=>"Payment Failed, please settle Rs.'.$fare.' in cash");
+        $jsonResp = array('status'=>'fail', 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription, 'message'=>'Payment failed, please settle Rs.'.$fare.' in cash');
     }
 
     http_response_code(200);
