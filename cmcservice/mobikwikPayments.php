@@ -126,7 +126,7 @@ if (!$error) {
     if ($curlFailed || $paymentFailed) {
         http_response_code(500);
         header('Content-Type: application/json');
-        echo '{"status":"failed", "message":"Payment Failed, please settle Rs. "'.$fare.'" in cash"}';
+        echo '{"status":"failed", "message":"Payment Failed, please settle Rs. '.$fare.' in cash"}';
         exit;
     } else {
         http_response_code(200);
