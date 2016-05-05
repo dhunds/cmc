@@ -121,7 +121,7 @@ if (!$error) {
 
     $sql = "UPDATE acceptedrequest set hasBoarded = 1 where CabId = '" . $_POST['cabId'] . "'";
     $stmt = $con->prepare($sql12);
-    $res = $stmt12->execute();
+    $res = $stmt->execute();
 
     if ($curlFailed || $paymentFailed) {
         http_response_code(500);
