@@ -8,23 +8,24 @@ $paymentFailed = 0;
 $curlFailed = 0;
 $error = 0;
 
-$error = checkPostForBlank (array('sendercell', 'receivercell', 'amount', 'fee', 'orderid', 'token', 'mid', 'merchantname'));
+$error = checkPostForBlank (array('sendercell', 'receivercell', 'amount', 'fee'));
 
 if (!$error) {
-    $fare           = $_POST['amount'];
+    $amount         = $_POST['amount'];
     $sendercell     = $_POST['sendercell'];
     $receivercell   = $_POST['receivercell'];
     $fee            = $_POST['fee'];
-    $orderid        = $_POST['orderid'];
-    $token          = $_POST['token'];
-    $merchantname   = $_POST['merchantname'];
-    $mid            = $_POST['mid'];
+    $orderid        = microtime();
+    $merchantname   = MERCHANT_NAME;
+    $mid            = MID;
+
+    $sendercellNew = '0091'.$sendercell;
+    $receivercellNew = '0091'.$receivercell;
+    $token          = getMobikwikToken($sendercellNew);
 
     $serviceCharge  = 5;
-    $serviceTax  = ceil((14/100) * 5);
-    $totalDeductible = $serviceCharge + $serviceTax;
-
-    $amount = $fare - $totalDeductible;
+    $serviceTax  = (14/100) * 5;
+    $totalDeductible = ceil($serviceCharge + $serviceTax);
 
 	$result = mobikwikTransfers($amount, $fee, $merchantname, $mid, $orderid, $receivercell, $sendercell, $token);
     
@@ -36,19 +37,25 @@ if (!$error) {
         $resp = simplexml_load_string($result);
         
         if ($resp->status =='SUCCESS'){
-            $cell = '0091'.substr(trim($_POST['cell']), -10);
-            $sql = "INSERT INTO paymentLogs(mobileNumberFrom, mobileNumberTo, transactionId, amount, transactionDate, paidTo, cabId, status) VALUES ('" . $sendercell . "', '" . $resp->receivercell . "', '" . $resp->refId . "', '" . $resp->amount . "', now(), 2, '" . $_POST['cabId'] . "', '" . $resp->status . "')";
+
+            mobikwikTokenRegenerate($sendercellNew);
+
+            $sql = "INSERT INTO paymentLogs(mobileNumberFrom, mobileNumberTo, transactionId, amount, transactionDate, paidTo, cabId, status, serviceCharge, serviceTax) VALUES ('" . $sendercellNew . "', '" . $receivercellNew . "', '" . $resp->refId . "', '" . $resp->amount . "', now(), 1, '" . $_POST['cabId'] . "', '" . $resp->status . "', '" . $serviceCharge . "', '" . $serviceTax . "')";
             $nStmt = $con->prepare($sql);
             $nStmt->execute();
 
         // Start Merchant Transaction
-            $merchantOrderid = microtime();
-
+            $merchantOrderid = microtime().$_POST['cabId'];
+            $merchantToken = getMobikwikToken ($receivercellNew);
+            $merchantTransferResp = mobikwikTransfers($totalDeductible, $fee, $merchantname, $mid, $merchantOrderid, MERCHANT_NUMBER, $receivercell, $merchantToken);
 
             $merchantResp = simplexml_load_string($merchantTransferResp);
 
             if ($merchantResp->status =='SUCCESS') {
-                $sql = "INSERT INTO paymentLogs (mobileNumberFrom, mobileNumberTo, transactionId, amount, transactionDate, paidTo, cabId, status, serviceCharge, serviceTax) VALUES ('" . $sendercell . "', '" . MERCHANT_NUMBER . "', '" . $merchantResp->refId . "', '" . $merchantResp->amount . "', now(), 2, '" . $_POST['cabId'] . "', '" . $merchantResp->status . "', '" . $serviceCharge . "', '" . $serviceTax . "')";
+
+                mobikwikTokenRegenerate($receivercellNew);
+
+                $sql = "INSERT INTO paymentLogs (mobileNumberFrom, mobileNumberTo, transactionId, amount, transactionDate, paidTo, cabId, status, serviceCharge, serviceTax) VALUES ('" . $receivercellNew . "', '" . MERCHANT_NUMBER . "', '" . $merchantResp->refId . "', '" . $merchantResp->amount . "', now(), 2, '" . $_POST['cabId'] . "', '" . $merchantResp->status . "', '" . $serviceCharge . "', '" . $serviceTax . "')";
                 $nStmt = $con->prepare($sql);
                 $nStmt->execute();
             }

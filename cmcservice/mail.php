@@ -144,9 +144,14 @@ function sendPaymentMailMember ($name, $email, $ride, $distance, $perkmCharge,  
     }
 }
 
-function sendPaymentMailOwner ($groupName) {
+function sendPaymentMailOwner ($email, $cabId) {
     global $client;
-    $body = '<html>
+
+    $stmt = $con->query("SELECT pl.*, ru.FullName FROM paymentLogs pl JOIN registeredusers ru ON pl.mobileNumberFrom=ru.MobileNumber WHERE  pl.paidTo = 1 AND pl.CabId='".$cabId."'");
+    $membersJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($membersJoined) {
+        $body = '<html>
                 <head>
                     <title></title>
                 </head>
@@ -159,16 +164,21 @@ function sendPaymentMailOwner ($groupName) {
                 </body>
              </html>';
 
-    $msg = array();
-    $msg['Source'] = "support@ishareryde.com";
-    $msg['Destination']['ToAddresses'][] = "support@ishareryde.com";
-    $msg['Message']['Subject']['Data'] = "New Group created";
-    $msg['Message']['Body']['Html']['Data'] =$body;
-    $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
+        while ($row = $stmt->fetch()) {
 
-    try{
-        $client->sendEmail($msg);
-    } catch (Exception $e) {
-        error_log($e->getMessage());
+        }
+
+        $msg = array();
+        $msg['Source'] = "support@ishareryde.com";
+        $msg['Destination']['ToAddresses'][] = $email;
+        $msg['Message']['Subject']['Data'] = "New Group created";
+        $msg['Message']['Body']['Html']['Data'] =$body;
+        $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
+
+        try{
+            $client->sendEmail($msg);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+        }
     }
 }

@@ -403,3 +403,15 @@ function getMobikwikToken ($mobileNumber) {
     return false;
 }
 
+function getUserByMobileNumber ($mobileNumber) {
+    global $con;
+
+    $stmt = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '".$mobileNumber."'");
+    $userExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($userExists) {
+        $user = $stmt->fetch();
+        return $user;
+    }
+    return false;
+}

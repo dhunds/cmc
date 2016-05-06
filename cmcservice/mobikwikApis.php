@@ -39,7 +39,7 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
     } else if($_POST['act'] == 'getToken') {
 
         $res = getMobikwikToken($_POST['mobileNumber']);
-        
+
         if ($res) {
             $user = $stmt->fetch();
             echo '{"status":"success", "token":"'.$res.'"}';
@@ -47,7 +47,7 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
         } else {
             http_response_code(200);
             header('Content-Type: application/json');
-            echo '{"status":"fail", "message":"Invalid User"}';
+            echo '{"status":"fail", "message":"No Data"}';
             exit;
         }
     }

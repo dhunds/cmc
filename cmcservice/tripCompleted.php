@@ -13,7 +13,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
     $stmt = $con->query("SELECT * FROM cabopen WHERE CabId = '" . $_POST['cabId'] . "'");
     $cabDetail = $stmt->fetch();
 
-    $stmt = $con->query("SELECT a.FullName, a.MobileNumber, a.DeviceToken, c.CabId, c.FromShortName, c.ToShortName FROM registeredusers a, acceptedrequest b, cabopen c WHERE  a.MobileNumber = b.MemberNumber AND b.CabId = c.CabId AND c.CabId='".$_POST['cabId']."' AND b.hasBoarded=1");
+    $stmt = $con->query("SELECT a.FullName, a.MobileNumber, a.DeviceToken, c.CabId, c.FromShortName, c.ToShortName FROM registeredusers a, acceptedrequest b WHERE  a.MobileNumber = b.MemberNumber AND b.CabId='".$_POST['cabId']."' AND b.hasBoarded=1");
 
     $membersJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -27,6 +27,14 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
             $params = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$row['FullName'], 'ReceiveMemberNumber'=>(string)$row['MobileNumber'], 'Message'=>$Message, 'CabId'=>$row['CabId'], 'DateTime'=>'now()');
 
             sendOwnerRatingNotification ($objNotification, $params, $row['DeviceToken'], $row['Platform'], $row['PushNotification']);
+
+        // Send Mail
+            $owner = getUserByMobileNumber($cabDetail['MobileNumber']);
+
+            if($owner['Email'] !='') {
+                require_once 'mail.php';
+                sendPaymentMailOwner($owner['Email'], $_POST['cabId']);
+            }
         }
 
         $sql = "UPDATE cabopen set ratenotificationsend = '1' where CabId = '$CabID'";
