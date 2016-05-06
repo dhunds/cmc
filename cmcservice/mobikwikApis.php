@@ -41,7 +41,6 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
         $res = getMobikwikToken($_POST['mobileNumber']);
 
         if ($res) {
-            $user = $stmt->fetch();
             echo '{"status":"success", "token":"'.$res.'"}';
             exit;
         } else {

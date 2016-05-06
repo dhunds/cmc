@@ -144,7 +144,7 @@ function sendPaymentMailMember ($name, $email, $ride, $distance, $perkmCharge,  
     }
 }
 
-function sendPaymentMailOwner ($email, $cabId) {
+function sendPaymentMailOwner ($name, $email, $cabId, $ride) {
     global $client;
 
     $stmt = $con->query("SELECT pl.*, ru.FullName FROM paymentLogs pl JOIN registeredusers ru ON pl.mobileNumberFrom=ru.MobileNumber WHERE  pl.paidTo = 1 AND pl.CabId='".$cabId."'");
@@ -156,9 +156,9 @@ function sendPaymentMailOwner ($email, $cabId) {
                     <title></title>
                 </head>
                 <body>
-                    <p>Hello Admin,</p>
-
-                    <p>A new group with the name <strong>'.$groupName.'</strong>has been created</p>
+                    <p>Dear '.$name.',</p>
+                    <p>Thanks for choosing iShareRyde. Below is your ride summary</p>
+                    <p>Ride : '.$ride.'</p>
                     <p>&nbsp;</p>
                     <p>Team iShareRyde</p>
                 </body>

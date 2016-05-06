@@ -33,7 +33,9 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
 
             if($owner['Email'] !='') {
                 require_once 'mail.php';
-                sendPaymentMailOwner($owner['Email'], $_POST['cabId']);
+
+                $ride  = $cabDetail['FromShortName'].' To '.$cabDetail['ToShortName'];
+                sendPaymentMailOwner($owner['FullName'], $owner['Email'], $_POST['cabId'], $ride);
             }
         }
 
