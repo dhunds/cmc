@@ -269,3 +269,137 @@ function checkPostForBlank($arrParams){
     return $error;
 }
 
+function sendOwnerRatingNotification ($objNotification, $params, $deviceToken, $Platform, $pushNotification) {
+
+    $gcm_array = array();
+    $apns_array = array();
+
+    $notificationId = $objNotification->logNotification($params);
+
+    if ($pushNotification !='off') {
+        $body = array('gcmText' => $RateNotificationMessage, 'pushfrom' => 'Cab_Rating', 'notificationId' => $notificationId);
+
+        if ($Platform == "A") {
+            $gcm_array[] = $deviceToken;
+            $objNotification->setVariables($gcm_arrayF, $body);
+            $objNotification->sendGCMNotification();
+        } else {
+            $apns_array[] = $deviceToken;
+            $objNotification->setVariables($apns_array, $body);
+            $objNotification->sendIOSNotification();
+        }
+    }
+}
+
+function mobikwikTokenRegenerate ($mobileNumber) {
+    global $con;
+
+    $stmt = $con->query("SELECT MobileNumber, mobikwikToken FROM registeredusers WHERE MobileNumber = '".$mobileNumber."'");
+    $userExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($userExists) {
+
+        $user = $stmt->fetch();
+
+        $mobileNumber = substr(trim($user['MobileNumber']), -10);
+        $msgCode = 507;
+        $tokenType = 1;
+
+        $string = "'".$mobileNumber ."''". MERCHANT_NAME ."''". MID ."''". $msgCode ."''". $user['mobikwikToken'] ."''". $tokenType."'";
+
+        $checksum = hash_hmac('sha256', $string, MOBIKWIK_TOKEN_REGENERATE_KEY);
+
+        $fields = array('cell' => $mobileNumber, 'token' => $user['mobikwikToken'], 'tokentype' => $tokenType, 'msgcode' => $msgCode, 'mid' => MID, 'merchantname' => MERCHANT_NAME, 'checksum' => $checksum);
+
+        $strParams = http_build_query($fields);
+        $url = TOKEN_REGENERATE_URL . '?' . $strParams;
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $url,
+            CURLOPT_HTTPHEADER => array('Content-Type: application/json')
+        ));
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        $resp = simplexml_load_string($result);
+
+        if ($resp->status =='SUCCESS'){
+            saveMobikwikToken($user['MobileNumber'], (string)$resp->token);
+        }
+
+        return $resp;
+    }
+
+    return false;
+}
+
+function checkMobikwikWalletBalance ($mobileNumber) {
+    global $con;
+
+    $stmt = $con->query("SELECT MobileNumber, mobikwikToken FROM registeredusers WHERE MobileNumber = '".$mobileNumber."'");
+    $userExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($userExists) {
+        $user = $stmt->fetch();
+
+        $mobileNumber = substr(trim($user['MobileNumber']), -10);
+        $msgCode = 501;
+
+        $string = "'".$mobileNumber ."''". MERCHANT_NAME ."''". MID ."''". $msgCode ."''". $user['mobikwikToken'] ."'";
+
+        $checksum = hash_hmac('sha256', $string, API_SECRET);
+
+        $fields = array('cell' => $mobileNumber, 'token' => $user['mobikwikToken'],  'msgcode' => $msgCode, 'mid' => MID, 'merchantname' => MERCHANT_NAME, 'checksum' => $checksum);
+
+        $strParams = http_build_query($fields);
+        $url = MOBIKWIK_BALANCE_CHECK_URL . '?' . $strParams;
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $url,
+            CURLOPT_HTTPHEADER => array('Content-Type: application/json')
+        ));
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        $resp = simplexml_load_string($result);
+
+        if ($resp->status =='SUCCESS'){
+            mobikwikTokenRegenerate($user['MobileNumber']);
+        }
+
+        return $resp;
+    }
+
+    return false;
+}
+
+function saveMobikwikToken ($mobileNumber, $token) {
+    global $con;
+
+    if ($mobileNumber !='' && $token !=''){
+        $sql = "UPDATE registeredusers set mobikwikToken = '" . $token . "' where MobileNumber = '" . $mobileNumber . "'";
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function getMobikwikToken ($mobileNumber) {
+    global $con;
+
+    $stmt = $con->query("SELECT mobikwikToken FROM registeredusers WHERE MobileNumber = '".$mobileNumber."'");
+    $userExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($userExists) {
+        $user = $stmt->fetch();
+        return $user['mobikwikToken'];
+    }
+    return false;
+}
+

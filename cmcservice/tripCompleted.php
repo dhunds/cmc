@@ -1,72 +1,47 @@
 <?php
 include('connection.php');
+include('includes/functions.php');
 include_once('classes/class.notification.php');
 $objNotification = new Notification();
 
 if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
-    $CabId = $_POST['cabId'];
-    if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='' && isset($_POST['owner'])) {
-    // Mark Individual members as fare settled
-        if ($_POST['mobileNumber']==$_POST['owner']){
-           $sql = "UPDATE cabopen SET settled=1 WHERE CabId = '".$_POST['cabId']."' AND trim(MobileNumber) = '".$_POST['mobileNumber']."'";
-        }else{
-          $sql = "UPDATE cabmembers SET settled=1 WHERE CabId = '".$_POST['cabId']."' AND trim(MemberNumber) = '".$_POST['mobileNumber']."'";
+
+    $sql = "UPDATE cabopen set CabStatus = 'I' where CabId = '" . $_POST['cabId'] . "'";
+    $stmt = $con->prepare($sql);
+    $res = $stmt->execute();
+
+    $stmt = $con->query("SELECT * FROM cabopen WHERE CabId = '" . $_POST['cabId'] . "'");
+    $cabDetail = $stmt->fetch();
+
+    $stmt = $con->query("SELECT a.FullName, a.MobileNumber, a.DeviceToken, c.CabId, c.FromShortName, c.ToShortName FROM registeredusers a, acceptedrequest b, cabopen c WHERE  a.MobileNumber = b.MemberNumber AND b.CabId = c.CabId AND c.CabId='".$_POST['cabId']."' AND b.hasBoarded=1");
+
+    $membersJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($membersJoined) {
+
+        while ($row = $stmt->fetch()) {
+
+            $NotificationType = "Cab_Rating";
+            $Message = "Trip from " . $row['FromShortName'] . " to  " . $row['ToShortName'] . " completed. Help us improve by rating the cab service.";
+
+            $params = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$row['FullName'], 'ReceiveMemberNumber'=>(string)$row['MobileNumber'], 'Message'=>$Message, 'CabId'=>$row['CabId'], 'DateTime'=>'now()');
+
+            sendOwnerRatingNotification ($objNotification, $params, $row['DeviceToken'], $row['Platform'], $row['PushNotification']);
         }
 
-        $stmt = $con->prepare($sql);
-        $res = $stmt->execute();
-
-    // Send Notification
-        $sql = "SELECT FullName FROM registeredusers WHERE trim(MobileNumber) = '".$_POST['mobileNumber']."'";
+        $sql = "UPDATE cabopen set ratenotificationsend = '1' where CabId = '$CabID'";
         $stmt = $con->prepare($sql);
         $stmt->execute();
-        $user = $stmt->fetch();
-        $Msg = $user['FullName'].' has indicated that fare split has already been settled or will be paid in cash';
-
-       $sql = "SELECT ru.FullName, ru.MobileNumber, ru.DeviceToken FROM registeredusers ru JOIN cabopen co ON ru.MobileNumber=co.paidBy WHERE co.CabId='".$_POST['cabId']."'";
-        $stmt = $con->prepare($sql);
-        $stmt->execute();
-        $row = $stmt->fetch();
-        $MemberName=$row['FullName'];
-        $MemberNumber=$row['MobileNumber'];
-        $gcm_array[]= $row['DeviceToken'];
-
-        $sql = "INSERT INTO notifications(NotificationType,SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, CabId, DateTime) VALUES ('genericnotification','System','','$MemberName', '$MemberNumber','$Msg', '$cabId', now())";
-        $nStmt = $con->prepare($sql);
-        $nStmt->execute();
-        $notificationId =  $con->lastInsertId();
-
-        $body = array('gcmText' => $Msg, 'pushfrom' => 'genericnotification', 'notificationId' => $notificationId, 'CabId' => $CabId);
-        $objNotification->setVariables($gcm_array, $body);
-        $res = $objNotification->sendGCMNotification();
-
-        // If All members done fare settlement mark trip as Archived
-        $stmt = $con->query("select MemberNumber FROM cabmembers where CabId = '".$_POST['cabId']."' AND settled !=1");
-        $foundRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-
-        $stmt = $con->query("select MobileNumber FROM cabopen where CabId = '".$_POST['cabId']."' AND settled !=1");
-        $foundRows1 = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-
-        if($foundRows < 1 && $foundRows1 < 1){
-            $sql = "UPDATE cabopen set CabStatus = 'I' where CabId = '" . $_POST['cabId'] . "'";
-            $stmt = $con->prepare($sql);
-            $res = $stmt->execute();
-        }
-
-        http_response_code(200);
-        header('Content-Type: application/json');
-        echo '{status:"success", message:"Updated sucessfully"}';
-        exit;
-
-    } else {
-        //Mark Trip as Archived
-        $sql = "UPDATE cabopen set CabStatus = 'I' where CabId = '" . $_POST['cabId'] . "'";
-        $stmt = $con->prepare($sql);
-        $res = $stmt->execute();
-
-        http_response_code(200);
-        header('Content-Type: application/json');
-        echo '{status:"success", message:"Updated sucessfully"}';
-        exit;
     }
+
+    http_response_code(200);
+    header('Content-Type: application/json');
+    echo '{status:"success", message:"Updated sucessfully"}';
+    exit;
+
+} else {
+    http_response_code(200);
+    header('Content-Type: application/json');
+    echo '{"status":"failed", "message":"Invalid Params."}';
+    exit;
 }

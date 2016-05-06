@@ -37,7 +37,7 @@ if (!$error) {
         
         if ($resp->status =='SUCCESS'){
             $cell = '0091'.substr(trim($_POST['cell']), -10);
-            $sql = "INSERT INTO paymentLogs(mobileNumberFrom, mobileNumberTo, transactionId, amount, transactionDate, cabId, status) VALUES ('" . $sendercell . "', '" . $resp->receivercell . "', '" . $resp->refId . "', '" . $resp->amount . "', now(), '" . $_POST['cabId'] . "', '" . $resp->status . "')";
+            $sql = "INSERT INTO paymentLogs(mobileNumberFrom, mobileNumberTo, transactionId, amount, transactionDate, paidTo, cabId, status) VALUES ('" . $sendercell . "', '" . $resp->receivercell . "', '" . $resp->refId . "', '" . $resp->amount . "', now(), 2, '" . $_POST['cabId'] . "', '" . $resp->status . "')";
             $nStmt = $con->prepare($sql);
             $nStmt->execute();
 
@@ -48,7 +48,7 @@ if (!$error) {
             $merchantResp = simplexml_load_string($merchantTransferResp);
 
             if ($merchantResp->status =='SUCCESS') {
-                $sql = "INSERT INTO paymentLogs (mobileNumberFrom, mobileNumberTo, transactionId, amount, transactionDate, cabId, status, serviceCharge, serviceTax) VALUES ('" . $sendercell . "', '" . MERCHANT_NUMBER . "', '" . $merchantResp->refId . "', '" . $merchantResp->amount . "', now(), '" . $_POST['cabId'] . "', '" . $merchantResp->status . "', '" . $serviceCharge . "', '" . $serviceTax . "')";
+                $sql = "INSERT INTO paymentLogs (mobileNumberFrom, mobileNumberTo, transactionId, amount, transactionDate, paidTo, cabId, status, serviceCharge, serviceTax) VALUES ('" . $sendercell . "', '" . MERCHANT_NUMBER . "', '" . $merchantResp->refId . "', '" . $merchantResp->amount . "', now(), 2, '" . $_POST['cabId'] . "', '" . $merchantResp->status . "', '" . $serviceCharge . "', '" . $serviceTax . "')";
                 $nStmt = $con->prepare($sql);
                 $nStmt->execute();
             }
@@ -74,7 +74,7 @@ if (!$error) {
 
                 $paramsReceiver = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$receiverName, 'ReceiveMemberNumber'=>$receiverMobileNumber, 'Message'=>$Message, 'CabId'=>$_POST['cabId'], 'DateTime'=>'now()');
 
-                $notificationId = $objNotification->logNotification($params);
+                $notificationId = $objNotification->logNotification($paramsReceiver);
 
                 $body = array('gcmText' => $Message, 'pushfrom' => $NotificationType, 'notificationId' => $notificationId);
 
@@ -119,7 +119,7 @@ if (!$error) {
     }
 
     $sql = "UPDATE acceptedrequest set hasBoarded = 1 where CabId = '" . $_POST['cabId'] . "'";
-    $stmt = $con->prepare($sql12);
+    $stmt = $con->prepare($sql);
     $res = $stmt->execute();
 
     if ($curlFailed || $paymentFailed) {
