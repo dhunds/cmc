@@ -37,9 +37,14 @@ if (($Seats - $RemainingSeats) > 0) {
         $stmt->execute();
 
         if ($PoolId) {
-            $sql = "INSERT INTO userpoolsslave(PoolId, MemberName, MemberNumber, IsActive) VALUES ('$PoolId', '$MemberName', '$MemberNumber', '1')";
-            $stmt = $con->prepare($sql);
-            $stmt->execute();
+            $stmt = $con->query("SELECT PoolSubId FROM userpoolsslave WHERE MemberNumber = '$MemberNumber' AND PoolId != '$PoolId'");
+            $isAlreadyMember = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+            if (!$isAlreadyMember) {
+                $sql = "INSERT INTO userpoolsslave(PoolId, MemberName, MemberNumber, IsActive) VALUES ('$PoolId', '$MemberName', '$MemberNumber', '1')";
+                $stmt = $con->prepare($sql);
+                $stmt->execute();
+            }
         }
     }
 

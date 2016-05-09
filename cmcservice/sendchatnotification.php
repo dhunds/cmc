@@ -11,7 +11,7 @@ $ownerName = $_POST['ownername'];
 $ownerNumber = $_POST['ownernumber'];
 
 
-$sql = "SELECT ar.ChatStatus, ru.DeviceToken, ru.Platform, ru.FullName FROM acceptedrequest ar JOIN registeredusers ru ON ar.MemberNumber = ru.MobileNumber WHERE ar.MemberNumber !='".$MobileNumber."' AND ar.CabId='".$CabId."' AND ru.PushNotification !='off'
+$sql = "SELECT ar.ChatStatus, ru.DeviceToken, ru.Platform, ru.FullName FROM acceptedrequest ar JOIN registeredusers ru ON ar.MemberNumber = ru.MobileNumber WHERE ar.MemberNumber !='".$MobileNumber."' AND ar.CabId='".$CabId."' AND ru.PushNotification !='off' AND ar.Status !='Dropped'
 UNION
 SELECT co.OwnerChatStatus as ChatStatus, ru.DeviceToken, ru.Platform, ru.FullName FROM cabopen co JOIN registeredusers ru ON co.MobileNumber = ru.MobileNumber WHERE co.MobileNumber !	='".$MobileNumber."' AND co.CabId='".$CabId."' AND ru.PushNotification !='off'
 ";

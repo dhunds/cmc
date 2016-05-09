@@ -4,11 +4,11 @@ include ('connection.php');
 $OwnerNumber = $_REQUEST['OwnerNumber'];
 
 $sql = "SELECT pm.PoolId, pm.OwnerNumber, pm.PoolName, ru.FullName, '1' AS IsPoolOwner FROM userpoolsmaster pm LEFT JOIN
-registeredusers ru ON trim(ru.MobileNumber)=trim(pm.OwnerNumber) WHERE trim(pm.OwnerNumber)='".trim($OwnerNumber)."'
+registeredusers ru ON trim(ru.MobileNumber)=trim(pm.OwnerNumber) WHERE trim(pm.OwnerNumber)='".trim($OwnerNumber)."' AND pm.poolType=1
 UNION
 SELECT pm.PoolId, pm.OwnerNumber, pm.PoolName, ru.FullName, '0' AS IsPoolOwner FROM userpoolsmaster pm
 JOIN userpoolsslave ps ON ps.PoolId = pm.PoolId JOIN registeredusers ru ON trim(ru.MobileNumber)=trim(pm.ownerNumber)
-WHERE trim(ps.MemberNumber)='".trim($OwnerNumber)."'";
+WHERE trim(ps.MemberNumber)='".trim($OwnerNumber)."'  AND pm.poolType=1";
 
 $stmt = $con->query($sql);
 $no_of_clubs= $con->query("SELECT FOUND_ROWS()")->fetchColumn();
