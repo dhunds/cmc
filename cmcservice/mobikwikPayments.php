@@ -114,7 +114,7 @@ if (!$error) {
                     $cabDetail = $stmt->fetch();
                     $ride  = $cabDetail['FromShortName'].' To '.$cabDetail['ToShortName'];
 
-                    sendPaymentMailMember ($row['FullName'], $row['Email'], $ride, $cabDetail['Distance'], $cabDetail['perKmCharge'],  $amount );
+                    sendPaymentMailMember ($row['FullName'], $row['Email'], $ride, $cabDetail['distance'], $cabDetail['perKmCharge'],  $amount );
 
                 }
             }

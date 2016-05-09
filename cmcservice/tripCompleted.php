@@ -13,7 +13,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
     $stmt = $con->query("SELECT * FROM cabopen WHERE CabId = '" . $_POST['cabId'] . "'");
     $cabDetail = $stmt->fetch();
 
-    $stmt = $con->query("SELECT a.FullName, a.MobileNumber, a.DeviceToken, c.CabId, c.FromShortName, c.ToShortName FROM registeredusers a, acceptedrequest b WHERE  a.MobileNumber = b.MemberNumber AND b.CabId='".$_POST['cabId']."' AND b.hasBoarded=1");
+    $stmt = $con->query("SELECT a.FullName, a.MobileNumber, a.DeviceToken, b.distance FROM registeredusers a, acceptedrequest b WHERE  a.MobileNumber = b.MemberNumber AND b.CabId='".$_POST['cabId']."' AND b.hasBoarded=1");
 
     $membersJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -22,9 +22,9 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
         while ($row = $stmt->fetch()) {
 
             $NotificationType = "Cab_Rating";
-            $Message = "Trip from " . $row['FromShortName'] . " to  " . $row['ToShortName'] . " completed. Help us improve by rating the cab service.";
+            $Message = "Trip from " . $cabDetail['FromShortName'] . " to  " . $cabDetail['ToShortName'] . " completed. Help us improve by rating the cab service.";
 
-            $params = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$row['FullName'], 'ReceiveMemberNumber'=>(string)$row['MobileNumber'], 'Message'=>$Message, 'CabId'=>$row['CabId'], 'DateTime'=>'now()');
+            $params = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$row['FullName'], 'ReceiveMemberNumber'=>(string)$row['MobileNumber'], 'Message'=>$Message, 'CabId'=>$cabDetail['CabId'], 'DateTime'=>'now()');
 
             sendOwnerRatingNotification ($objNotification, $params, $row['DeviceToken'], $row['Platform'], $row['PushNotification']);
 
@@ -35,11 +35,11 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
                 require_once 'mail.php';
 
                 $ride  = $cabDetail['FromShortName'].' To '.$cabDetail['ToShortName'];
-                sendPaymentMailOwner($owner['FullName'], $owner['Email'], $_POST['cabId'], $ride);
+                sendPaymentMailOwner($owner['FullName'], $owner['Email'], $cabDetail['CabId'], $ride, $row['distance']);
             }
         }
 
-        $sql = "UPDATE cabopen set ratenotificationsend = '1' where CabId = '$CabID'";
+        $sql = "UPDATE cabopen set ratenotificationsend = '1' where CabId = '".$cabDetail['CabId']."'";
         $stmt = $con->prepare($sql);
         $stmt->execute();
     }

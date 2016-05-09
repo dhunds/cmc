@@ -54,26 +54,7 @@ $totalRows = count($data);
 
 if ($totalRows > 0)
 {
-    $arrFinal = [];
-    foreach ($data as $val){
-            if ($val['CabStatus'] == 'A') {
-                $stmt = $con->query("select MemberNumber FROM cabmembers where CabId = '" . $val['CabId'] . "' AND trim(MemberNumber)='" . $MobileNumber . "' AND settled=1");
-                $foundRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-
-                $stmt = $con->query("select MobileNumber FROM cabopen where CabId = '" . $val['CabId'] . "' AND trim(MobileNumber)='" . $MobileNumber . "' AND
-    settled=1");
-                $foundRows1 = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-
-                if ($foundRows > 0 || $foundRows1 > 0) {
-                    $val['CabStatus'] = 'I';
-                    $arrFinal[] = $val;
-                }
-            } else {
-                $arrFinal[] = $val;
-            }
-
-    }
-    echo json_encode($arrFinal);
+    echo json_encode($data);
 }
 else
 {

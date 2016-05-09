@@ -144,7 +144,7 @@ function sendPaymentMailMember ($name, $email, $ride, $distance, $perkmCharge,  
     }
 }
 
-function sendPaymentMailOwner ($name, $email, $cabId, $ride) {
+function sendPaymentMailOwner ($name, $email, $cabId, $ride, $distance) {
     global $client;
 
     $stmt = $con->query("SELECT pl.*, ru.FullName FROM paymentLogs pl JOIN registeredusers ru ON pl.mobileNumberFrom=ru.MobileNumber WHERE  pl.paidTo = 1 AND pl.CabId='".$cabId."'");

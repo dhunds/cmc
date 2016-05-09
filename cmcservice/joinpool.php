@@ -15,6 +15,7 @@ $MemberEndLocationlatlong = $_POST['MemberEndLocationlatlong'];
 $Status = $_POST['Status'];
 $Message = $_POST['Message'];
 $PoolId = $_POST['PoolId'];
+$distance = $_POST['distance'];
 
 $sqlI = "SELECT imagename FROM userprofileimage WHERE Trim(MobileNumber) = Trim('$MemberNumber')";
 $stmtI = $con->query($sqlI);
@@ -42,7 +43,7 @@ if (($Seats - $RemainingSeats) > 0) {
         }
     }
 
-    $sql2 = "INSERT INTO acceptedrequest(CabId, OwnerName, OwnerNumber, MemberName, MemberNumber, MemberLocationAddress, MemberLocationlatlong, MemberEndLocationAddress, MemberEndLocationlatlong, MemberImageName, Status) VALUES ('$CabId', '$OwnerName','$OwnerNumber','$MemberName', '$MemberNumber','$MemberLocationAddress', '$MemberLocationlatlong','$MemberEndLocationAddress','$MemberEndLocationlatlong', '$MemberImageName','$Status')";
+    $sql2 = "INSERT INTO acceptedrequest(CabId, OwnerName, OwnerNumber, MemberName, MemberNumber, MemberLocationAddress, MemberLocationlatlong, MemberEndLocationAddress, MemberEndLocationlatlong, distance, MemberImageName, Status) VALUES ('$CabId', '$OwnerName','$OwnerNumber','$MemberName', '$MemberNumber','$MemberLocationAddress', '$MemberLocationlatlong','$MemberEndLocationAddress','$MemberEndLocationlatlong', $distance, '$MemberImageName','$Status')";
     $stmt2 = $con->prepare($sql2);
     $res2 = $stmt2->execute();
 
