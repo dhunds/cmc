@@ -130,7 +130,7 @@ if (!$error) {
     $res = $stmt->execute();
 
     if ($curlFailed || $paymentFailed) {
-        $jsonResp = array('status'=>'fail', 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription, 'message'=>'Payment failed, please settle Rs.'.$fare.' in cash');
+        $jsonResp = array('status'=>'fail', 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription, 'message'=>'Payment failed, please settle Rs.'.$amount.' in cash');
     }
 
     http_response_code(200);

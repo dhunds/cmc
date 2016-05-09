@@ -182,3 +182,20 @@ function sendPaymentMailOwner ($name, $email, $cabId, $ride, $distance) {
         }
     }
 }
+
+function sendMail($from, $to, $subject, $body){
+    global $client;
+
+    $msg = array();
+    $msg['Source'] = $from;
+    $msg['Destination']['ToAddresses'][] = $to;
+    $msg['Message']['Subject']['Data'] = $subject;
+    $msg['Message']['Body']['Html']['Data'] =$body;
+    $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
+
+    try{
+        $client->sendEmail($msg);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+    }
+}
