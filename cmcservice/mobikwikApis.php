@@ -47,12 +47,15 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
             $discount = 0;
             $credit = $user ['totalCredits'];
             $discount = checkForOffers ('FIRSTRIDEFREE', $mobileNumber);
+            $availableBalance = $credit + $discount + $resp->balanceamount;
+            $requiredBalance = $_POST['amount'];
         // End Checking User Balance
 
-            if ($resp->balanceamount >=($credit + $discount)){
-                $jsonResp = array("status" => "success", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Balance sufficient for ride");
-            } else {
+
+            if ($requiredBalance > $availableBalance){
                 $jsonResp = array("status" => "success", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Insufficient balance for ride");
+            } else {
+                $jsonResp = array("status" => "success", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Balance sufficient for ride");
             }
 
             http_response_code(200);
