@@ -142,8 +142,8 @@ if (!$error) {
                     // Partial Payment By Merchant
                     $merchantOrderid = microtime() . $_POST['cabId'];
                     $paidAmount1 = $discount + $credit;
-                    $respPeerTransfer1 = mobikwikTransfers($paidAmount1, $fee, $merchantname, $mid, $merchantOrderid, $receivercell, MERCHANT_NUMBER, $token);
-                    logMobikwikTransaction($respPeerTransfer1->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $respPeerTransfer1->status, 1, 0.0, 0.0);
+                    $respPeerTransfer1 = mobikwikTransfersFromMerchant($paidAmount1, $merchantname, $mid, $merchantOrderid, $receivercell);
+                    logMobikwikTransaction($merchantOrderid, $receivercell, MERCHANT_NUMBER, $paidAmount1, $cabId, $respPeerTransfer1->status, 1, 0.0, 0.0);
 
                     // Start Merchant Transaction For Platform Charges
                     $merchantOrderid1 = microtime() . $_POST['cabId'];
@@ -163,12 +163,13 @@ if (!$error) {
 
         } else if ($merchantTransfer == '2') {
             $paidAmount = $amount - $totalDeductible;
-            $respPeerTransfer = mobikwikTransfers($paidAmount, $fee, $merchantname, $mid, $orderid, $receivercell, MERCHANT_NUMBER, $token);
+
+            $respPeerTransfer = mobikwikTransfersFromMerchant($paidAmount, $merchantname, $mid, $orderid, $receivercell);
 
             if ($respPeerTransfer === FALSE) {
                 $paymentStatus = 'failed';
             } else {
-                logMobikwikTransaction($respPeerTransfer->refId, MERCHANT_NUMBER, $receivercell, $paidAmount, $cabId, $respPeerTransfer->status, 1, 0.0, 0.0);
+                logMobikwikTransaction($orderid, MERCHANT_NUMBER, $receivercell, $paidAmount, $cabId, $respPeerTransfer->status, 1, 0.0, 0.0);
 
                 if ($respPeerTransfer->status == 'SUCCESS') {
                     $paymentStatus = 'success';

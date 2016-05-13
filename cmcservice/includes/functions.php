@@ -262,6 +262,43 @@ function mobikwikTransfers($amount, $fee, $merchantname, $mid, $orderid, $receiv
     } else {
         $resp = simplexml_load_string($result);
 
+        if ((string)$resp->statuscode == '199') {
+            $mobileNumber = '0091'.$sendercell;
+            $tokenResp = simplexml_load_string(mobikwikTokenRegenerate($mobileNumber));
+
+            if($tokenResp->status == 'SUCCESS') {
+                mobikwikTransfers($amount, $fee, $merchantname, $mid, $orderid, $receivercell, $sendercell, (string)$tokenResp->token);
+            }
+        }
+        return $resp;
+    }
+}
+
+function mobikwikTransfersFromMerchant($amount, $merchantName, $merchantId, $orderId, $cell){
+    $creditMethod = 'cashback';
+    $typeOfMoney = 0;
+
+    $string = "'".$amount ."''". $cell ."''". $creditMethod ."''". $merchantName ."''". $merchantId ."''". $orderId ."''". $typeOfMoney ."''". WALLET_ID."'";
+
+    $checksum = hash_hmac('sha256', $string, API_SECRET);
+
+    $fields = array('amount' => $amount, 'typeofmoney' => $typeOfMoney, 'cell' => $cell, 'orderid' => $orderId, 'creditmethod' => $creditMethod, 'walletid' => WALLET_ID, 'mid' => $merchantId, 'merchantname' => $merchantName, 'checksum' => $checksum);
+
+    $strParams = http_build_query($fields);
+    $url = LOAD_MONEY_URL . '?' . $strParams;
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => $url,
+        CURLOPT_HTTPHEADER => array('Content-Type: application/json')
+    ));
+    $result = curl_exec($curl);
+    curl_close($curl);
+
+    if ($result === FALSE) {
+        return FALSE;
+    } else {
+        $resp = simplexml_load_string($result);
         return $resp;
     }
 }
