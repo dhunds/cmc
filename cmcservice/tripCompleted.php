@@ -10,14 +10,17 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
     $stmt = $con->prepare($sql);
     $res = $stmt->execute();
 
-    $stmt = $con->query("SELECT * FROM cabopen WHERE CabId = '" . $_POST['cabId'] . "'");
+    $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" . $_POST['cabId'] . "'");
     $cabDetail = $stmt->fetch();
 
-    $stmt = $con->query("SELECT a.FullName, a.MobileNumber, a.DeviceToken, b.distance FROM registeredusers a, acceptedrequest b WHERE  a.MobileNumber = b.MemberNumber AND b.CabId='".$_POST['cabId']."' AND b.hasBoarded=1");
+    $stmt = $con->query("SELECT ru.FullName, ru.MobileNumber, ru.DeviceToken, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount, pl.serviceCharge, pl.serviceTax FROM registeredusers ru JOIN acceptedrequest ar ON a.MobileNumber = b.MemberNumber
+        JOIN paymentLogs pl ON ar.MemberNumber = pl.mobileNumberFrom WHERE b.CabId='".$_POST['cabId']."' AND b.hasBoarded=1");
 
     $membersJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($membersJoined) {
+        $members = [];
+        $totalPaymentReceived = 0;
 
         while ($row = $stmt->fetch()) {
 
@@ -28,16 +31,25 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
 
             sendOwnerRatingNotification ($objNotification, $params, $row['DeviceToken'], $row['Platform'], $row['PushNotification']);
 
-        // Send Mail
-            $owner = getUserByMobileNumber($cabDetail['MobileNumber']);
+            $members[] = $row;
 
-            if($owner['Email'] !='') {
-                require_once 'mail.php';
-
-                $ride  = $cabDetail['FromShortName'].' To '.$cabDetail['ToShortName'];
-                sendPaymentMailOwner($owner['FullName'], $owner['Email'], $cabDetail['CabId'], $ride, $row['distance']);
-            }
+            $totalPaymentReceived = $totalPaymentReceived + $row['amount'];
         }
+
+        // Send Mail
+        $owner = getUserByMobileNumber($cabDetail['MobileNumber']);
+
+        if($owner['Email'] !='') {
+            require_once 'mail.php';
+
+            $rideData = array ("FromShortName" =>$cabDetail['FromShortName'], "ToShortName" => $cabDetail['ToShortName'], "TravelDate" => $cabDetail['TravelDate'], "Distance" => $cabDetail['Distance'], "amount" => $totalPaymentReceived);
+
+            $RideDetail = array("ride" =>$rideData, "members"=>$members);
+
+            $subject = "Your Ride Summary: iShareRyde";
+            sendPaymentMailOwner ($owner['Email'], $RideDetail, $subject);
+        }
+        //End Send Mail
 
         $sql = "UPDATE cabopen set ratenotificationsend = '1' where CabId = '".$cabDetail['CabId']."'";
         $stmt = $con->prepare($sql);

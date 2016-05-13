@@ -256,7 +256,14 @@ function mobikwikTransfers($amount, $fee, $merchantname, $mid, $orderid, $receiv
     ));
     $result = curl_exec($curl);
     curl_close($curl);
-    return $result;
+
+    if ($result === FALSE) {
+        return FALSE;
+    } else {
+        $resp = simplexml_load_string($result);
+
+        return $resp;
+    }
 }
 
 function checkPostForBlank($arrParams){
@@ -415,3 +422,20 @@ function getUserByMobileNumber ($mobileNumber) {
     }
     return false;
 }
+
+function logMobikwikTransaction ($transactionId, $sender, $receiver, $amount, $cabId, $status, $transactionType, $serviceCharge=0.0, $serviceTax=0.0) {
+    $sql = "INSERT INTO mobikwikTransactions(transactionId, transactionDate, sender, receiver, amount, serviceCharge, serviceTax, transactionType, cabId, status) VALUES ('$transactionId', now(), '$sender','$receiver', $amount, $serviceCharge, $serviceTax, $transactionType, '$cabId', '$status')";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    $insertedId = $con->lastInsertId();
+    return $insertedId;
+}
+
+function logRidePayment ($sender, $receiver, $amount, $cabId, $status, $serviceCharge, $serviceTax) {
+    $sql = "INSERT INTO paymentLogs(mobileNumberFrom, mobileNumberTo, amount, serviceCharge, serviceTax, transactionDate, cabId, status) VALUES ('$sender', '$receiver', $amount, $serviceCharge, $serviceTax, now(), '$cabId', '$status')";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    $insertedId = $con->lastInsertId();
+    return $insertedId;
+}
+

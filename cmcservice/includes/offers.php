@@ -200,3 +200,31 @@ function offerCarpoolRideBonus($mobileNumber, $objNotification){
 
     return $resp;
 }
+
+function checkForOffers ($offerCode, $mobileNumber) {
+    global $con;
+
+    $sql = "SELECT id, amount, maxUse, maxUsePerUser, status FROM offers WHERE status=1 AND validThru > now() AND code='".$offerCode."'";
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+
+    if ($found > 0) {
+        $offer = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $sql = "SELECT COUNT(id) as useCount FROM credits WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "'";
+        $stmt = $con->query($sql);
+        $credits = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($credits['useCount'] < $offer['maxUsePerUser']) {
+
+            $sql = "INSERT INTO credits SET offerId=" . $offer['id'] . ", mobileNumber='" . $mobileNumber . "', credits=" . $offer['amount'] . ", created=now()";
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
+
+            return $offer['amount'];
+        } else {
+            return 0;
+        }
+    }
+}
