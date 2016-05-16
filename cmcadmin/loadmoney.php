@@ -1,10 +1,19 @@
 <?php
 include_once('connection.php');
+
+define("MID", "MBK9005");
+define("MERCHANT_NAME", "MyMerchantName");
+define("API_SECRET", "ju6tygh7u7tdg554k098ujd5468o");
+define("LOAD_MONEY_URL", "https://test.mobikwik.com/mobikwik/loadmoney");
+define("WALLET_ID", "testapisupport@gmail.com");
+
+/*
 define("MID", "MBK9572");
 define("MERCHANT_NAME", "iShareRyde");
 define("API_SECRET", "bToO0UJ7OaijZ9g7a1Axr3J5OpEF");
 define("LOAD_MONEY_URL", "https://walletapi.mobikwik.com/loadmoney");
 define("WALLET_ID", "support@clubmycab.com");
+*/
 
 if (isset($_POST['submit'])) {
     $orderid = uniqid();
