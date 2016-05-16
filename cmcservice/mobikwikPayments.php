@@ -78,7 +78,7 @@ if (!$error) {
             if ($respPeerTransfer === FALSE) {
                 $paymentStatus = 'failed';
             } else {
-                logMobikwikTransaction($respPeerTransfer->refId, $sendercell, MERCHANT_NUMBER, $paidAmount, $cabId, $respPeerTransfer->status, 3, $serviceCharge, $serviceTax);
+                logMobikwikTransaction($respPeerTransfer->refId, $sendercell, MERCHANT_NUMBER, $paidAmount, $cabId, $respPeerTransfer->status, 3, $serviceCharge, $serviceTax, $respPeerTransfer->statusdescription);
 
                 if ($respPeerTransfer->status == 'SUCCESS') {
                     mobikwikTokenRegenerate($sendercellNew);
@@ -99,7 +99,7 @@ if (!$error) {
             if ($respPeerTransfer === FALSE) {
                 $paymentStatus = 'failed';
             } else {
-                logMobikwikTransaction($respPeerTransfer->refId, $sendercell, $receivercell, $amount, $cabId, $respPeerTransfer->status, 1, 0.0, 0.0);
+                logMobikwikTransaction($respPeerTransfer->refId, $sendercell, $receivercell, $amount, $cabId, $respPeerTransfer->status, 1, 0.0, 0.0, $respPeerTransfer->statusdescription);
 
                 if ($respPeerTransfer->status == 'SUCCESS') {
                     mobikwikTokenRegenerate($sendercellNew);
@@ -110,7 +110,7 @@ if (!$error) {
                     $merchantToken = getMobikwikToken($receivercellNew);
                     $merchantResp = mobikwikTransfers($totalDeductible, $fee, $merchantname, $mid, $merchantOrderid, MERCHANT_NUMBER, $receivercell, $merchantToken);
 
-                    logMobikwikTransaction($merchantResp->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $merchantResp->status, 2, $serviceCharge, $serviceTax);
+                    logMobikwikTransaction($merchantResp->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $merchantResp->status, 2, $serviceCharge, $serviceTax, $respPeerTransfer->statusdescription);
 
                     if ($merchantResp->status == 'SUCCESS') {
                         mobikwikTokenRegenerate($receivercellNew);
@@ -132,7 +132,7 @@ if (!$error) {
             if ($respPeerTransfer === FALSE) {
                 $paymentStatus = 'failed';
             } else {
-                logMobikwikTransaction($respPeerTransfer->refId, $sendercell, $receivercell, $paidAmount, $cabId, $paymentStatus, 1, 0.0, 0.0);
+                logMobikwikTransaction($respPeerTransfer->refId, $sendercell, $receivercell, $paidAmount, $cabId, $paymentStatus, 1, 0.0, 0.0, $respPeerTransfer->statusdescription);
 
                 if ($respPeerTransfer->status == 'SUCCESS') {
                     mobikwikTokenRegenerate($sendercellNew);
@@ -143,13 +143,13 @@ if (!$error) {
                     $merchantOrderid = microtime() . $_POST['cabId'];
                     $paidAmount1 = $discount + $credit;
                     $respPeerTransfer1 = mobikwikTransfersFromMerchant($paidAmount1, $merchantname, $mid, $merchantOrderid, $receivercell);
-                    logMobikwikTransaction($merchantOrderid, $receivercell, MERCHANT_NUMBER, $paidAmount1, $cabId, $respPeerTransfer1->status, 1, 0.0, 0.0);
+                    logMobikwikTransaction($merchantOrderid, $receivercell, MERCHANT_NUMBER, $paidAmount1, $cabId, $respPeerTransfer1->status, 1, 0.0, 0.0, $respPeerTransfer->statusdescription);
 
                     // Start Merchant Transaction For Platform Charges
                     $merchantOrderid1 = microtime() . $_POST['cabId'];
                     $merchantToken = getMobikwikToken($receivercellNew);
                     $merchantResp = mobikwikTransfers($totalDeductible, $fee, $merchantname, $mid, $merchantOrderid1, MERCHANT_NUMBER, $receivercell, $merchantToken);
-                    logMobikwikTransaction($merchantResp->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $merchantResp->status, 2, $serviceCharge, $serviceTax);
+                    logMobikwikTransaction($merchantResp->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $merchantResp->status, 2, $serviceCharge, $serviceTax, $respPeerTransfer->statusdescription);
                     if ($merchantResp->status == 'SUCCESS') {
                         mobikwikTokenRegenerate($receivercellNew);
                     }
@@ -169,7 +169,7 @@ if (!$error) {
             if ($respPeerTransfer === FALSE) {
                 $paymentStatus = 'failed';
             } else {
-                logMobikwikTransaction($orderid, MERCHANT_NUMBER, $receivercell, $paidAmount, $cabId, $respPeerTransfer->status, 1, 0.0, 0.0);
+                logMobikwikTransaction($orderid, MERCHANT_NUMBER, $receivercell, $paidAmount, $cabId, $respPeerTransfer->status, 1, 0.0, 0.0, $respPeerTransfer->statusdescription);
 
                 if ($respPeerTransfer->status == 'SUCCESS') {
                     $paymentStatus = 'success';

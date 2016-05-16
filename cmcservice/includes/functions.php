@@ -460,9 +460,9 @@ function getUserByMobileNumber ($mobileNumber) {
     return false;
 }
 
-function logMobikwikTransaction ($transactionId, $sender, $receiver, $amount, $cabId, $status, $transactionType, $serviceCharge=0.0, $serviceTax=0.0) {
+function logMobikwikTransaction ($transactionId, $sender, $receiver, $amount, $cabId, $status, $transactionType, $serviceCharge=0.0, $serviceTax=0.0, $description='') {
     global $con;;
-    $sql = "INSERT INTO mobikwikTransactions(transactionId, transactionDate, sender, receiver, amount, serviceCharge, serviceTax, transactionType, cabId, status) VALUES ('$transactionId', now(), '$sender','$receiver', $amount, $serviceCharge, $serviceTax, $transactionType, '$cabId', '$status')";
+    $sql = "INSERT INTO mobikwikTransactions(transactionId, transactionDate, sender, receiver, amount, serviceCharge, serviceTax, transactionType, cabId, status, description) VALUES ('$transactionId', now(), '$sender','$receiver', $amount, $serviceCharge, $serviceTax, $transactionType, '$cabId', '$status', '$description')";
     $stmt = $con->prepare($sql);
     $stmt->execute();
     $insertedId = $con->lastInsertId();
