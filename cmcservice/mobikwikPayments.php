@@ -223,7 +223,7 @@ if (!$error) {
         // End Sending Notification
 
         // Send Payment Email to member
-        $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicle FROM registeredusers ru JOIN userprofileimage ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.MobileNumber = '".$sendercellNew."'");
+        $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicleModel FROM registeredusers ru JOIN userprofileimage ui ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.MobileNumber = '".$sendercellNew."'");
         $senderExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         if ($senderExists) {
