@@ -92,7 +92,7 @@ if (!$error) {
         logRidePayment($sendercellNew, $receivercellNew, $amount, $cabId, $paymentStatus, 0.0, 0.0);
 
     } else {
-        if ($merchantTransfer == '0') {   // When No credits or discount
+        if ($transferFromMerchantAccount == '0') {   // When No credits or discount
 
             $respPeerTransfer = mobikwikTransfers($amount, $fee, $merchantname, $mid, $orderid, $receivercell, $sendercell, $token);
 
@@ -123,7 +123,7 @@ if (!$error) {
 
             logRidePayment($sendercellNew, $receivercellNew, $amount, $cabId, $paymentStatus, $serviceCharge, $serviceTax);
 
-        } elseif ($merchantTransfer == '1') {
+        } elseif ($transferFromMerchantAccount == '1') {
 
             // Partial Payment By User
             $paidAmount = $amount - ($discount + $credit);
@@ -161,7 +161,7 @@ if (!$error) {
 
             logRidePayment($sendercellNew, $receivercellNew, $amount, $cabId, $paymentStatus, $serviceCharge, $serviceTax);
 
-        } else if ($merchantTransfer == '2') {
+        } else if ($transferFromMerchantAccount == '2') {
             $paidAmount = $amount - $totalDeductible;
 
             $respPeerTransfer = mobikwikTransfersFromMerchant($paidAmount, $merchantname, $mid, $orderid, $receivercell);
