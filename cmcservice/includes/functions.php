@@ -461,6 +461,7 @@ function getUserByMobileNumber ($mobileNumber) {
 }
 
 function logMobikwikTransaction ($transactionId, $sender, $receiver, $amount, $cabId, $status, $transactionType, $serviceCharge=0.0, $serviceTax=0.0) {
+    global $con;;
     $sql = "INSERT INTO mobikwikTransactions(transactionId, transactionDate, sender, receiver, amount, serviceCharge, serviceTax, transactionType, cabId, status) VALUES ('$transactionId', now(), '$sender','$receiver', $amount, $serviceCharge, $serviceTax, $transactionType, '$cabId', '$status')";
     $stmt = $con->prepare($sql);
     $stmt->execute();
@@ -469,6 +470,7 @@ function logMobikwikTransaction ($transactionId, $sender, $receiver, $amount, $c
 }
 
 function logRidePayment ($sender, $receiver, $amount, $cabId, $status, $serviceCharge, $serviceTax) {
+    global $con;
     $sql = "INSERT INTO paymentLogs(mobileNumberFrom, mobileNumberTo, amount, serviceCharge, serviceTax, transactionDate, cabId, status) VALUES ('$sender', '$receiver', $amount, $serviceCharge, $serviceTax, now(), '$cabId', '$status')";
     $stmt = $con->prepare($sql);
     $stmt->execute();

@@ -1,5 +1,4 @@
 <?php
-
 function claimReferalBonus($referralCode, $mobileNumber, $name, $deviceToken, $objNotification)
 {
     global $con;
@@ -84,7 +83,7 @@ function claimFirstRideBonus($mobileNumber, $objNotification, $isOwner)
     if ($found > 0) {
         $offer = $stmt->fetch(PDO::FETCH_ASSOC);
         /*
-         // OLD Implementation till 22nd Dec 1015
+        // OLD Implementation till 22nd Dec 1015
         if ($isOwner) {
             $sql = "SELECT COUNT(id) as useCount FROM credits WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "' AND beneficiaryType=1";
             $stmt = $con->query($sql);
@@ -103,6 +102,7 @@ function claimFirstRideBonus($mobileNumber, $objNotification, $isOwner)
             $resp='success';
         }
         */
+
         if ($isOwner) {
             $beneficiaryType = 1;
         } else {
@@ -225,6 +225,41 @@ function checkForOffers ($offerCode, $mobileNumber) {
             return $offer['amount'];
         } else {
             return 0;
+        }
+    }
+}
+
+function attachCouponsToUsers ($offerCode, $mobileNumber) {
+    $sql = "SELECT id, amount, maxUse, maxUsePerUser, status FROM offers WHERE status=1 AND validThru > now() AND code='".$offerCode."'";
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($found > 0) {
+        $offer = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $sql = "SELECT id FROM userOffers WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "'";
+        $stmt = $con->query($sql);
+        $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+        if ($found > 0) {
+            $msg ="Coupon Already Applied";
+        } else {
+            $sql = "SELECT id FROM userOffers WHERE mobileNumber='" . $mobileNumber . "'";
+            $stmt = $con->query($sql);
+            $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+            if ($found > 0) {
+                $sql = "UPDATE userOffers SET offerId=".$offer['id']." WHERE mobileNumber='" . $mobileNumber . "'";
+                $stmt = $con->prepare($sql);
+                $stmt->execute();
+
+                $msg = "Offer Attached";
+            } else {
+                $sql = "INSERT INTO userOffers(mobileNumber, offerId) VALUES ('$mobileNumber',".$offer['id'].")";
+                $nStmt = $con->prepare($sql);
+                $nStmt->execute();
+                $msg = "Offer Attached";
+            }
         }
     }
 }
