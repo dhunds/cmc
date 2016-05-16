@@ -110,7 +110,7 @@ if (!$error) {
                     $merchantToken = getMobikwikToken($receivercellNew);
                     $merchantResp = mobikwikTransfers($totalDeductible, $fee, $merchantname, $mid, $merchantOrderid, MERCHANT_NUMBER, $receivercell, $merchantToken);
 
-                    logMobikwikTransaction($merchantResp->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $merchantResp->status, 2, $serviceCharge, $serviceTax, $respPeerTransfer->statusdescription);
+                    logMobikwikTransaction($merchantResp->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $merchantResp->status, 2, $serviceCharge, $serviceTax, $merchantResp->statusdescription);
 
                     if ($merchantResp->status == 'SUCCESS') {
                         mobikwikTokenRegenerate($receivercellNew);
@@ -149,7 +149,7 @@ if (!$error) {
                     $merchantOrderid1 = microtime() . $_POST['cabId'];
                     $merchantToken = getMobikwikToken($receivercellNew);
                     $merchantResp = mobikwikTransfers($totalDeductible, $fee, $merchantname, $mid, $merchantOrderid1, MERCHANT_NUMBER, $receivercell, $merchantToken);
-                    logMobikwikTransaction($merchantResp->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $merchantResp->status, 2, $serviceCharge, $serviceTax, $respPeerTransfer->statusdescription);
+                    logMobikwikTransaction($merchantResp->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $merchantResp->status, 2, $serviceCharge, $serviceTax, $merchantResp->statusdescription);
                     if ($merchantResp->status == 'SUCCESS') {
                         mobikwikTokenRegenerate($receivercellNew);
                     }
