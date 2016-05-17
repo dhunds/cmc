@@ -146,12 +146,39 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
         google.maps.event.addListener(marker1, 'dragend', function (event) {
             document.getElementById("slat").value = event.latLng.lat();
             document.getElementById("slon").value = event.latLng.lng();
+
+            getAddressFromReverseGeocoding(event.latLng.lat(), event.latLng.lng());
         });
 
         google.maps.event.addListener(marker2, 'dragend', function (event) {
             document.getElementById("elat").value = event.latLng.lat();
             document.getElementById("elon").value = event.latLng.lng();
+
+            getAddressFromReverseGeocoding(event.latLng.lat(), event.latLng.lng());
         });
+    }
+
+    function getAddressFromReverseGeocoding(latitude, longitude){
+
+        var geocoder = new google.maps.Geocoder();
+        var latLng = new google.maps.LatLng(latitude, longitude);
+
+        geocoder.geocode({
+                latLng: latLng
+            },
+            function(responses)
+            {
+                if (responses && responses.length > 0)
+                {
+                    console.log(responses);
+                    //console.log(responses[0].formatted_address);
+                }
+                else
+                {
+                    console.log('Not getting Any address for given latitude and longitude.');
+                }
+            }
+        );
     }
 
     function frmReset() {

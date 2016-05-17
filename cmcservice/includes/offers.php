@@ -268,3 +268,16 @@ function attachCouponsToUsers ($offerCode, $mobileNumber) {
 
     return $msg;
 }
+
+function checkOffers ($mobileNumber) {
+    global $con;
+
+    $stmt = $con->query("SELECT * FROM userOffers WHERE mobileNumber = '".$mobileNumber."' AND status=1");
+    $offerExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($offerExists) {
+        $offer = $stmt->fetch();
+        return $offer;
+    }
+    return false;
+}

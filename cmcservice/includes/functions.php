@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @param string $con
  * @param Array $arrMembersNumberAndFare
