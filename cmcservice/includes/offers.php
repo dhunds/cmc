@@ -1,4 +1,5 @@
 <?php
+
 function claimReferalBonus($referralCode, $mobileNumber, $name, $deviceToken, $objNotification)
 {
     global $con;
@@ -238,7 +239,7 @@ function attachCouponsToUsers ($offerCode, $mobileNumber) {
         $offer = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $sql = "SELECT id FROM userOffers WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "'";
-        $stmt = $con->query($sql);
+        $con->query($sql);
         $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         if ($found > 0) {
@@ -253,13 +254,17 @@ function attachCouponsToUsers ($offerCode, $mobileNumber) {
                 $stmt = $con->prepare($sql);
                 $stmt->execute();
 
-                $msg = "Offer Attached";
+                $msg = "Coupon Applied";
             } else {
                 $sql = "INSERT INTO userOffers(mobileNumber, offerId) VALUES ('$mobileNumber',".$offer['id'].")";
                 $nStmt = $con->prepare($sql);
                 $nStmt->execute();
-                $msg = "Offer Attached";
+                $msg = "Coupon Applied";
             }
         }
+    } else {
+        $msg = "Either invalid coupon code or coupon expired.";
     }
+
+    return $msg;
 }
