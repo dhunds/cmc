@@ -8,7 +8,7 @@ if (isset($_POST['offerCode']) && $_POST['offerCode'] !='' && isset($_POST['mobi
     header('Content-Type: application/json');
     echo '{status:"success", message:"'.$attachOffer.'"}';
     exit;
-}
+
 } else {
     http_response_code(500);
     header('Content-Type: application/json');
