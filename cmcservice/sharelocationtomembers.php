@@ -27,6 +27,9 @@ if ($Message == '') {
     $sql = "UPDATE routelogs SET coordinates = concat(coordinates, '$newCoordinates'), atTime=concat(atTime, '$atTime') WHERE routeId = '".$routeId."'";
     $stmt = $con->prepare($sql);
     $stmt->execute();
+
+    echo $routeId;
+    exit;
 } else {
     $NotificationType = "Share_LocationUpdate";
     $sqlquery = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, UserLatLong, DateTime, routeId) VALUES ";
