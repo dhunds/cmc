@@ -277,7 +277,7 @@ function checkOffers ($mobileNumber) {
     $offerExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($offerExists) {
-        $offer = $stmt->fetch();
+        $offer = $stmt->fetch(PDO::FETCH_ASSOC);
         return $offer;
     }
     return false;
