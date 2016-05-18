@@ -273,7 +273,7 @@ function attachCouponsToUsers ($offerCode, $mobileNumber) {
 function checkOffers ($mobileNumber) {
     global $con;
 
-    $stmt = $con->query("SELECT * FROM userOffers WHERE mobileNumber = '".$mobileNumber."' AND status=1");
+    $stmt = $con->query("SELECT f.title, f.description, f.terms, f.code FROM userOffers uf JOIN offers f ON uf.offerId = f.id WHERE uf.mobileNumber = '".$mobileNumber."' AND uf.status=1");
     $offerExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($offerExists) {
