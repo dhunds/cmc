@@ -12,7 +12,7 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='') {
         echo json_encode($resp);
         exit;
     } else {
-        $resp = array('header' => 200, 'status' => 'success', 'message' => '', 'data' => $offer);
+        $resp = array('header' => 200, 'status' => 'fail', 'message' => 'No coupons available.');
         http_response_code(200);
         header('Content-Type: application/json');
         echo json_encode($resp);
