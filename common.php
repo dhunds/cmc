@@ -33,22 +33,6 @@ function createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $From, $To) {
         return false;
 }
 
-function createPublicGroupsNew($con, $sLat, $sLon, $eLat, $eLon, $groupName) {
-
-    $MobileNumber = '00911234567890';
-
-    $sql = "INSERT INTO userpoolsmaster(OwnerNumber, PoolName, PoolStatus, poolType, startLat, startLon, endLat, endLon, Active) VALUES ('$MobileNumber', '$groupName','OPEN', 2, '$sLat', '$sLon', '$eLat', '$eLon','1')";
-
-    $stmt = $con->prepare($sql);
-    $res = $stmt->execute();
-    $gId =  $con->lastInsertId();
-
-    if ($res)
-        return $gId;
-    else
-        return false;
-}
-
 function rideProximity(){
     global $con;
     $stmt = $con->prepare("select setValue from settings Where setName='SEARCH_RIDE_PROXIMITY'");

@@ -45,7 +45,8 @@ if ($no_of_clubs > 0) {
                 }
             }
         }
-        $arrTemp['NoofMembers'] = ($totalClubs-$unregistered) +1;
+        $noOfMembers = ($totalClubs-$unregistered) +1;
+        $arrTemp['NoofMembers'] = (string)$noOfMembers;
         $arrTemp['Members'] = $arrTemp1;
         $finalArray[]=$arrTemp;
     }

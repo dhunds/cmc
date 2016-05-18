@@ -10,10 +10,8 @@ if (isset($_POST['offerCode']) && $_POST['offerCode'] !='' && isset($_POST['mobi
     exit;
 
 } else {
-    http_response_code(500);
+    http_response_code(200);
     header('Content-Type: application/json');
     echo '{status:"fail", message:"Invalid Params"}';
     exit;
 }
-
-

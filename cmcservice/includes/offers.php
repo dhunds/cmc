@@ -231,6 +231,7 @@ function checkForOffers ($offerCode, $mobileNumber) {
 }
 
 function attachCouponsToUsers ($offerCode, $mobileNumber) {
+    global $con;
     $sql = "SELECT id, amount, maxUse, maxUsePerUser, status FROM offers WHERE status=1 AND validThru > now() AND code='".$offerCode."'";
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
