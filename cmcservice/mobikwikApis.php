@@ -38,37 +38,34 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
             exit;
         }
     } else if($_POST['act'] == 'checkBalanceForRide') {
-        $resp = checkMobikwikWalletBalance($_POST['mobileNumber']);
 
-        if ($resp && $resp->status =='SUCCESS') {
+        $user = getUserByMobileNumber($_POST['mobileNumber']);
+        $mobikwikBalance = 0;
+
+        if ($user['mobikwikToken'] !='') {
+            $resp = checkMobikwikWalletBalance($_POST['mobileNumber']);
+            if ($resp && $resp->status =='SUCCESS') {
+                $mobikwikBalance = $resp->balanceamount;
+            }
+        }
+        $discount = 0;
+        $credit = $user ['totalCredits'];
+        $discount = checkForOffers ('FIRSTRIDEFREE', $mobileNumber);
 
         // Check User Balance (including discounts and credits) for the ride
-            $user = getUserByMobileNumber($_POST['mobileNumber']);
-            $discount = 0;
-            $credit = $user ['totalCredits'];
-            $discount = checkForOffers ('FIRSTRIDEFREE', $mobileNumber);
-            $availableBalance = $credit + $discount + $resp->balanceamount;
-            $requiredBalance = $_POST['amount'];
-        // End Checking User Balance
+        $availableBalance = $credit + $discount + $mobikwikBalance;
+        $requiredBalance = $_POST['amount'];
 
-
-            if ($requiredBalance > $availableBalance){
-                $jsonResp = array("status" => "success", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Insufficient balance for ride");
-            } else {
-                $jsonResp = array("status" => "success", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Balance sufficient for ride");
-            }
-
-            http_response_code(200);
-            header('Content-Type: application/json');
-            echo json_encode($jsonResp);
-            exit;
+        if ($requiredBalance > $availableBalance){
+            $jsonResp = array("status" => "success", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Insufficient balance for ride");
         } else {
-            $jsonResp = array('status'=>'fail', 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription);
-            http_response_code(200);
-            header('Content-Type: application/json');
-            echo json_encode($jsonResp);
-            exit;
+            $jsonResp = array("status" => "success", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Balance sufficient for ride");
         }
+
+        http_response_code(200);
+        header('Content-Type: application/json');
+        echo json_encode($jsonResp);
+        exit;
     } else if($_POST['act'] == 'getToken') {
 
         $res = getMobikwikToken($_POST['mobileNumber']);
