@@ -4,11 +4,11 @@ include('connection.php');
 if (isset($_REQUEST['cabId']) && $_REQUEST['cabId'] !='') {
     $cabId = $_REQUEST['cabId'];
 
-    $stmtF = $con->query("SELECT * FROM cabopen WHERE CabId = '$cabId'");
+    $stmt = $con->query("SELECT co.*, ui.imagename FROM cabopen co JOIN userprofileimage ui ON ui.MobileNumber=co.MobileNumber WHERE co.CabId = '$cabId'");
     $cab_exits = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($cab_exits) {
-        $cabDetail = $stmtF->fetch(PDO::FETCH_ASSOC);
+        $cabDetail = $stmt->fetch(PDO::FETCH_ASSOC);
         http_response_code(200);
         $resp = array("status"=>"success", "data"=>$cabDetail, "data"=>$cabDetail);
         header('Content-Type: application/json');

@@ -11,13 +11,18 @@ if (isset($_POST['ownerNumber']) && $_POST['ownerNumber'] !='' && isset($_POST['
 
     if (!$found)
     {
-        $sql = "INSERT INTO userRating (ownerNumber,memberNumber, cabId, rating, created) VALUES ('".$_POST['ownerNumber']."','".$_POST['memberNumber']."', '".$_POST['cabId']."', ".$_POST['rating'].", now())";
+        $sql = "INSERT INTO userRating (ownerNumber,memberNumber, cabId, rating, reason, created) VALUES ('".$_POST['ownerNumber']."','".$_POST['memberNumber']."', '".$_POST['cabId']."', ".$_POST['rating'].", '".$_POST['reason']."', now())";
 
     }
 
     $nStmt = $con->prepare($sql);
 
     if ($nStmt->execute()){
+
+        $sql = "UPDATE notifications set StatusArchieve = 'Yes' where NotificationId = '" . $_POST['notificationId'] . "'";
+        $stmt = $con->prepare($sql);
+        $res = $stmt->execute();
+
         http_response_code(200);
         header('Content-Type: application/json');
         echo '{"status":"success", "message":"User Rated Successfully."}';
