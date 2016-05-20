@@ -283,7 +283,7 @@ WHERE co.CabId = '".$_POST['cabId']."' AND ar.MemberNumber='".$sendercellNew."'"
         }
         // End Sending Notification
 
-        $jsonResp = array('status'=>'fail', 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription, 'message'=>'Payment failed, please settle Rs.'.$amount.' in cash');
+        $jsonResp = array('status'=>'fail', 'statuscode'=>(string)$respPeerTransfer->statuscode, 'statusdescription'=>(string)$respPeerTransfer->statusdescription, 'message'=>'Payment failed, please settle Rs.'.$amount.' in cash');
     }
 
     $sql = "UPDATE acceptedrequest set hasBoarded = 1 where CabId = '" . $_POST['cabId'] . "'";
