@@ -7,7 +7,6 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
     list($eLat, $eLon) = explode(',', $_POST['eLatLon']);
 
-
     $proximity = rideProximity();
 
     $CabId = $_POST['CabId'];
@@ -27,7 +26,6 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
 
     $rideType = '';
 
-
     if (isset($_POST['rideType']) && $_POST['rideType'] != '') {
         $rideType = $_POST['rideType'];
     }
@@ -37,7 +35,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     }
 
     $perKmCharge = perKMChargeIntracity();
-    
+
     $dateInput = explode('/', $TravelDate);
     $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
 
@@ -75,7 +73,6 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
             HAVING origin < ".$proximity." AND destination < ".$proximity."
             ORDER BY origin, destination LIMIT 0,1";
 
-
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
     $createGroup = 0;
@@ -109,12 +106,10 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
         $res = $stmt->execute();
 
         if ($res) {
-
             http_response_code(200);
             header('Content-Type: application/json');
             echo '{"status":"success", "message":"Ride created."}';
             exit;
-
         } else {
             http_response_code(200);
             header('Content-Type: application/json');

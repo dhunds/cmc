@@ -247,6 +247,42 @@ WHERE co.CabId = '".$_POST['cabId']."' AND ar.MemberNumber='".$sendercellNew."'"
         // End Sending Payment Email to member
 
     } else {
+
+        //Send Notification
+        $stmt = $con->query("SELECT MobileNumber, FullName, DeviceToken, Platform FROM registeredusers WHERE MobileNumber = '$receivercellNew'");
+        $receiverExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+        if ($receiverExists) {
+            $row = $stmt->fetch();
+
+            $receiverName = $row['FullName'];
+            $receiverMobileNumber = $row['MobileNumber'];
+            $receiverPlatform = $row['Platform'];
+            $receiverDeviceToken = $row['DeviceToken'];
+
+            $NotificationType = "Payment_Received";
+            $Message = "Payment error, please take Rs. " . $amount . " in cash from " . $memberDetail['FullName'] . ".";
+
+            $paramsReceiver = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$receiverName, 'ReceiveMemberNumber'=>$receiverMobileNumber, 'Message'=>$Message, 'CabId'=>$_POST['cabId'], 'DateTime'=>'now()');
+
+            $notificationId = $objNotification->logNotification($paramsReceiver);
+
+            $body = array('gcmText' => $Message, 'pushfrom' => $NotificationType, 'notificationId' => $notificationId);
+
+            if ($receiverPlatform == 'A') {
+                $gcm_array = [];
+                $gcm_array[] = $receiverDeviceToken;
+                $objNotification->setVariables($gcm_array, $body);
+                $res = $objNotification->sendGCMNotification();
+            } else {
+                $apns_array = [];
+                $apns_array[] = $receiverDeviceToken;
+                $objNotification->setVariables($apns_array, $body);
+                $objNotification->sendIOSNotification();
+            }
+        }
+        // End Sending Notification
+
         $jsonResp = array('status'=>'fail', 'statuscode'=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription, 'message'=>'Payment failed, please settle Rs.'.$amount.' in cash');
     }
 

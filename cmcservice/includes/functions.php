@@ -413,7 +413,16 @@ function checkMobikwikWalletBalance ($mobileNumber) {
         $resp = simplexml_load_string($result);
 
         if ($resp->status =='SUCCESS'){
+
             mobikwikTokenRegenerate($user['MobileNumber']);
+
+        } else if ((string)$resp->statuscode == '199') {
+
+            $tokenResp = simplexml_load_string(mobikwikTokenRegenerate($mobileNumber));
+
+            if($tokenResp->status == 'SUCCESS') {
+                checkMobikwikWalletBalance($mobileNumber);
+            }
         }
 
         return $resp;
