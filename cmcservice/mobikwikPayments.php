@@ -189,7 +189,7 @@ if (!$error) {
 
     if ($paymentStatus == 'success'){
 
-        $jsonResp = array('status'=>"success", 'statuscode'=>(string)$respPeerTransfer->statuscode, 'statusdescription'=>(string)$respPeerTransfer->statusdescription, 'amount'=>(string)$respPeerTransfer->amount, 'orderid'=>(string)$respPeerTransfer->orderid, 'refId'=>(string)$respPeerTransfer->refId, 'checksum'=>(string)$respPeerTransfer->checksum, 'message'=>'Payment processed.');
+        $jsonResp = array('status'=>"success", 'statuscode'=>(string)$respPeerTransfer->statuscode, 'statusdescription'=>(string)$respPeerTransfer->statusdescription, 'amount'=>(string)$respPeerTransfer->amount, 'orderid'=>(string)$respPeerTransfer->orderid, 'refId'=>(string)$respPeerTransfer->refId, 'checksum'=>(string)$respPeerTransfer->checksum, 'message'=>'Payment processed. Enjoy your ride!');
 
         //Send Notification
         $stmt = $con->query("SELECT MobileNumber, FullName, DeviceToken, Platform FROM registeredusers WHERE MobileNumber = '$receivercellNew'");
@@ -204,7 +204,7 @@ if (!$error) {
             $receiverDeviceToken = $row['DeviceToken'];
 
             $NotificationType = "Payment_Received";
-            $Message = "Payment of Rs.".$amount." received from. ".$memberDetail['FullName'];
+            $Message = "Payment of Rs.".$amount." received from ".$memberDetail['FullName'];
 
             $paramsReceiver = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$receiverName, 'ReceiveMemberNumber'=>$receiverMobileNumber, 'Message'=>$Message, 'CabId'=>$_POST['cabId'], 'DateTime'=>'now()');
 
@@ -285,7 +285,12 @@ WHERE co.CabId = '".$_POST['cabId']."' AND ar.MemberNumber='".$sendercellNew."'"
         $jsonResp = array('status'=>'fail', 'statuscode'=>(string)$respPeerTransfer->statuscode, 'statusdescription'=>(string)$respPeerTransfer->statusdescription, 'message'=>'Payment failed, please settle Rs.'.$amount.' in cash');
     }
 
-    $sql = "UPDATE acceptedrequest set hasBoarded = 1 where CabId = '" . $_POST['cabId'] . "'";
+    if ($jsonResp['status'] == 'success') {
+        $sql = "UPDATE acceptedrequest set hasBoarded = 1 where CabId = '" . $_POST['cabId'] . "'";
+    } else {
+        $sql = "UPDATE acceptedrequest set hasBoarded = 2 where CabId = '" . $_POST['cabId'] . "'";
+    }
+
     $stmt = $con->prepare($sql);
     $res = $stmt->execute();
 
