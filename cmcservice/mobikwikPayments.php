@@ -13,7 +13,8 @@ $error = 0;
 $error = checkPostForBlank (array('sendercell', 'receivercell', 'amount'));
 
 if (!$error) {
-    $offerCode = 'FIRSTRIDEFREE';
+    $offerCode = '';
+    //$offerCode = 'FIRSTRIDEFREE';
     $amount = $_POST['amount'];
     $sendercell = $_POST['sendercell'];
     $receivercell = $_POST['receivercell'];
