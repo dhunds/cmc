@@ -304,6 +304,39 @@ function mobikwikTransfersFromMerchant($amount, $merchantName, $merchantId, $ord
     }
 }
 
+function merchantTransfer($amount, $cell, $comment, $merchantname, $mid, $msgCode, $orderid, $token, $txntype) {
+
+    $string = "'".$amount ."''". $cell ."''". $comment ."''". $merchantname ."''". $mid ."''". $msgCode ."''". $orderid ."''". $token ."''". $txntype ."'";
+    $checksum = hash_hmac('sha256', $string, API_SECRET);
+
+    $fields = array('amount' => $amount, 'cell' => $cell, 'comment' => $comment, 'merchantname' => $merchantname, 'mid' => $mid, 'msgcode' =>$msgCode, 'orderid' => $orderid, 'token' => $token,  'txntype' => $txntype, 'checksum' => $checksum);
+
+    $strParams = http_build_query($fields);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, DEBIT_API);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $strParams);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $result = curl_exec ($ch);
+    curl_close ($ch);
+
+    if ($result === FALSE) {
+        return FALSE;
+    } else {
+        $resp = simplexml_load_string($result);
+
+        if ((string)$resp->statuscode == '199') {
+            $mobileNumber = '0091'.$cell;
+            $tokenResp = simplexml_load_string(mobikwikTokenRegenerate($mobileNumber));
+
+            if($tokenResp->status == 'SUCCESS') {
+                merchantTransfer ($amount, $cell, $comment, $merchantname, $mid, $msgCode, $orderid, $token, $txntype);
+            }
+        }
+        return $resp;
+    }
+}
+
 function checkPostForBlank($arrParams){
     $error = 0;
     foreach ($arrParams as $value) {

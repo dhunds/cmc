@@ -18,6 +18,9 @@ if (!$error) {
     $sendercell = $_POST['sendercell'];
     $receivercell = $_POST['receivercell'];
     $fee = 0;
+    $comment = 'serviceCharge';
+    $msgCode = '503';
+    $txntype = 'debit';
     $cabId = $_POST['cabId'];
     $orderid = microtime();
     $merchantname = MERCHANT_NAME;
@@ -108,7 +111,8 @@ if (!$error) {
                     // Start Merchant Transaction For Platform Charges
                     $merchantOrderid = microtime() . $_POST['cabId'];
                     $merchantToken = getMobikwikToken($receivercellNew);
-                    $merchantResp = mobikwikTransfers($totalDeductible, $fee, $merchantname, $mid, $merchantOrderid, MERCHANT_NUMBER, $receivercell, $merchantToken);
+
+                    $merchantResp = merchantTransfer($totalDeductible, $receivercell, $comment, $merchantname, $mid, $msgCode, $merchantOrderid, $merchantToken, $txntype);
 
                     logMobikwikTransaction($merchantResp->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $merchantResp->status, 2, $serviceCharge, $serviceTax, $merchantResp->statusdescription);
 
@@ -148,7 +152,9 @@ if (!$error) {
                     // Start Merchant Transaction For Platform Charges
                     $merchantOrderid1 = microtime() . $_POST['cabId'];
                     $merchantToken = getMobikwikToken($receivercellNew);
-                    $merchantResp = mobikwikTransfers($totalDeductible, $fee, $merchantname, $mid, $merchantOrderid1, MERCHANT_NUMBER, $receivercell, $merchantToken);
+
+                    $merchantResp = merchantTransfer($totalDeductible, $receivercell, $comment, $merchantname, $mid, $msgCode, $merchantOrderid, $merchantToken, $txntype);
+
                     logMobikwikTransaction($merchantResp->refId, $receivercell, MERCHANT_NUMBER, $totalDeductible, $cabId, $merchantResp->status, 2, $serviceCharge, $serviceTax, $merchantResp->statusdescription);
                     if ($merchantResp->status == 'SUCCESS') {
                         mobikwikTokenRegenerate($receivercellNew);
