@@ -22,7 +22,7 @@ if (!$error) {
     $msgCode = '503';
     $txntype = 'debit';
     $cabId = $_POST['cabId'];
-    $orderid = microtime();
+    $orderid = rand().$cabId;
     $merchantname = MERCHANT_NAME;
     $mid = MID;
     $merchantTransfer = 1;
@@ -33,7 +33,7 @@ if (!$error) {
     $isAssociate = 0;
     $serviceCharge = 5;
     $serviceTax = (14 / 100) * 5;
-    $totalDeductible = ceil($serviceCharge + $serviceTax);
+    $totalDeductible = $serviceCharge + $serviceTax;
     $paidAmount = 0;
     $paymentStatus = '';
 
@@ -109,7 +109,7 @@ if (!$error) {
 
                     $paymentStatus = 'success';
                     // Start Merchant Transaction For Platform Charges
-                    $merchantOrderid = microtime() . $_POST['cabId'];
+                    $merchantOrderid = rand() . $_POST['cabId'];
                     $merchantToken = getMobikwikToken($receivercellNew);
 
                     $merchantResp = merchantTransfer($totalDeductible, $receivercell, $comment, $merchantname, $mid, $msgCode, $merchantOrderid, $merchantToken, $txntype);
@@ -144,13 +144,13 @@ if (!$error) {
                     $paymentStatus = 'success';
 
                     // Partial Payment By Merchant
-                    $merchantOrderid = microtime() . $_POST['cabId'];
+                    $merchantOrderid = rand() . $_POST['cabId'];
                     $paidAmount1 = $discount + $credit;
                     $respPeerTransfer1 = mobikwikTransfersFromMerchant($paidAmount1, $merchantname, $mid, $merchantOrderid, $receivercell);
                     logMobikwikTransaction($merchantOrderid, $receivercell, MERCHANT_NUMBER, $paidAmount1, $cabId, $respPeerTransfer1->status, 1, 0.0, 0.0, $respPeerTransfer->statusdescription);
 
                     // Start Merchant Transaction For Platform Charges
-                    $merchantOrderid1 = microtime() . $_POST['cabId'];
+                    $merchantOrderid1 = rand() . $_POST['cabId'];
                     $merchantToken = getMobikwikToken($receivercellNew);
 
                     $merchantResp = merchantTransfer($totalDeductible, $receivercell, $comment, $merchantname, $mid, $msgCode, $merchantOrderid, $merchantToken, $txntype);
