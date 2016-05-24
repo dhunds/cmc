@@ -184,9 +184,12 @@ if (!$error) {
 
     }
 
+    $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicleModel FROM registeredusers ru JOIN userprofileimage ui ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.MobileNumber = '".$sendercellNew."'");
+    $memberDetail = $stmt->fetch();
+
     if ($paymentStatus == 'success'){
 
-        $jsonResp = array('status'=>"success", 'statuscode'=>(string)$respPeerTransfer->statuscode, 'statusdescription'=>(string)$respPeerTransfer->statusdescription, 'amount'=>(string)$respPeerTransfer->amount, 'orderid'=>(string)$respPeerTransfer->orderid, 'refId'=>(string)$respPeerTransfer->refId, 'checksum'=>(string)$respPeerTransfer->checksum, 'message'=>'Payment Received');
+        $jsonResp = array('status'=>"success", 'statuscode'=>(string)$respPeerTransfer->statuscode, 'statusdescription'=>(string)$respPeerTransfer->statusdescription, 'amount'=>(string)$respPeerTransfer->amount, 'orderid'=>(string)$respPeerTransfer->orderid, 'refId'=>(string)$respPeerTransfer->refId, 'checksum'=>(string)$respPeerTransfer->checksum, 'message'=>'Payment processed.');
 
         //Send Notification
         $stmt = $con->query("SELECT MobileNumber, FullName, DeviceToken, Platform FROM registeredusers WHERE MobileNumber = '$receivercellNew'");
@@ -201,7 +204,7 @@ if (!$error) {
             $receiverDeviceToken = $row['DeviceToken'];
 
             $NotificationType = "Payment_Received";
-            $Message = "Payment received.";
+            $Message = "Payment of Rs.".$amount." received from. ".$memberDetail['FullName'];
 
             $paramsReceiver = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$receiverName, 'ReceiveMemberNumber'=>$receiverMobileNumber, 'Message'=>$Message, 'CabId'=>$_POST['cabId'], 'DateTime'=>'now()');
 
@@ -224,27 +227,22 @@ if (!$error) {
         // End Sending Notification
 
         // Send Payment Email to member
-        $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicleModel FROM registeredusers ru JOIN userprofileimage ui ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.MobileNumber = '".$sendercellNew."'");
-        $senderExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-        if ($senderExists) {
-            $memberDetail = $stmt->fetch();
+        if($memberDetail['Email'] !='') {
+            require_once 'mail.php';
 
-            if($memberDetail['Email'] !='') {
-                require_once 'mail.php';
-
-                $sql = "SELECT date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate, co.perKmCharge, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount FROM cabopen co JOIN acceptedrequest ar ON co.CabId = ar.CabId JOIN paymentLogs pl ON co.CabId = pl.cabId
+            $sql = "SELECT date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate, co.perKmCharge, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount FROM cabopen co JOIN acceptedrequest ar ON co.CabId = ar.CabId JOIN paymentLogs pl ON co.CabId = pl.cabId
 WHERE co.CabId = '".$_POST['cabId']."' AND ar.MemberNumber='".$sendercellNew."'";
 
-                $stmt = $con->query($sql);
-                $cabDetail = $stmt->fetch();
+            $stmt = $con->query($sql);
+            $cabDetail = $stmt->fetch();
 
-                $rideDetails = array("TravelDate" =>$cabDetail['TravelDate'], "perKmCharge" =>$cabDetail['perKmCharge'], "MemberLocationAddress" =>$cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" =>$cabDetail['MemberEndLocationAddress'], "distance" =>$cabDetail['distance'], "amount" =>$cabDetail['amount'], "vehicleModel" =>$memberDetail['vehicleModel'], "imagename" =>$memberDetail['imagename'], "memberEmail" =>$memberDetail['Email'], "memberName" => $memberDetail['FullName']);
+            $rideDetails = array("TravelDate" =>$cabDetail['TravelDate'], "perKmCharge" =>$cabDetail['perKmCharge'], "MemberLocationAddress" =>$cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" =>$cabDetail['MemberEndLocationAddress'], "distance" =>$cabDetail['distance'], "amount" =>$cabDetail['amount'], "vehicleModel" =>$memberDetail['vehicleModel'], "imagename" =>$memberDetail['imagename'], "memberEmail" =>$memberDetail['Email'], "memberName" => $memberDetail['FullName']);
 
-                sendPaymentMailMember ($rideDetails);
+            sendPaymentMailMember ($rideDetails);
 
-            }
         }
+
         // End Sending Payment Email to member
 
     } else {
