@@ -270,6 +270,13 @@ function attachCouponsToUsers ($offerCode, $mobileNumber) {
     return $msg;
 }
 
+function checkOfferUseCount(){
+    global $con;
+    $con->query("SELECT id FROM availedOffers WHERE mobileNumber = '".$mobileNumber."'");
+    $offerCount = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+    return $offerCount;
+}
+
 function checkOffers ($mobileNumber) {
     global $con;
 

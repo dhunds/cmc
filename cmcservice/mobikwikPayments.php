@@ -17,7 +17,7 @@ if (!$error) {
     $amount = $_POST['amount'];
     $sendercell = $_POST['sendercell'];
     $receivercell = $_POST['receivercell'];
-    $fee = $_POST['fee'];
+    $fee = 0;
     $cabId = $_POST['cabId'];
     $orderid = microtime();
     $merchantname = MERCHANT_NAME;
@@ -185,6 +185,7 @@ if (!$error) {
     }
 
     if ($paymentStatus == 'success'){
+
         $jsonResp = array('status'=>"success", 'statuscode'=>(string)$respPeerTransfer->statuscode, 'statusdescription'=>(string)$respPeerTransfer->statusdescription, 'amount'=>(string)$respPeerTransfer->amount, 'orderid'=>(string)$respPeerTransfer->orderid, 'refId'=>(string)$respPeerTransfer->refId, 'checksum'=>(string)$respPeerTransfer->checksum, 'message'=>'Payment Received');
 
         //Send Notification

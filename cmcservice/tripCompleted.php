@@ -25,7 +25,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
         while ($row = $stmt->fetch()) {
 
             $NotificationType = "Cab_Rating";
-            $Message = "Trip from " . $cabDetail['FromShortName'] . " to  " . $cabDetail['ToShortName'] . " completed. Help us improve by rating the cab service.";
+            $Message = "Please rate your ride from " . $cabDetail['FromShortName'] . " to  " . $cabDetail['ToShortName'] . " .";
 
             $params = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$row['FullName'], 'ReceiveMemberNumber'=>(string)$row['MobileNumber'], 'Message'=>$Message, 'CabId'=>$cabDetail['CabId'], 'DateTime'=>'now()');
 

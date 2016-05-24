@@ -12,7 +12,7 @@ if ($CabsExists > 0) {
         $ToShortAddress = $row['ToShortName'];
         $OwnerNumber = (string)$row['MobileNumber'];
     }
-    $RateNotificationMessage = "Trip from " . $FromShortAddress . " to  " . $ToShortAddress . " completed? Help us improve by rating the cab service.";
+    $RateNotificationMessage = "Please rate your ride from " . $FromShortAddress . " to  " . $ToShortAddress . ".";
 
     $stmtOwner = $con->query("SELECT * FROM registeredusers WHERE Trim(MobileNumber) = Trim('$OwnerNumber') and PushNotification != 'off'");
     $OwnerExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();

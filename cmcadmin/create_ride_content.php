@@ -1,33 +1,131 @@
 <?php
+include('connection.php');
 include('../common.php');
 
-if (isset($_POST['submit']) && $_POST['clubName'] != '') {
+if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] != '' && $_POST['eLatLon'] != '' && isset($_POST['CabId']) && $_POST['CabId'] != '' && isset($_POST['MobileNumber']) && $_POST['MobileNumber'] != '') {
 
-    $MobileNumber = '00911234567890';
-    $FullName = 'Admin';
-    $groupName = $_POST['clubName'];
-    $sLat = $_POST['slat'];
-    $sLon = $_POST['slon'];
-    $eLat = $_POST['elat'];
-    $eLon = $_POST['elon'];
+    list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
+    list($eLat, $eLon) = explode(',', $_POST['eLatLon']);
 
+    $proximity = rideProximity();
 
-    $stmt = $con->query("select FullName, MobileNumber FROM registeredusers WHERE trim(MobileNumber)='" . $MobileNumber . "'");
-    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+    $CabId = $_POST['CabId'];
+    $MobileNumber = $_POST['MobileNumber'];
+    $OwnerName = $_POST['OwnerName'];
+    $FromLocation = $_POST['FromLocation'];
+    $ToLocation = $_POST['ToLocation'];
+    $TravelDate = $_POST['TravelDate'];
+    $TravelTime = $_POST['TravelTime'];
+    $Seats = $_POST['Seats'];
+    $RemainingSeats = $_POST['RemainingSeats'];
+    $Distance = $_POST['Distance'];
 
-    if ($found > 0) {
-        $stmt = $con->query("Select * From userpoolsmaster WHERE PoolName='$groupName' AND OwnerNumber = '$MobileNumber'");
-        $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+    $ExpTripDuration = $_POST['ExpTripDuration'];
+    $FromShortName = $_POST['FromShortName'];
+    $ToShortName = $_POST['ToShortName'];
 
-        if ($found > 0) {
-            echo "Group Name '" . $groupName . "' Already Exist<br />";
-        } else {
-            $createGroup = createPublicGroups($con, $groupName, $sLat, $sLon, $eLat, $eLon);
-            if ($createGroup == true) {
-                echo "Group Created.";
-            }
-        }
+    $rideType = '';
+
+    if (isset($_POST['rideType']) && $_POST['rideType'] != '') {
+        $rideType = $_POST['rideType'];
     }
+
+    if (isset($_POST['perKmCharge']) && $_POST['perKmCharge'] != '') {
+        $perKmCharge = $_POST['perKmCharge'];
+    }
+
+    $perKmCharge = perKMChargeIntracity();
+
+    $dateInput = explode('/', $TravelDate);
+    $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
+
+    $expTrip = strtotime($cDate . ' ' . $TravelTime);
+    $newdate = $expTrip + $ExpTripDuration;
+    $ExpEndDateTime = date('Y-m-d H:i:s', $newdate);
+
+    $startDate = $expTrip;
+    $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
+
+    $sql = "SELECT
+              PoolId,
+              PoolName,
+              (
+                6371 * acos (
+                  cos ( radians($sLat) )
+                  * cos( radians( startLat ) )
+                  * cos( radians( startLon ) - radians($sLon) )
+                  + sin ( radians($sLat) )
+                  * sin( radians( startLat ) )
+                )
+              ) AS origin,
+              (
+                6371 * acos (
+                  cos ( radians($eLat) )
+                  * cos( radians( endLat ) )
+                  * cos( radians( endLon ) - radians($eLon) )
+                  + sin ( radians($eLat) )
+                  * sin( radians( endLat ) )
+                )
+              ) AS destination
+
+            FROM userpoolsmaster
+            WHERE poolType=2
+            HAVING origin < ".$proximity." AND destination < ".$proximity."
+            ORDER BY origin, destination LIMIT 0,1";
+
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+    $createGroup = 0;
+
+    if ($found < 1) {
+        $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
+        $groupId = $createGroup;
+
+        if ($groupId) {
+            // Send Mail to support
+            require_once 'mail.php';
+            $groupName = $FromShortName . ' to ' . $ToShortName;
+            sendGroupCreationMail ($groupName);
+        }
+
+    } else {
+        $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $groupId = $nearbyGroup[0]['PoolId'];
+    }
+
+    if ($found > 0 || $createGroup) {
+
+        $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+
+        $stmt = $con->prepare($sql);
+        $res = $stmt->execute();
+
+        $sql = "INSERT INTO groupCabs(groupId, cabId) VALUES ($groupId, '$CabId')";
+
+        $stmt = $con->prepare($sql);
+        $res = $stmt->execute();
+
+        if ($res) {
+            http_response_code(200);
+            header('Content-Type: application/json');
+            echo '{"status":"success", "message":"Ride created."}';
+            exit;
+        } else {
+            http_response_code(200);
+            header('Content-Type: application/json');
+            echo '{"status":"fail", "message":"An Error Occured, Please try again later!"}';
+            exit;
+        }
+    } else {
+        http_response_code(500);
+        header('Content-Type: application/json');
+        echo '{"status":"failed", "message":"An Error occured, Please try later."}';
+    }
+
+} else {
+   /* http_response_code(500);
+    header('Content-Type: application/json');
+    echo '{"status":"failed", "message":"Invalid Params."}';*/
 }
 ?>
 
@@ -55,8 +153,39 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
 
             <form id="groups" method="post" action="">
                 <div style="margin-left: 5px;">
-                    <div class="divLeft bluetext">&nbsp;&nbsp;Group Name:</div>
-                    <div class="divRight bluetext"><input type="text" name="clubName"></div>
+
+                    <div class="divLeft bluetext">&nbsp;&nbsp;Mobile Number:</div>
+                    <div class="divRight bluetext"><input type="text" name="mobileNumber"></div>
+                    <div style="clear:both;"></div>
+                    <br/>
+
+                    <div class="divLeft bluetext">&nbsp;&nbsp;Owner Name:</div>
+                    <div class="divRight bluetext"><input type="text" name="ownerName"></div>
+                    <div style="clear:both;"></div>
+                    <br/>
+
+                    <div class="divLeft bluetext">&nbsp;&nbsp;From Location:</div>
+                    <div class="divRight bluetext"><input id="from-location" class="controls" type="text"></div>
+                    <div style="clear:both;"></div>
+                    <br/>
+
+                    <div class="divLeft bluetext">&nbsp;&nbsp;To Location:</div>
+                    <div class="divRight bluetext"><input id="to-location" class="controls" type="text"></div>
+                    <div style="clear:both;"></div>
+                    <br/>
+
+                    <div class="divLeft bluetext">&nbsp;&nbsp;Seats:</div>
+                    <div class="divRight bluetext"><input type="text" name="seats"></div>
+                    <div style="clear:both;"></div>
+                    <br/>
+
+                    <div class="divLeft bluetext">&nbsp;&nbsp;Distance:</div>
+                    <div class="divRight bluetext"><input type="text" name="distance" id="distance"></div>
+                    <div style="clear:both;"></div>
+                    <br/>
+
+                    <div class="divLeft bluetext">&nbsp;&nbsp;Expected Time:</div>
+                    <div class="divRight bluetext"><input type="text" name="expTime" id="expTime"></div>
                     <div style="clear:both;"></div>
                     <br/>
 
@@ -92,67 +221,150 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
     </div>
 </div>
 <script>
+
+    var mapInstance, sLat, sLon, eLat, eLon, distance;
+
     function initMap() {
         var mapDiv = document.getElementById('map');
         var map = new google.maps.Map(mapDiv, {
             center: {lat: 28.4940472, lng: 77.0820822},
             zoom: 12
         });
+
+        var inputFrom = /** @type {!HTMLInputElement} */(
+            document.getElementById('from-location'));
+
+        var inputTo = /** @type {!HTMLInputElement} */(
+            document.getElementById('to-location'));
+
+        var autocompleteFrom = new google.maps.places.Autocomplete(inputFrom);
+        autocompleteFrom.bindTo('bounds', map);
+
+        var autocompleteTo = new google.maps.places.Autocomplete(inputTo);
+        autocompleteTo.bindTo('bounds', map);
+
+        autocompleteFrom.addListener('place_changed', function() {
+            var place = autocompleteFrom.getPlace();
+
+            if (!place.geometry) {
+                window.alert("Autocomplete's returned place contains no geometry");
+                return;
+            }
+            sLat = place.geometry.location.lat();
+            sLon = place.geometry.location.lng();
+            drawLocationFrom(sLat, sLon);
+        });
+
+        autocompleteTo.addListener('place_changed', function() {
+            var place = autocompleteTo.getPlace();
+
+            if (!place.geometry) {
+                window.alert("Autocomplete's returned place contains no geometry");
+                return;
+            }
+            eLat = place.geometry.location.lat();
+            eLon = place.geometry.location.lng();
+
+            drawLocationTo(eLat, eLon);
+        });
     }
-    window.onload = function () {
-        var mapOptions = {
-            center: new google.maps.LatLng(28.5267268, 77.1358162),
-            zoom: 12,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
 
-        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    var drawLocationFrom = function (sLat, sLon) {
+        document.getElementById("slat").value = sLat;
+        document.getElementById("slon").value = sLon;
 
-        var marker1 = new google.maps.Marker({
+        if (eLat != undefined) {
+            document.getElementById("distance").value = getDistanceFromLatLonInKm(sLat, sLon, eLat, eLon);
+        } else {
+            var mapOptions = {
+                center: new google.maps.LatLng(sLat, sLon),
+                zoom: 12,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            mapInstance = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+            directionsDisplay.setMap(mapInstance);
+            directionsDisplay.setPanel(document.getElementById('directionsPanel'));
+        }
+
+        var marker = new google.maps.Marker({
             draggable: true,
-            position: new google.maps.LatLng(28.5267268, 77.1358162),
-            map: map
+            position: new google.maps.LatLng(sLat, sLon),
+            map: mapInstance
         });
 
-        var marker2 = new google.maps.Marker({
-            draggable: true,
-            position: new google.maps.LatLng(28.4936018, 77.0861363),
-            map: map
-        });
-
-        var circle1 = new google.maps.Circle({
-            map: map,
+        var circle = new google.maps.Circle({
+            map: mapInstance,
             strokeColor: '#4285F4',
             strokeOpacity: 0.6,
             strokeWeight: 1,
             radius: 2500,    // 10 miles in metres
             fillColor: '#7caeff',
-            fillOpacity: 0.2,
+            fillOpacity: 0.2
         });
+        circle.bindTo('center', marker, 'position');
 
-        var circle2 = new google.maps.Circle({
-            map: map,
-            strokeColor: '#4285F4',
-            strokeOpacity: 0.6,
-            strokeWeight: 1,
-            radius: 2500,    // 10 miles in metres
-            fillColor: '#7caeff',
-            fillOpacity: 0.2,
-        });
-
-        circle1.bindTo('center', marker1, 'position');
-        circle2.bindTo('center', marker2, 'position');
-
-        google.maps.event.addListener(marker1, 'dragend', function (event) {
+        google.maps.event.addListener(marker, 'dragend', function (event) {
             document.getElementById("slat").value = event.latLng.lat();
             document.getElementById("slon").value = event.latLng.lng();
 
+            sLat = event.latLng.lat();
+            sLon = event.latLng.lng();
+
+            if (eLat != undefined) {
+                document.getElementById("distance").value = getDistanceFromLatLonInKm(sLat, sLon, eLat, eLon);
+            }
+
             getAddressFromReverseGeocoding(event.latLng.lat(), event.latLng.lng());
         });
+    }
 
-        google.maps.event.addListener(marker2, 'dragend', function (event) {
+    var drawLocationTo = function (eLat, eLon) {
+
+        document.getElementById("elat").value = eLat;
+        document.getElementById("elon").value = eLon;
+
+        if (sLat != undefined) {
+            document.getElementById("distance").value = getDistanceFromLatLonInKm(sLat, sLon, eLat, eLon);
+        } else {
+            var mapOptions = {
+                center: new google.maps.LatLng(eLat, eLon),
+                zoom: 12,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            mapInstance = new google.maps.Map(document.getElementById("map"), mapOptions);
+        }
+
+        var marker = new google.maps.Marker({
+            draggable: true,
+            position: new google.maps.LatLng(eLat, eLon),
+            map: mapInstance
+        });
+
+        var circle = new google.maps.Circle({
+            map: mapInstance,
+            strokeColor: '#4285F4',
+            strokeOpacity: 0.6,
+            strokeWeight: 1,
+            radius: 2500,    // 10 miles in metres
+            fillColor: '#7caeff',
+            fillOpacity: 0.2
+        });
+        circle.bindTo('center', marker, 'position');
+
+        google.maps.event.addListener(marker, 'dragend', function (event) {
             document.getElementById("elat").value = event.latLng.lat();
             document.getElementById("elon").value = event.latLng.lng();
+
+            eLat = event.latLng.lat();
+            eLon = event.latLng.lng();
+
+            if (sLat != undefined) {
+                document.getElementById("distance").value = getDistanceFromLatLonInKm(sLat, sLon, eLat, eLon);
+                getTimeFromLatLon (sLat, sLon, eLat, eLon);
+            }
 
             getAddressFromReverseGeocoding(event.latLng.lat(), event.latLng.lng());
         });
@@ -170,7 +382,7 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
             {
                 if (responses && responses.length > 0)
                 {
-                    console.log(responses);
+                    //console.log(responses);
                     //console.log(responses[0].formatted_address);
                 }
                 else
@@ -181,9 +393,65 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
         );
     }
 
+    function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2-lat1);  // deg2rad below
+        var dLon = deg2rad(lon2-lon1);
+        var a =
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon/2) * Math.sin(dLon/2)
+            ;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c; // Distance in km
+        return d;
+    }
+
+    function deg2rad(deg) {
+        return deg * (Math.PI/180)
+    }
+
+    function getTimeFromLatLon (sLat, sLon, eLat, eLon) {
+        var directions = new GDirections ();
+
+        var wp = new Array ();
+        wp[0] = new GLatLng(sLat, sLon);
+        wp[1] = new GLatLng(eLat, eLon);
+
+        directions.loadFromWaypoints(wp);
+
+        GEvent.addListener(directions, "load", function() {
+            console.log(directions.getDuration ().seconds + " seconds");
+            //$('log').innerHTML = directions.getDuration ().seconds + " seconds";
+        });
+    }
+
+    function computeTotalDistance(result) {
+        var total = 0;
+        var time= 0;
+        var from=0;
+        var to=0;
+        var myroute = result.routes[0];
+        for (var i = 0; i < myroute.legs.length; i++) {
+            total += myroute.legs[i].distance.value;
+            time +=myroute.legs[i].duration.text;
+            from =myroute.legs[i].start_address;
+            to =myroute.legs[i].end_address;
+
+
+        }
+        time = time.replace('hours','H');
+        time = time.replace('mins','M');
+        total = total / 1000.
+        document.getElementById('from').innerHTML = from + '-'+to;
+        document.getElementById('duration').innerHTML = time ;
+        document.getElementById('total').innerHTML =Math.round( total)+"KM" ;
+    }
+
     function frmReset() {
         document.getElementById("groups").reset();
     }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&callback=initMap"
-        async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&libraries=places&callback=initMap" async defer></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&callback=initMap"-->
+<!--        async defer></script>-->

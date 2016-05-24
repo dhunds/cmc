@@ -30,7 +30,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
             $res = $stmt->execute();
         }
 
-        $RateNotificationMessage = "Trip from " . $FromShortAddress . " to  " . $ToShortAddress . " completed. Help us improve by rating the cab service.";
+        $RateNotificationMessage = "Please rate your ride from " . $FromShortAddress . " to  " . $ToShortAddress . ".";
 
         $RateNotificationMessageOwner = "Trip from " . $FromShortAddress . " to  " . $ToShortAddress . " completed. Click here to send the fare split to your friends.";
 
