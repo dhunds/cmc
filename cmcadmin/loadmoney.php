@@ -1,7 +1,7 @@
 <?php
 include_once('connection.php');
 
-define("MID", "MBK9005");
+define("MID", "MBK9002");
 define("MERCHANT_NAME", "MyMerchantName");
 define("API_SECRET", "ju6tygh7u7tdg554k098ujd5468o");
 define("LOAD_MONEY_URL", "https://test.mobikwik.com/mobikwik/loadmoney");
