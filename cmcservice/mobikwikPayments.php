@@ -210,7 +210,7 @@ if (!$error) {
             $receiverDeviceToken = $row['DeviceToken'];
 
             $NotificationType = "Payment_Received";
-            $Message = "Payment of Rs.".$amount." received from ".$memberDetail['FullName'];
+            $Message = "Payment of Rs.".$amount." received from ".$memberDetail['FullName']." Please check your registered email address with Mobikwik (including spam folders) to accept it.";
 
             $paramsReceiver = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$receiverName, 'ReceiveMemberNumber'=>$receiverMobileNumber, 'Message'=>$Message, 'CabId'=>$_POST['cabId'], 'DateTime'=>'now()');
 
