@@ -10,7 +10,7 @@ $paymentFailed = 0;
 $curlFailed = 0;
 $error = 0;
 
-$error = checkPostForBlank (array('sendercell', 'receivercell', 'amount', 'fee'));
+$error = checkPostForBlank (array('sendercell', 'receivercell', 'amount'));
 
 if (!$error) {
     $offerCode = 'FIRSTRIDEFREE';
