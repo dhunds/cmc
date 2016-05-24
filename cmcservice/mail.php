@@ -334,7 +334,7 @@ $str .='<tr >
    <div class="adL"></div>
    </div>';
 
-    sendMail('support@ishareryde.com', $RideDetail['members']['Email'], 'Your Ride Summary', $str);
+    sendMail('support@ishareryde.com', $email, $subject, $str);
 }
 
 
@@ -541,5 +541,5 @@ function sendPaymentMailMember ($rideDetails) {
 
 
 
-    sendMail('support@ishareryde.com', $rideDetails['Email'], 'Your Ride Summary', $str);
+    sendMail('support@ishareryde.com', $rideDetails['memberEmail'], 'Your Ride Summary', $str);
 }
