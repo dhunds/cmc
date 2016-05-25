@@ -50,63 +50,66 @@ if ($no_of_users > 0) {
                 $FriendNumber = trim((string)$memNumber[$i]);
                 $FriendName = trim((string)$memName[$i]);
 
-                $Message = $OwnerName . ' added you to a group ' . $ClubName;
+                if ($FriendNumber != trim($OwnerNumber)) {
 
-                $stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$FriendNumber' and PushNotification != 'off'");
-                $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+                    $Message = $OwnerName . ' added you to a group ' . $ClubName;
 
-                if ($FriendExists > 0) {
-                    while ($row = $stmtF->fetch()) {
-                        $FriendDeviceToken = $row['DeviceToken'];
-                        $FriendPlatform = $row['Platform'];
-                        $FriendName = $row['FullName'];
+                    $stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$FriendNumber' and PushNotification != 'off'");
+                    $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+                    if ($FriendExists > 0) {
+                        while ($row = $stmtF->fetch()) {
+                            $FriendDeviceToken = $row['DeviceToken'];
+                            $FriendPlatform = $row['Platform'];
+                            $FriendName = $row['FullName'];
+                        }
                     }
-                }
 
-                if ($FriendDeviceToken != '') {
-                    $gcm_arrayF = array();
-                    $apns_arrayF = array();
-                    if ($FriendPlatform == "A") {
-                        $gcm_arrayF[] = $FriendDeviceToken;
+                    if ($FriendDeviceToken != '') {
+                        $gcm_arrayF = array();
+                        $apns_arrayF = array();
+                        if ($FriendPlatform == "A") {
+                            $gcm_arrayF[] = $FriendDeviceToken;
+                        } else {
+                            $apns_arrayF[] = $FriendDeviceToken;
+                        }
+
+                        $NotificationType = "PoolId_Added";
+                        $manFriend = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, PoolId, DateTime) VALUES ('$NotificationType','$OwnerName','$OwnerNumber','$FriendName','$FriendNumber','$Message','$poolid',now())";
+                        $manstmtFriend = $con->prepare($manFriend);
+                        $manresFriend = $manstmtFriend->execute();
+                        $notificationId = $con->lastInsertId();
+
+                        if ($manresFriend === true) {
+                            $body = array('gcmText' => $Message, 'pushfrom' => 'PoolId_', 'notificationId' => $notificationId);
+                            if (count($gcm_arrayF) > 0) {
+                                $objNotification->setVariables($gcm_arrayF, $body);
+                                $res = $objNotification->sendGCMNotification();
+                            }
+
+                            if (count($apns_arrayF) > 0) {
+                                $objNotification->setVariables($apns_arrayF, $body);
+                                $objNotification->sendIOSNotification();
+                            }
+                        }
                     } else {
-                        $apns_arrayF[] = $FriendDeviceToken;
+                        $sql = "SELECT amount FROM referral";
+                        $stmt = $con->query($sql);
+                        $referral = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        $sqlSMS = "SELECT SmsMessage FROM smstemplates WHERE SmsshortCode = 'CLUBADD'";
+                        $stmtSMS = $con->query($sqlSMS);
+                        $messageSMS = $stmtSMS->fetchColumn();
+                        $messageSMS = str_replace("OXXXXX", $OwnerName, $messageSMS);
+                        $objNotification->sendSMS("[" . $FriendNumber . "]", $messageSMS);
                     }
 
-                    $NotificationType = "PoolId_Added";
-                    $manFriend = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, PoolId, DateTime) VALUES ('$NotificationType','$OwnerName','$OwnerNumber','$FriendName','$FriendNumber','$Message','$poolid',now())";
-                    $manstmtFriend = $con->prepare($manFriend);
-                    $manresFriend = $manstmtFriend->execute();
-                    $notificationId =  $con->lastInsertId();
-
-                    if ($manresFriend === true) {
-                        $body = array('gcmText' => $Message, 'pushfrom' => 'PoolId_', 'notificationId' => $notificationId);
-                        if (count($gcm_arrayF) > 0) {
-                            $objNotification->setVariables($gcm_arrayF, $body);
-                            $res = $objNotification->sendGCMNotification();
-                        }
-
-                        if (count($apns_arrayF) > 0) {
-                            $objNotification->setVariables($apns_arrayF, $body);
-                            $objNotification->sendIOSNotification();
-                        }
+                    $sql3 = "INSERT INTO userpoolsslave(PoolId,MemberName,MemberNumber, IsActive) VALUES ('$poolid','$memName[$i]','$memNumber[$i]','1')";
+                    $stmt3 = $con->prepare($sql3);
+                    $res3 = $stmt3->execute();
+                    if ($res3 == true) {
+                        $IsCreated = true;
                     }
-                } else {
-	                $sql = "SELECT amount FROM referral";
-	                $stmt = $con->query($sql);
-	                $referral = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                    $sqlSMS = "SELECT SmsMessage FROM smstemplates WHERE SmsshortCode = 'CLUBADD'";
-                    $stmtSMS = $con->query($sqlSMS);
-                    $messageSMS = $stmtSMS->fetchColumn();
-                    $messageSMS = str_replace("OXXXXX", $OwnerName, $messageSMS);
-                    $objNotification->sendSMS("[" . $FriendNumber . "]", $messageSMS);
-                }
-
-                $sql3 = "INSERT INTO userpoolsslave(PoolId,MemberName,MemberNumber, IsActive) VALUES ('$poolid','$memName[$i]','$memNumber[$i]','1')";
-                $stmt3 = $con->prepare($sql3);
-                $res3 = $stmt3->execute();
-                if ($res3 == true) {
-                    $IsCreated = true;
                 }
             }
         }

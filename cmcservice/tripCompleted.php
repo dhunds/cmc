@@ -6,7 +6,7 @@ $objNotification = new Notification();
 
 if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
 
-    $sql = "UPDATE cabopen set CabStatus = 'I' where CabId = '" . $_POST['cabId'] . "'";
+    $sql = "UPDATE cabopen set CabStatus = 'C' where CabId = '" . $_POST['cabId'] . "'";
     $stmt = $con->prepare($sql);
     $res = $stmt->execute();
 

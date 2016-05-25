@@ -202,10 +202,11 @@ function offerCarpoolRideBonus($mobileNumber, $objNotification){
     return $resp;
 }
 
-function checkForOffers ($offerCode, $mobileNumber) {
+function checkForOffers ($mobileNumber) {
     global $con;
 
-    $sql = "SELECT id, amount, maxUse, maxUsePerUser, status FROM offers WHERE status=1 AND validThru > now() AND code='".$offerCode."'";
+    $offerCode = 'FIRSTRIDEFREE';
+    $sql = "SELECT o.id, o.amount, o.maxUse, o.maxUsePerUser, o.status FROM offers o JOIN userOffers uo ON o.id = uo.offerId WHERE o.status=1 AND o.validThru > now() AND o.code='".$offerCode."' AND uo.mobileNumber='".$mobileNumber."' AND uo.status=1";
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -213,19 +214,15 @@ function checkForOffers ($offerCode, $mobileNumber) {
     if ($found > 0) {
         $offer = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "SELECT COUNT(id) as useCount FROM credits WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "'";
+
+        $sql = "SELECT COUNT(id) as useCount FROM availedOffers WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "'";
         $stmt = $con->query($sql);
         $credits = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($credits['useCount'] < $offer['maxUsePerUser']) {
-
-            $sql = "INSERT INTO credits SET offerId=" . $offer['id'] . ", mobileNumber='" . $mobileNumber . "', credits=" . $offer['amount'] . ", created=now()";
-            $stmt = $con->prepare($sql);
-            $stmt->execute();
-
-            return $offer['amount'];
+            return $offer;
         } else {
-            return 0;
+            return false;
         }
     }
 }

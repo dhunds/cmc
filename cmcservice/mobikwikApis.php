@@ -50,7 +50,14 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
         }
         $discount = 0;
         $credit = $user ['totalCredits'];
-        $discount = checkForOffers ('FIRSTRIDEFREE', $mobileNumber);
+
+        $offerDetail = checkForOffers ($mobileNumber);
+
+        if ($offerDetail) {
+            $discount = $offerDetail['amount'];
+        } else {
+            $discount = 0;
+        }
 
         // Check User Balance (including discounts and credits) for the ride
         $availableBalance = $credit + $discount + $mobikwikBalance;
