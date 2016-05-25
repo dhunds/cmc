@@ -13,8 +13,8 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
     $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" . $_POST['cabId'] . "'");
     $cabDetail = $stmt->fetch();
 
-    $stmt = $con->query("SELECT ru.FullName, ru.MobileNumber, ru.DeviceToken, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount, pl.serviceCharge, pl.serviceTax FROM registeredusers ru JOIN acceptedrequest ar ON a.MobileNumber = b.MemberNumber
-        JOIN paymentLogs pl ON ar.MemberNumber = pl.mobileNumberFrom WHERE b.CabId='".$_POST['cabId']."' AND b.hasBoarded=1");
+    $stmt = $con->query("SELECT ru.FullName, ru.MobileNumber, ru.DeviceToken, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount, pl.serviceCharge, pl.serviceTax FROM registeredusers ru JOIN acceptedrequest ar ON ru.MobileNumber = ar.MemberNumber
+        JOIN paymentLogs pl ON ar.MemberNumber = pl.mobileNumberFrom WHERE ar.CabId='".$_POST['cabId']."' AND pl.cabId='".$_POST['cabId']."' AND ar.hasBoarded=1");
 
     $membersJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 

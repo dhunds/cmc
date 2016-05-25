@@ -289,7 +289,10 @@ if (!$error) {
                 $stmt = $con->query($sql);
                 $cabDetail = $stmt->fetch();
 
-                $rideDetails = array("TravelDate" => $cabDetail['TravelDate'], "TravelTime" => $cabDetail['TravelTime'], "perKmCharge" => $cabDetail['perKmCharge'], "MemberLocationAddress" => $cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" => $cabDetail['MemberEndLocationAddress'], "distance" => $cabDetail['distance'], "amount" => $cabDetail['amount'], "vehicleModel" => $memberDetail['vehicleModel'], "imagename" => $memberDetail['imagename'], "memberEmail" => $memberDetail['Email'], "OwnerName" => $cabDetail['OwnerName']);
+                $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicleModel FROM registeredusers ru JOIN userprofileimage ui ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.MobileNumber = '" . $receivercellNew . "'");
+                $ownerDetail = $stmt->fetch();
+
+                $rideDetails = array("TravelDate" => $cabDetail['TravelDate'], "TravelTime" => $cabDetail['TravelTime'], "perKmCharge" => $cabDetail['perKmCharge'], "MemberLocationAddress" => $cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" => $cabDetail['MemberEndLocationAddress'], "distance" => $cabDetail['distance'], "amount" => $cabDetail['amount'], "vehicleModel" => $ownerDetail['vehicleModel'], "imagename" => $ownerDetail['imagename'], "memberEmail" => $memberDetail['Email'], "OwnerName" => $cabDetail['OwnerName']);
 
                 sendPaymentMailMember($rideDetails);
 
