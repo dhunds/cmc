@@ -259,9 +259,9 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                      </tr>
                      <tr>
                         <td align="left" style="font-size:12px; color:#838383; font-family: Helvetica, Arial, sans-serif; border-bottom: 1px #f1f1f1 solid;
-                        padding-bottom: 10px;" height="15">'.$RideDetail['members']['MemberLocationAddress'].' &#8594; '.$RideDetail['members']['MemberEndLocationAddress'].'</td>
+                        padding-bottom: 10px;" height="15">'.$member['MemberLocationAddress'].' &#8594; '.$member['MemberEndLocationAddress'].'</td>
                         <td align="right" style="font-size:12px; color:#838383; font-family: Helvetica, Arial, sans-serif; border-bottom: 1px #f1f1f1 solid;
-                        padding-bottom: 10px;" height="15">'.$RideDetail['members']['distance'].' km</td>
+                        padding-bottom: 10px;" height="15">'.$member['distance'].' km</td>
                      </tr>
                      <tr >
                         <td colspan="2"><img alt="" src="http://ezeiadev.cloudapp.net/ishareryde-mailer/images/space.gif" style="display:block" border="0" height="5" width="300" /></td>
@@ -269,24 +269,24 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                      <tr>
                         <td align="left" style="font-size:14px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Amount :</td>
                         <td align="right" style="font-size:14px; color:#333333; font-family: Helvetica, Arial, sans-serif;
-                        Helvetica, Arial, sans-serif;">'.$RideDetail['members']['amount'].'</td>
+                        Helvetica, Arial, sans-serif;">'.$member['amount'].'</td>
                      </tr>
                      <tr>
                         <td align="left" style="font-size:14px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Service Charge :</td>
                         <td align="right" style="font-size:14px; color:#333333; font-family: Helvetica, Arial, sans-serif;
-                        Helvetica, Arial, sans-serif;"> - '.$RideDetail['members']['serviceCharge'].'</td>
+                        Helvetica, Arial, sans-serif;"> - '.$member['serviceCharge'].'</td>
                      </tr>
                      <tr>
                         <td align="left" style="font-size:14px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Service Tax :</td>
                         <td align="right" style="font-size:14px; color:#333333; font-family: Helvetica, Arial, sans-serif;
-                        Helvetica, Arial, sans-serif;"> - '.$RideDetail['members']['serviceTax'].'</td>
+                        Helvetica, Arial, sans-serif;"> - '.$member['serviceTax'].'</td>
                      </tr>
                      <tr >
                         <td colspan="2"><img alt="" src="http://ezeiadev.cloudapp.net/ishareryde-mailer/images/space.gif" style="display:block" border="0" height="2" width="300" /></td>
                      </tr>
                      <tr>
                         <td align="left" style="font-size:16px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;" height="30"> Subtotal</td>
-                        <td align="right" style="font-size:16px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;"><img src="http://ezeiadev.cloudapp.net/ishareryde-mailer/images/rupees-1.png" /><span style="padding:0 0 5px 0; vertical-align:top;"> '.($RideDetail['members']['amount'] - ($RideDetail['members']['serviceCharge'] + $RideDetail['members']['serviceTax'])).'</span></td>
+                        <td align="right" style="font-size:16px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;"><img src="http://ezeiadev.cloudapp.net/ishareryde-mailer/images/rupees-1.png" /><span style="padding:0 0 5px 0; vertical-align:top;"> '.($member['amount'] - ($member['serviceCharge'] + $member['serviceTax'])).'</span></td>
                      </tr>
                   </tbody>
                </table>
