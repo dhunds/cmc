@@ -10,7 +10,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
     $stmt = $con->prepare($sql);
     $res = $stmt->execute();
 
-    $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" . $_POST['cabId'] . "'");
+    $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" . $_POST['cabId'] . "'");
     $cabDetail = $stmt->fetch();
 
     $stmt = $con->query("SELECT ru.FullName, ru.MobileNumber, ru.DeviceToken, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount, pl.serviceCharge, pl.serviceTax FROM registeredusers ru JOIN acceptedrequest ar ON a.MobileNumber = b.MemberNumber
