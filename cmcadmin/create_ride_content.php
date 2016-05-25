@@ -2,130 +2,125 @@
 include('connection.php');
 include('../common.php');
 
-if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] != '' && $_POST['eLatLon'] != '' && isset($_POST['CabId']) && $_POST['CabId'] != '' && isset($_POST['MobileNumber']) && $_POST['MobileNumber'] != '') {
+if (isset($_POST['submit'])) {
 
-    list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
-    list($eLat, $eLon) = explode(',', $_POST['eLatLon']);
+$error = checkPostForBlank (array('mobileNumber', 'ownerName', 'FromLocation', 'ToLocation', 'FromShortName', 'ToShortName', 'seats', 'distance', 'expTime', 'slat', 'slon', 'elat', 'elon'));
 
-    $proximity = rideProximity();
+    if (!$error) {
+        $sLat = $_POST['slat'];
+        $sLon = $_POST['slon'];
+        $eLat = $_POST['elat'];
+        $eLon = $_POST['elon'];
 
-    $CabId = $_POST['CabId'];
-    $MobileNumber = $_POST['MobileNumber'];
-    $OwnerName = $_POST['OwnerName'];
-    $FromLocation = $_POST['FromLocation'];
-    $ToLocation = $_POST['ToLocation'];
-    $TravelDate = $_POST['TravelDate'];
-    $TravelTime = $_POST['TravelTime'];
-    $Seats = $_POST['Seats'];
-    $RemainingSeats = $_POST['RemainingSeats'];
-    $Distance = $_POST['Distance'];
+        $proximity = rideProximity();
 
-    $ExpTripDuration = $_POST['ExpTripDuration'];
-    $FromShortName = $_POST['FromShortName'];
-    $ToShortName = $_POST['ToShortName'];
+        $MobileNumber = '0091' . substr(trim($_POST['mobileNumber']), -10);;
+        $CabId = time().$MobileNumber;
+        $OwnerName = $_POST['ownerName'];
+        $FromLocation = $_POST['FromLocation'];
+        $ToLocation = $_POST['ToLocation'];
+        $TravelDate = date("d/m/Y", strtotime("+30 minutes"));
+        $TravelTime = date("h:i A", strtotime("+30 minutes"));
+        $Seats = $_POST['seats'];
+        $RemainingSeats = $_POST['seats'];
+        $Distance = $_POST['distance'];
+        $ExpTripDuration = ($_POST['expTime'] * 60);  // in seconds
+        $FromShortName = $_POST['FromShortName'];
+        $ToShortName = $_POST['ToShortName'];
+        $rideType = 5;
+        $perKmCharge = perKMChargeIntracity();
 
-    $rideType = '';
+        $dateInput = explode('/', $TravelDate);
+        $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
 
-    if (isset($_POST['rideType']) && $_POST['rideType'] != '') {
-        $rideType = $_POST['rideType'];
-    }
+        $expTrip = strtotime($cDate . ' ' . $TravelTime);
+        $newdate = $expTrip + $ExpTripDuration;
+        $ExpEndDateTime = date('Y-m-d H:i:s', $newdate);
 
-    if (isset($_POST['perKmCharge']) && $_POST['perKmCharge'] != '') {
-        $perKmCharge = $_POST['perKmCharge'];
-    }
+        $startDate = $expTrip;
 
-    $perKmCharge = perKMChargeIntracity();
+        $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
 
-    $dateInput = explode('/', $TravelDate);
-    $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
+        $sql = "SELECT
+                  PoolId,
+                  PoolName,
+                  (
+                    6371 * acos (
+                      cos ( radians($sLat) )
+                      * cos( radians( startLat ) )
+                      * cos( radians( startLon ) - radians($sLon) )
+                      + sin ( radians($sLat) )
+                      * sin( radians( startLat ) )
+                    )
+                  ) AS origin,
+                  (
+                    6371 * acos (
+                      cos ( radians($eLat) )
+                      * cos( radians( endLat ) )
+                      * cos( radians( endLon ) - radians($eLon) )
+                      + sin ( radians($eLat) )
+                      * sin( radians( endLat ) )
+                    )
+                  ) AS destination
 
-    $expTrip = strtotime($cDate . ' ' . $TravelTime);
-    $newdate = $expTrip + $ExpTripDuration;
-    $ExpEndDateTime = date('Y-m-d H:i:s', $newdate);
+                FROM userpoolsmaster
+                WHERE poolType=2
+                HAVING origin < " . $proximity . " AND destination < " . $proximity . "
+                ORDER BY origin, destination LIMIT 0,1";
 
-    $startDate = $expTrip;
-    $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
+        $stmt = $con->query($sql);
+        $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+        $createGroup = 0;
 
-    $sql = "SELECT
-              PoolId,
-              PoolName,
-              (
-                6371 * acos (
-                  cos ( radians($sLat) )
-                  * cos( radians( startLat ) )
-                  * cos( radians( startLon ) - radians($sLon) )
-                  + sin ( radians($sLat) )
-                  * sin( radians( startLat ) )
-                )
-              ) AS origin,
-              (
-                6371 * acos (
-                  cos ( radians($eLat) )
-                  * cos( radians( endLat ) )
-                  * cos( radians( endLon ) - radians($eLon) )
-                  + sin ( radians($eLat) )
-                  * sin( radians( endLat ) )
-                )
-              ) AS destination
+        if ($found < 1) {
+            $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
+            $groupId = $createGroup;
 
-            FROM userpoolsmaster
-            WHERE poolType=2
-            HAVING origin < ".$proximity." AND destination < ".$proximity."
-            ORDER BY origin, destination LIMIT 0,1";
+            if ($groupId) {
+                // Send Mail to support
+                require_once '../cmcservice/mail.php';
+                $groupName = $FromShortName . ' to ' . $ToShortName;
+                sendGroupCreationMail($groupName);
+            }
 
-    $stmt = $con->query($sql);
-    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-    $createGroup = 0;
-
-    if ($found < 1) {
-        $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
-        $groupId = $createGroup;
-
-        if ($groupId) {
-            // Send Mail to support
-            require_once 'mail.php';
-            $groupName = $FromShortName . ' to ' . $ToShortName;
-            sendGroupCreationMail ($groupName);
-        }
-
-    } else {
-        $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $groupId = $nearbyGroup[0]['PoolId'];
-    }
-
-    if ($found > 0 || $createGroup) {
-
-        $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
-
-        $stmt = $con->prepare($sql);
-        $res = $stmt->execute();
-
-        $sql = "INSERT INTO groupCabs(groupId, cabId) VALUES ($groupId, '$CabId')";
-
-        $stmt = $con->prepare($sql);
-        $res = $stmt->execute();
-
-        if ($res) {
-            http_response_code(200);
-            header('Content-Type: application/json');
-            echo '{"status":"success", "message":"Ride created."}';
-            exit;
         } else {
-            http_response_code(200);
-            header('Content-Type: application/json');
-            echo '{"status":"fail", "message":"An Error Occured, Please try again later!"}';
-            exit;
+            $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $groupId = $nearbyGroup[0]['PoolId'];
+        }
+
+        if ($found > 0 || $createGroup) {
+
+            $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+
+            $stmt = $con->prepare($sql);
+            $res = $stmt->execute();
+
+            $sql = "INSERT INTO groupCabs(groupId, cabId) VALUES ($groupId, '$CabId')";
+
+            $stmt = $con->prepare($sql);
+            $res = $stmt->execute();
+
+            if ($res) {
+                echo 'Ride created.';
+            } else {
+                echo 'An Error occured, Please try later.';
+            }
+        } else {
+            echo 'An Error occured, Please try later.';
         }
     } else {
-        http_response_code(500);
-        header('Content-Type: application/json');
-        echo '{"status":"failed", "message":"An Error occured, Please try later."}';
+        echo 'Please fill all the boxes.';
     }
+}
 
-} else {
-   /* http_response_code(500);
-    header('Content-Type: application/json');
-    echo '{"status":"failed", "message":"Invalid Params."}';*/
+function checkPostForBlank($arrParams){
+    $error = 0;
+    foreach ($arrParams as $value) {
+        if (!isset($_POST[$value]) || $_POST[$value] =='') {
+            $error = 1;
+        }
+    }
+    return $error;
 }
 ?>
 
@@ -165,12 +160,22 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
                     <br/>
 
                     <div class="divLeft bluetext">&nbsp;&nbsp;From Location:</div>
-                    <div class="divRight bluetext"><input id="from-location" class="controls" type="text"></div>
+                    <div class="divRight bluetext"><input id="from-location" name="FromLocation" class="controls" type="text"></div>
                     <div style="clear:both;"></div>
                     <br/>
 
                     <div class="divLeft bluetext">&nbsp;&nbsp;To Location:</div>
-                    <div class="divRight bluetext"><input id="to-location" class="controls" type="text"></div>
+                    <div class="divRight bluetext"><input id="to-location" name="ToLocation" class="controls" type="text"></div>
+                    <div style="clear:both;"></div>
+                    <br/>
+
+                    <div class="divLeft bluetext">&nbsp;&nbsp;From Short Name:</div>
+                    <div class="divRight bluetext"><input name="FromShortName" class="controls" type="text"></div>
+                    <div style="clear:both;"></div>
+                    <br/>
+
+                    <div class="divLeft bluetext">&nbsp;&nbsp;To Short Name:</div>
+                    <div class="divRight bluetext"><input name="ToShortName" class="controls" type="text"></div>
                     <div style="clear:both;"></div>
                     <br/>
 
@@ -180,12 +185,12 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
                     <br/>
 
                     <div class="divLeft bluetext">&nbsp;&nbsp;Distance:</div>
-                    <div class="divRight bluetext"><input type="text" name="distance" id="distance"></div>
+                    <div class="divRight bluetext"><input type="text" name="distance" id="distance"> ( Km )</div>
                     <div style="clear:both;"></div>
                     <br/>
 
                     <div class="divLeft bluetext">&nbsp;&nbsp;Expected Time:</div>
-                    <div class="divRight bluetext"><input type="text" name="expTime" id="expTime"></div>
+                    <div class="divRight bluetext"><input type="text" name="expTime" id="expTime"> ( Min )</div>
                     <div style="clear:both;"></div>
                     <br/>
 
@@ -222,7 +227,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
 </div>
 <script>
 
-    var mapInstance, sLat, sLon, eLat, eLon, distance;
+    var mapInstance, sLat, sLon, eLat, eLon, distance, directionsDisplay, directionsService;
+
 
     function initMap() {
         var mapDiv = document.getElementById('map');
@@ -230,6 +236,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
             center: {lat: 28.4940472, lng: 77.0820822},
             zoom: 12
         });
+
+        directionsService = new google.maps.DirectionsService();
 
         var inputFrom = /** @type {!HTMLInputElement} */(
             document.getElementById('from-location'));
@@ -274,7 +282,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
         document.getElementById("slon").value = sLon;
 
         if (eLat != undefined) {
-            document.getElementById("distance").value = getDistanceFromLatLonInKm(sLat, sLon, eLat, eLon);
+            getDistanceAndTime (sLat+","+sLon, eLat+","+eLon);
         } else {
             var mapOptions = {
                 center: new google.maps.LatLng(sLat, sLon),
@@ -283,9 +291,6 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
             };
 
             mapInstance = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-            directionsDisplay.setMap(mapInstance);
-            directionsDisplay.setPanel(document.getElementById('directionsPanel'));
         }
 
         var marker = new google.maps.Marker({
@@ -313,10 +318,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
             sLon = event.latLng.lng();
 
             if (eLat != undefined) {
-                document.getElementById("distance").value = getDistanceFromLatLonInKm(sLat, sLon, eLat, eLon);
+                getDistanceAndTime (sLat+","+sLon, eLat+","+eLon);
             }
-
-            getAddressFromReverseGeocoding(event.latLng.lat(), event.latLng.lng());
         });
     }
 
@@ -326,7 +329,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
         document.getElementById("elon").value = eLon;
 
         if (sLat != undefined) {
-            document.getElementById("distance").value = getDistanceFromLatLonInKm(sLat, sLon, eLat, eLon);
+            getDistanceAndTime (sLat+","+sLon, eLat+","+eLon);
         } else {
             var mapOptions = {
                 center: new google.maps.LatLng(eLat, eLon),
@@ -362,90 +365,25 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
             eLon = event.latLng.lng();
 
             if (sLat != undefined) {
-                document.getElementById("distance").value = getDistanceFromLatLonInKm(sLat, sLon, eLat, eLon);
-                getTimeFromLatLon (sLat, sLon, eLat, eLon);
+                getDistanceAndTime (sLat+","+sLon, eLat+","+eLon);
             }
-
-            getAddressFromReverseGeocoding(event.latLng.lat(), event.latLng.lng());
         });
     }
 
-    function getAddressFromReverseGeocoding(latitude, longitude){
+    function getDistanceAndTime (sLatLong, eLatLong) {
+        var request = {
+            origin: sLatLong, // LatLng|string
+            destination: eLatLong, // LatLng|string
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
 
-        var geocoder = new google.maps.Geocoder();
-        var latLng = new google.maps.LatLng(latitude, longitude);
-
-        geocoder.geocode({
-                latLng: latLng
-            },
-            function(responses)
-            {
-                if (responses && responses.length > 0)
-                {
-                    //console.log(responses);
-                    //console.log(responses[0].formatted_address);
-                }
-                else
-                {
-                    console.log('Not getting Any address for given latitude and longitude.');
-                }
+        directionsService.route( request, function( response, status ) {
+            if ( status === 'OK' ) {
+                var point = response.routes[ 0 ].legs[ 0 ];
+                document.getElementById("expTime").value = Math.round(point.duration.value / 60);
+                document.getElementById("distance").value = Math.round(point.distance.value / 1000);
             }
-        );
-    }
-
-    function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-        var R = 6371; // Radius of the earth in km
-        var dLat = deg2rad(lat2-lat1);  // deg2rad below
-        var dLon = deg2rad(lon2-lon1);
-        var a =
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                Math.sin(dLon/2) * Math.sin(dLon/2)
-            ;
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        var d = R * c; // Distance in km
-        return d;
-    }
-
-    function deg2rad(deg) {
-        return deg * (Math.PI/180)
-    }
-
-    function getTimeFromLatLon (sLat, sLon, eLat, eLon) {
-        var directions = new GDirections ();
-
-        var wp = new Array ();
-        wp[0] = new GLatLng(sLat, sLon);
-        wp[1] = new GLatLng(eLat, eLon);
-
-        directions.loadFromWaypoints(wp);
-
-        GEvent.addListener(directions, "load", function() {
-            console.log(directions.getDuration ().seconds + " seconds");
-            //$('log').innerHTML = directions.getDuration ().seconds + " seconds";
-        });
-    }
-
-    function computeTotalDistance(result) {
-        var total = 0;
-        var time= 0;
-        var from=0;
-        var to=0;
-        var myroute = result.routes[0];
-        for (var i = 0; i < myroute.legs.length; i++) {
-            total += myroute.legs[i].distance.value;
-            time +=myroute.legs[i].duration.text;
-            from =myroute.legs[i].start_address;
-            to =myroute.legs[i].end_address;
-
-
-        }
-        time = time.replace('hours','H');
-        time = time.replace('mins','M');
-        total = total / 1000.
-        document.getElementById('from').innerHTML = from + '-'+to;
-        document.getElementById('duration').innerHTML = time ;
-        document.getElementById('total').innerHTML =Math.round( total)+"KM" ;
+        } );
     }
 
     function frmReset() {

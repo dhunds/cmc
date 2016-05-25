@@ -3,7 +3,12 @@ $page='login';
 include_once('connection.php');
 
 if ((isset($_SESSION['username']) && $_SESSION['username'] !='')){
-    header('location:groups.php');
+
+    if ($_SESSION['username']=='cabservice') {
+        header('location:createRide.php');
+    } else {
+        header('location:groups.php');
+    }
 }
 
 if (isset($_POST['submit']) && isset($_POST['username']) && $_POST['username'] !='' && isset($_POST['password']) && $_POST['password'] !=''){
@@ -20,7 +25,13 @@ if (isset($_POST['submit']) && isset($_POST['username']) && $_POST['username'] !
         $_SESSION['username'] = $result['username'];
         $_SESSION['mobileNumber'] = $result['mobileNumber'];
         $_SESSION['logo'] = $result['logo'];
-        header('location:groups.php');
+
+        if($result['username']=='cabservice'){
+            header('location:createRide.php');
+        } else {
+            header('location:groups.php');
+        }
+
     } else {
         $_REQUEST['err']=1;
     }

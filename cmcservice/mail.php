@@ -415,7 +415,7 @@ function sendPaymentMailMember ($rideDetails) {
                                                    Helvetica, Arial, sans-serif;">'.$rideDetails['distance'].'</td>
                                              </tr>
                                              <tr>
-                                                <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Time :</td>
+                                                <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Date :</td>
                                                 <td align="right" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;
                                                    Helvetica, Arial, sans-serif;">'.$rideDetails['TravelDate'].'</td>
                                              </tr>
@@ -424,7 +424,7 @@ function sendPaymentMailMember ($rideDetails) {
                                              </tr>
                                              <tr>
                                                 <td align="left" style="font-size:16px; color:#16a4de; font-weight:bold; font-family: Helvetica, Arial, sans-serif; border-bottom:1px solid #f1f1f1; border-top:1px solid #f1f1f1;" height="50"> Subtotal</td>
-                                                <td align="right" style="font-size:16px; color:#16a4de; font-weight:bold; border-bottom:1px solid #f1f1f1; border-top:1px solid #f1f1f1; font-family: Helvetica, Arial, sans-serif;"><img src="http://ezeiadev.cloudapp.net/ishareryde-mailer/images/rupees-1.png" /><span style="padding:0 0 5px 0; vertical-align:top;"> '.$rideDetails['TravelDate'].'</span></td>
+                                                <td align="right" style="font-size:16px; color:#16a4de; font-weight:bold; border-bottom:1px solid #f1f1f1; border-top:1px solid #f1f1f1; font-family: Helvetica, Arial, sans-serif;"><img src="http://ezeiadev.cloudapp.net/ishareryde-mailer/images/rupees-1.png" /><span style="padding:0 0 5px 0; vertical-align:top;"> '.$rideDetails['amount'].'</span></td>
                                              </tr>
                                              <tr >
                                                 <td><img alt="" src="http://ezeiadev.cloudapp.net/ishareryde-mailer/images/space.gif" style="display:block" border="0" height="30" width="300" /></td>
@@ -468,7 +468,7 @@ function sendPaymentMailMember ($rideDetails) {
                                              <tr>
                                                 <td align="center" style="font-size:14px; line-height:25px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$rideDetails['vehicleModel'].'</td>
                                                 <td align="center" style="font-size:14px; line-height:25px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$rideDetails['distance'].'</td>
-                                                <td align="center" style="font-size:14px; line-height:25px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$rideDetails['TravelDate'].'</td>
+                                                <td align="center" style="font-size:14px; line-height:25px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$rideDetails['TravelTime'].'</td>
                                              </tr>
                                           </tbody>
                                        </table>
@@ -482,8 +482,8 @@ function sendPaymentMailMember ($rideDetails) {
                                        <table align="center" border="0"cellpadding="0" cellspacing="0" width="450">
                                           <tbody>
                                              <tr>
-                                                <td width="80"><img src="http://107.167.183.147/cmc/cmcservice/ProfileImages/'.$rideDetails['imagename'].'" onerror="this.src=\'http://107.167.183.147/cmc/img/avatar.png\'"/></td>
-                                                <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30">You rode with '.$rideDetails['memberName'].'</td>
+                                                <td width="80"><img src="http://107.167.183.147/cmc/cmcservice/ProfileImages/'.$rideDetails['imagename'].'" onerror="this.src=\'http://107.167.183.147/cmc/img/avatar.png\'" height="50"/></td>
+                                                <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30">You rode with '.$rideDetails['OwnerName'].'</td>
                                              </tr>
                                           </tbody>
                                        </table>

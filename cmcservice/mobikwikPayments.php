@@ -283,13 +283,13 @@ if (!$error) {
             if ($memberDetail['Email'] != '') {
                 require_once 'mail.php';
 
-                $sql = "SELECT date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate, co.perKmCharge, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount FROM cabopen co JOIN acceptedrequest ar ON co.CabId = ar.CabId JOIN paymentLogs pl ON co.CabId = pl.cabId
+                $sql = "SELECT date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate, co.TravelTime, co.perKmCharge, co.OwnerName, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount FROM cabopen co JOIN acceptedrequest ar ON co.CabId = ar.CabId JOIN paymentLogs pl ON co.CabId = pl.cabId
     WHERE co.CabId = '" . $_POST['cabId'] . "' AND ar.MemberNumber='" . $sendercellNew . "'";
 
                 $stmt = $con->query($sql);
                 $cabDetail = $stmt->fetch();
 
-                $rideDetails = array("TravelDate" => $cabDetail['TravelDate'], "perKmCharge" => $cabDetail['perKmCharge'], "MemberLocationAddress" => $cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" => $cabDetail['MemberEndLocationAddress'], "distance" => $cabDetail['distance'], "amount" => $cabDetail['amount'], "vehicleModel" => $memberDetail['vehicleModel'], "imagename" => $memberDetail['imagename'], "memberEmail" => $memberDetail['Email'], "memberName" => $memberDetail['FullName']);
+                $rideDetails = array("TravelDate" => $cabDetail['TravelDate'], "TravelTime" => $cabDetail['TravelTime'], "perKmCharge" => $cabDetail['perKmCharge'], "MemberLocationAddress" => $cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" => $cabDetail['MemberEndLocationAddress'], "distance" => $cabDetail['distance'], "amount" => $cabDetail['amount'], "vehicleModel" => $memberDetail['vehicleModel'], "imagename" => $memberDetail['imagename'], "memberEmail" => $memberDetail['Email'], "OwnerName" => $cabDetail['OwnerName']);
 
                 sendPaymentMailMember($rideDetails);
 
