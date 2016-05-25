@@ -33,7 +33,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
 
             $members[] = $row;
 
-            $totalPaymentReceived = $totalPaymentReceived + $row['amount'];
+            $totalPaymentReceived = $totalPaymentReceived + ($row['amount'] - ($row['serviceCharge'] + $row['serviceTax']));
         }
 
         // Send Mail

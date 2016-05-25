@@ -214,7 +214,7 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                                                                <td align="right" style="font-size:14px; line-height:30px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$RideDetail['ride']['Distance'].'</td>
                                                             </tr>
                                                             <tr>
-                                                               <td align="left"  style="font-size:14px; line-height:30px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">EARNINGS</td>
+                                                               <td align="left"  style="font-size:14px; line-height:30px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">PAYMENTS</td>
                                                                <td align="right" style="font-size:14px; line-height:30px; color:#333333; font-family: Helvetica, Arial, sans-serif;">&#8377; '.$RideDetail['ride']['amount'].'</td>
                                                             </tr>
                                                          </tbody>
@@ -255,7 +255,7 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                <table bgcolor="#ffffff" style="padding:20px;" align="center" border="0"cellpadding="0" cellspacing="0" width="560">
                   <tbody>
                      <tr style="">
-                        <td colspan="2" align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif; line-height:22px;" height="30">Amit Kumar<br/></td>
+                        <td colspan="2" align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif; line-height:22px;" height="30">'.$member['FullName'].'<br/></td>
                      </tr>
                      <tr>
                         <td align="left" style="font-size:12px; color:#838383; font-family: Helvetica, Arial, sans-serif; border-bottom: 1px #f1f1f1 solid;
