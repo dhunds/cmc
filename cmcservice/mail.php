@@ -415,9 +415,14 @@ function sendPaymentMailMember ($rideDetails) {
                                                    Helvetica, Arial, sans-serif;">'.$rideDetails['distance'].'</td>
                                              </tr>
                                              <tr>
-                                                <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Date :</td>
+                                                <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Discount :</td>
                                                 <td align="right" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;
-                                                   Helvetica, Arial, sans-serif;">'.$rideDetails['TravelDate'].'</td>
+                                                   Helvetica, Arial, sans-serif;">'.$rideDetails['discount'].'</td>
+                                             </tr>
+                                             <tr>
+                                                <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Credits Used :</td>
+                                                <td align="right" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;
+                                                   Helvetica, Arial, sans-serif;">'.$rideDetails['credits'].'</td>
                                              </tr>
                                              <tr >
                                                 <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="10" width="300" /></td>

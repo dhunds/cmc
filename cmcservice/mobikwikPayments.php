@@ -193,7 +193,7 @@ if (!$error) {
             } else if ($transferFromMerchantAccount == '2') {
                 $paidAmount = $amount - $totalDeductible;
 
-                $respPeerTransfer = mobikwikTransfersFromMerchant($paidAmount, $merchantname, $mid, $orderid, $receivercell);
+                $respPeerTransfer = mobikwikTransfersFromMerchant($paidAmount, $merchantname, MID_LOADMONEY, $orderid, $receivercell);
 
                 if ($respPeerTransfer === FALSE) {
                     $paymentStatus = 'failed';

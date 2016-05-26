@@ -279,7 +279,7 @@ function mobikwikTransfersFromMerchant($amount, $merchantName, $merchantId, $ord
     $creditMethod = 'cashback';
     $typeOfMoney = 0;
 
-    $string = "'".$amount ."''". $cell ."''". $creditMethod ."''". $merchantName ."''". "MBK9002" ."''". $orderId ."''". $typeOfMoney ."''". WALLET_ID."'";
+    $string = "'".$amount ."''". $cell ."''". $creditMethod ."''". $merchantName ."''". $merchantId ."''". $orderId ."''". $typeOfMoney ."''". WALLET_ID."'";
 
     $checksum = hash_hmac('sha256', $string, API_SECRET);
 
