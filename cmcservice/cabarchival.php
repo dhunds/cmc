@@ -19,8 +19,8 @@ if ($cabExists > 0) {
         $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" . $cabId . "'");
         $cabDetail = $stmt->fetch();
 
-        $stmt = $con->query("SELECT ru.FullName, ru.MobileNumber, ru.DeviceToken, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount, pl.serviceCharge, pl.serviceTax FROM registeredusers ru JOIN acceptedrequest ar ON a.MobileNumber = b.MemberNumber
-            JOIN paymentLogs pl ON ar.MemberNumber = pl.mobileNumberFrom WHERE b.CabId='" . $cabId . "' AND b.hasBoarded=1");
+        $stmt = $con->query("SELECT ru.FullName, ru.MobileNumber, ru.DeviceToken, ru.Platform, ru.PushNotification, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount, pl.serviceCharge, pl.serviceTax FROM registeredusers ru JOIN acceptedrequest ar ON ru.MobileNumber = ar.MemberNumber
+        JOIN paymentLogs pl ON ar.MemberNumber = pl.mobileNumberFrom WHERE ar.CabId='".$cabId."' AND pl.cabId='".$cabId."' AND ar.hasBoarded=1");
 
         $membersJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
