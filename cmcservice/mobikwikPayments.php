@@ -52,6 +52,7 @@ if (!$error) {
         $totalDeductible = round($serviceCharge + $serviceTax);
         $paidAmount = 0;
         $paymentStatus = '';
+        $debitFromCredits=0;
 
         $transferFromMerchantAccount = 0; // 0-Complete tranfer From member, 1-partialTransfer from member and partial from merchant, 2- Complete Transfer from merchant
 
@@ -292,7 +293,9 @@ if (!$error) {
                 $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicleModel FROM registeredusers ru JOIN userprofileimage ui ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.MobileNumber = '" . $receivercellNew . "'");
                 $ownerDetail = $stmt->fetch();
 
-                $rideDetails = array("TravelDate" => $cabDetail['TravelDate'], "TravelTime" => $cabDetail['TravelTime'], "perKmCharge" => $cabDetail['perKmCharge'], "MemberLocationAddress" => $cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" => $cabDetail['MemberEndLocationAddress'], "distance" => $cabDetail['distance'], "amount" => $cabDetail['amount'], "vehicleModel" => $ownerDetail['vehicleModel'], "imagename" => $ownerDetail['imagename'], "memberEmail" => $memberDetail['Email'], "OwnerName" => $cabDetail['OwnerName']);
+                //$paidAmountByUSer = $amount$debitFromCredits
+
+                $rideDetails = array("TravelDate" => $cabDetail['TravelDate'], "TravelTime" => $cabDetail['TravelTime'], "perKmCharge" => $cabDetail['perKmCharge'], "MemberLocationAddress" => $cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" => $cabDetail['MemberEndLocationAddress'], "distance" => $cabDetail['distance'], "amount" => $cabDetail['amount'], "discount"=>$discount, "credits"=>$debitFromCredits, "vehicleModel" => $ownerDetail['vehicleModel'], "imagename" => $ownerDetail['imagename'], "memberEmail" => $memberDetail['Email'], "OwnerName" => $cabDetail['OwnerName']);
 
                 sendPaymentMailMember($rideDetails);
 

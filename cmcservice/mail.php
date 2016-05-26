@@ -482,7 +482,7 @@ function sendPaymentMailMember ($rideDetails) {
                                        <table align="center" border="0"cellpadding="0" cellspacing="0" width="450">
                                           <tbody>
                                              <tr>
-                                                <td width="80"><img src="http://107.167.183.147/cmc/cmcservice/ProfileImages/'.$rideDetails['imagename'].'" onerror="this.src=\'http://107.167.183.147/cmc/img/avatar.png\'" height="50"/></td>
+                                                <td width="80"><img src="http://107.167.183.147/cmc/cmcservice/ProfileImages/'.$rideDetails['imagename'].'" onerror="this.src=\'http://107.167.183.147/cmc/img/avatar.png\'" height="50" width="50" style="border-radius: 50%;"/></td>
                                                 <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30">You rode with '.$rideDetails['OwnerName'].'</td>
                                              </tr>
                                           </tbody>
