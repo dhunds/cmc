@@ -136,34 +136,34 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
       <table border="0" align="center" cellpadding="0" width="600" cellspacing="0" bgcolor="#f5f5f5" style="margin:0 auto;table-layout:fixed">
          <tbody>
             <tr>
-               <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+               <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
             </tr>
             <tr>
                <td>
                   <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
                      <tbody>
                         <tr>
-                           <td align="center"><a href="https://www.ishareryde.com" target="_blank"><img alt="" src="'.BASE_URL.'/logo.png" style="display:block" border="0" /></a></td>
+                           <td align="center"><a href="https://www.ishareryde.com" target="_blank"><img alt="" src="'.IMG_URL.'/logo.png" style="display:block" border="0" /></a></td>
                         </tr>
                      </tbody>
                   </table>
                </td>
             </tr>
             <tr>
-               <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+               <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
             </tr>
             <tr>
                <td>
                   <table align="center" border="0" bgcolor="#ffffff" cellpadding="0" cellspacing="0" width="560">
                      <tbody>
                         <tr>
-                           <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+                           <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
                         </tr>
                         <tr>
                            <td align="center" style="font-size:17px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">Thanks for choosing iShareRyde</td>
                         </tr>
                         <tr>
-                           <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+                           <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
                         </tr>
                         <tr>
                            <td>
@@ -174,12 +174,12 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                                        <table align="center" border="0"cellpadding="0" cellspacing="0" width="450">
                                           <tbody>
                                              <tr style="">
-                                                <td align="left" style="font-size:28px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;"><img src="'.BASE_URL.'/rupees.png" /> <span style="padding:0 0 5px 0; vertical-align:top;">'.$RideDetail['ride']['amount'].'</span></td>
+                                                <td align="left" style="font-size:28px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;"><img src="'.IMG_URL.'/rupees.png" /> <span style="padding:0 0 5px 0; vertical-align:top;">'.$RideDetail['ride']['amount'].'</span></td>
                                                 <td align="right" style="font-size:14px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;
                                                    Helvetica, Arial, sans-serif;">'.date('F d, Y').'</td>
                                              </tr>
                                              <tr >
-                                                <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                                                <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
                                              </tr>
                                           </tbody>
                                        </table>
@@ -189,7 +189,7 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                                        <td style="border-bottom:1px solid #f1f1f1;"></td>
                                     </tr>
                                     <tr >
-                                       <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                                       <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
                                     </tr>
                                     <tr>
                                        <td>
@@ -197,7 +197,7 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                                              <tbody>
                                                 <tr>
                                                    <td width="60%" align="left" style="font-size:14px; line-height:22px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">
-                                                      <div style="float:left; margin-right:15px;"><img src="'.BASE_URL.'/map.png" /></div>
+                                                      <div style="float:left; margin-right:15px;"><img src="'.IMG_URL.'/map.png" /></div>
                                                       '.$RideDetail['ride']['FromShortName'].' <br/><br/>
                                                       '.$RideDetail['ride']['ToShortName'].'
                                                    </td>
@@ -226,7 +226,7 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                                        </td>
                                     </tr>
                                     <tr >
-                                       <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                                       <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
                                     </tr>
                                  </tbody>
                               </table>
@@ -238,13 +238,13 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
             </tr>
          </tr>
          <tr >
-            <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
+            <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
          </tr>
          <tr>
             <td align="center" style="padding:10 0px; font-size:16px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;" height="30">Payments Received</td>
          </tr>
          <tr >
-            <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
+            <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
          </tr>';
 
   foreach ($RideDetail['members'] as $member) {
@@ -264,7 +264,7 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                         padding-bottom: 10px;" height="15">'.$member['distance'].' km</td>
                      </tr>
                      <tr >
-                        <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="5" width="300" /></td>
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="5" width="300" /></td>
                      </tr>
                      <tr>
                         <td align="left" style="font-size:14px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Amount :</td>
@@ -282,23 +282,23 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                         Helvetica, Arial, sans-serif;"> - '.$member['serviceTax'].'</td>
                      </tr>
                      <tr >
-                        <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="2" width="300" /></td>
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="2" width="300" /></td>
                      </tr>
                      <tr>
                         <td align="left" style="font-size:16px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;" height="30"> Subtotal</td>
-                        <td align="right" style="font-size:16px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;"><img src="'.BASE_URL.'/rupees-1.png" /><span style="padding:0 0 5px 0; vertical-align:top;"> '.($member['amount'] - ($member['serviceCharge'] + $member['serviceTax'])).'</span></td>
+                        <td align="right" style="font-size:16px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;"><img src="'.IMG_URL.'/rupees-1.png" /><span style="padding:0 0 5px 0; vertical-align:top;"> '.($member['amount'] - ($member['serviceCharge'] + $member['serviceTax'])).'</span></td>
                      </tr>
                   </tbody>
                </table>
             </td>
          </tr>
          <tr >
-            <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+            <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
          </tr>';
   }
 
 $str .='<tr >
-            <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+            <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
          </tr>
          <tr>
             <td>
@@ -310,13 +310,13 @@ $str .='<tr >
                         </td>
                      </tr>
                      <tr >
-                        <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
                      </tr>
                      <tr>
-                        <td align="center"><a href="https://www.facebook.com/ishareryde" target="_blank"><img src="'.BASE_URL.'/facebook.png" /></a> <a href="https://twitter.com/ishareryde" target="_blank"><img src="'.BASE_URL.'/twitter.png" /></a></td>
+                        <td align="center"><a href="https://www.facebook.com/ishareryde" target="_blank"><img src="'.IMG_URL.'/facebook.png" /></a> <a href="https://twitter.com/ishareryde" target="_blank"><img src="'.IMG_URL.'/twitter.png" /></a></td>
                      </tr>
                      <tr >
-                        <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
                      </tr>
                   </tbody>
                </table>
@@ -334,7 +334,7 @@ $str .='<tr >
    <div class="adL"></div>
    </div>';
 
-    sendMail('support@ishareryde.com', $email, $subject, $str);
+    sendMail('iShareRyde<support@ishareryde.com>', $email, $subject, $str);
 }
 
 
@@ -345,34 +345,34 @@ function sendPaymentMailMember ($rideDetails) {
    <table border="0" align="center" cellpadding="0" width="600" cellspacing="0" bgcolor="#f5f5f5" style="margin:0 auto;table-layout:fixed">
       <tbody>
          <tr>
-            <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+            <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
          </tr>
          <tr>
             <td>
                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
                   <tbody>
                      <tr>
-                        <td align="center"><a href="https://www.ishareryde.com" target="_blank"><img alt="" src="'.BASE_URL.'/logo.png" style="display:block" border="0" /></a></td>
+                        <td align="center"><a href="https://www.ishareryde.com" target="_blank"><img alt="" src="'.IMG_URL.'/logo.png" style="display:block" border="0" /></a></td>
                      </tr>
                   </tbody>
                </table>
             </td>
          </tr>
          <tr>
-            <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+            <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
          </tr>
          <tr>
             <td>
                <table align="center" border="0" bgcolor="#ffffff" cellpadding="0" cellspacing="0" width="560">
                   <tbody>
                      <tr>
-                        <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+                        <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
                      </tr>
                      <tr>
                         <td align="center" style="font-size:17px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">Thanks for choosing iShareRyde</td>
                      </tr>
                      <tr>
-                        <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+                        <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
                      </tr>
                      <tr>
                         <td>
@@ -383,12 +383,12 @@ function sendPaymentMailMember ($rideDetails) {
                                        <table align="center" border="0"cellpadding="0" cellspacing="0" width="450">
                                           <tbody>
                                              <tr style="">
-                                                <td align="left" style="font-size:28px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;"><img src="'.BASE_URL.'/rupees.png" /> <span style="padding:0 0 5px 0; vertical-align:top;">'.$rideDetails['amount'].'</span></td>
+                                                <td align="left" style="font-size:28px; color:#16a4de; font-family: Helvetica, Arial, sans-serif;"><img src="'.IMG_URL.'/rupees.png" /> <span style="padding:0 0 5px 0; vertical-align:top;">'.$rideDetails['amount'].'</span></td>
                                                 <td align="right" style="font-size:14px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;
                                                    Helvetica, Arial, sans-serif;">'.date('F d, Y').'</td>
                                              </tr>
                                              <tr >
-                                                <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                                                <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
                                              </tr>
                                           </tbody>
                                        </table>
@@ -398,7 +398,7 @@ function sendPaymentMailMember ($rideDetails) {
                                     <td style="border-bottom:1px solid #f1f1f1;"></td>
                                  </tr>
                                  <tr >
-                                    <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                                    <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
                                  </tr>
                                  <tr>
                                     <td>
@@ -420,14 +420,14 @@ function sendPaymentMailMember ($rideDetails) {
                                                    Helvetica, Arial, sans-serif;">'.$rideDetails['TravelDate'].'</td>
                                              </tr>
                                              <tr >
-                                                <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="10" width="300" /></td>
+                                                <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="10" width="300" /></td>
                                              </tr>
                                              <tr>
                                                 <td align="left" style="font-size:16px; color:#16a4de; font-weight:bold; font-family: Helvetica, Arial, sans-serif; border-bottom:1px solid #f1f1f1; border-top:1px solid #f1f1f1;" height="50"> Subtotal</td>
-                                                <td align="right" style="font-size:16px; color:#16a4de; font-weight:bold; border-bottom:1px solid #f1f1f1; border-top:1px solid #f1f1f1; font-family: Helvetica, Arial, sans-serif;"><img src="'.BASE_URL.'/rupees-1.png" /><span style="padding:0 0 5px 0; vertical-align:top;"> '.$rideDetails['amount'].'</span></td>
+                                                <td align="right" style="font-size:16px; color:#16a4de; font-weight:bold; border-bottom:1px solid #f1f1f1; border-top:1px solid #f1f1f1; font-family: Helvetica, Arial, sans-serif;"><img src="'.IMG_URL.'/rupees-1.png" /><span style="padding:0 0 5px 0; vertical-align:top;"> '.$rideDetails['amount'].'</span></td>
                                              </tr>
                                              <tr >
-                                                <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+                                                <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
                                              </tr>
                                           </tbody>
                                        </table>
@@ -439,7 +439,7 @@ function sendPaymentMailMember ($rideDetails) {
                                           <tbody>
                                              <tr>
                                                 <td align="left" style="font-size:14px; line-height:25px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">
-                                                   <div style="float:left; margin-right:15px; height:125px;"><img src="'.BASE_URL.'/map.png" /></div>'.$rideDetails['MemberLocationAddress'].'<br/><br/>
+                                                   <div style="float:left; margin-right:15px; height:125px;"><img src="'.IMG_URL.'/map.png" /></div>'.$rideDetails['MemberLocationAddress'].'<br/><br/>
                                                    '.$rideDetails['MemberEndLocationAddress'].'
                                                 </td>
                                              </tr>
@@ -448,13 +448,13 @@ function sendPaymentMailMember ($rideDetails) {
                                     </td>
                                  </tr>
                                  <tr >
-                                    <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                                    <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
                                  </tr>
                                  <tr>
                                     <td style="border-bottom:1px solid #f1f1f1;"></td>
                                  </tr>
                                  <tr >
-                                    <td><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                                    <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
                                  </tr>
                                  <tr>
                                     <td>
@@ -475,7 +475,7 @@ function sendPaymentMailMember ($rideDetails) {
                                     </td>
                                  </tr>
                                  <tr >
-                                    <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+                                    <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
                                  </tr>
                                  <tr>
                                     <td>
@@ -494,7 +494,7 @@ function sendPaymentMailMember ($rideDetails) {
                         </td>
                      </tr>
                      <tr >
-                        <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
                      </tr>
                   </tbody>
                </table>
@@ -505,7 +505,7 @@ function sendPaymentMailMember ($rideDetails) {
                <table align="center" border="0"cellpadding="0" cellspacing="0" width="450">
                   <tbody>
                      <tr >
-                        <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
                      </tr>
                      <tr>
                         <td align="center" style="font-size:14px; color:#6d6d6d; font-family: Helvetica, Arial, sans-serif; line-height:25px;" height="30"><a href="mailto:support@ishareryde.com" style="color:#6d6d6d; text-decoration:none;">support@iShareRyde.com</a><br/>
@@ -513,13 +513,13 @@ function sendPaymentMailMember ($rideDetails) {
                         </td>
                      </tr>
                      <tr >
-                        <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
                      </tr>
                      <tr>
-                        <td align="center"><a href="https://www.facebook.com/ishareryde" target="_blank"><img src="'.BASE_URL.'/facebook.png" /></a> <a href="https://twitter.com/ishareryde" target="_blank"><img src="'.BASE_URL.'/twitter.png" /></a></td>
+                        <td align="center"><a href="https://www.facebook.com/ishareryde" target="_blank"><img src="'.IMG_URL.'/facebook.png" /></a> <a href="https://twitter.com/ishareryde" target="_blank"><img src="'.IMG_URL.'/twitter.png" /></a></td>
                      </tr>
                      <tr >
-                        <td colspan="2"><img alt="" src="'.BASE_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
                      </tr>
                   </tbody>
                </table>
@@ -541,5 +541,5 @@ function sendPaymentMailMember ($rideDetails) {
 
 
 
-    sendMail('support@ishareryde.com', $rideDetails['memberEmail'], 'Your Ride Summary', $str);
+    sendMail('iShareRyde<support@ishareryde.com>', $rideDetails['memberEmail'], 'Your Ride Summary', $str);
 }
