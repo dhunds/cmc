@@ -2,6 +2,7 @@
 include('connection.php');
 include('includes/functions.php');
 include('includes/offers.php');
+include('mail.php');
 include_once('classes/class.notification.php');
 
 $objNotification = new Notification();
@@ -170,6 +171,12 @@ if (!$error) {
                         $merchantOrderid = time() . mt_rand(1, 10000);
                         $paidAmount1 = $discount + $credit;
                         $respPeerTransfer1 = mobikwikTransfersFromMerchant($paidAmount1, $merchantname, $mid, $merchantOrderid, $receivercell);
+
+                        if ($respPeerTransfer1 === FALSE) {
+                            sendPaymentFailedMail ($cabId, $paidAmount1, $sendercellNew, $merchantOrderid, $receivercellNew);
+                        }
+
+
                         logMobikwikTransaction($merchantOrderid, MERCHANT_NUMBER, $receivercell, $paidAmount1, $cabId, $respPeerTransfer1->status, 1, 0.0, 0.0, $respPeerTransfer->statusdescription);
 
                         // Start Merchant Transaction For Platform Charges
@@ -197,6 +204,7 @@ if (!$error) {
 
                 if ($respPeerTransfer === FALSE) {
                     $paymentStatus = 'failed';
+                    sendPaymentFailedMail ($cabId, $paidAmount, $sendercellNew, $orderid, $receivercellNew);
                 } else {
                     logMobikwikTransaction($orderid, MERCHANT_NUMBER, $receivercell, $paidAmount, $cabId, $respPeerTransfer->status, 1, 0.0, 0.0, $respPeerTransfer->statusdescription);
 
@@ -286,7 +294,6 @@ if (!$error) {
             // Send Payment Email to member
 
             if ($memberDetail['Email'] != '') {
-                require_once 'mail.php';
 
                 $sql = "SELECT date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate, co.TravelTime, co.perKmCharge, co.OwnerName, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount FROM cabopen co JOIN acceptedrequest ar ON co.CabId = ar.CabId JOIN paymentLogs pl ON co.CabId = pl.cabId
     WHERE co.CabId = '" . $_POST['cabId'] . "' AND ar.MemberNumber='" . $sendercellNew . "'";

@@ -52,6 +52,43 @@ function sendRegistrationMail ($name, $email) {
     }
 }
 
+function sendPaymentFailedMail ($cabId, $amount, $onBehalfOf, $orderId, $to) {
+    global $client;
+    $body = '<html>
+                <head>
+                    <title></title>
+                </head>
+                <body>
+                    <p>Hello Admin,</p>
+
+                    <p>User payment failed. Following is the detail of same.</p>
+
+                    <p>Cab ID: '.$cabId.'</p>
+                    <p>Amount: '.$amount.'</p>
+                    <p>Paying For: '.$onBehalfOf.'</p>
+                    <p>Order ID: '.$orderId.'</p>
+                    <p>Receiver Number: '.$to.'</p>
+
+                    <p>Webmaster</p>
+
+                    <p> </p>
+                </body>
+             </html>';
+
+    $msg = array();
+    $msg['Source'] = "support@ishareryde.com";
+    $msg['Destination']['ToAddresses'][] = "Webmaster<support@ishareryde.com>";
+    $msg['Message']['Subject']['Data'] = "Payment Failed !!";
+    $msg['Message']['Body']['Html']['Data'] =$body;
+    $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
+
+    try{
+        $client->sendEmail($msg);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+    }
+}
+
 function sendGroupCreationMail ($groupName) {
     global $client;
     $body = '<html>

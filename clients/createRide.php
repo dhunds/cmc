@@ -30,7 +30,7 @@ if (isset($_POST['submit'])) {
         $ExpTripDuration = ($_POST['expTime'] * 60);  // in seconds
         $FromShortName = $_POST['FromShortName'];
         $ToShortName = $_POST['ToShortName'];
-        $rideType = 5;
+        $rideType = 4;
         $perKmCharge = perKMChargeIntracity();
 
         $dateInput = explode('/', $TravelDate);
