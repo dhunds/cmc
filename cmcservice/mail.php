@@ -412,19 +412,25 @@ function sendPaymentMailMember ($rideDetails) {
                                              <tr style="">
                                                 <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Distance :</td>
                                                 <td align="right" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;
-                                                   Helvetica, Arial, sans-serif;">'.$rideDetails['distance'].'</td>
-                                             </tr>
-                                             <tr>
-                                                <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Discount :</td>
-                                                <td align="right" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;
-                                                   Helvetica, Arial, sans-serif;">'.$rideDetails['discount'].'</td>
-                                             </tr>
-                                             <tr>
-                                                <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Credits Used :</td>
-                                                <td align="right" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;
-                                                   Helvetica, Arial, sans-serif;">'.$rideDetails['credits'].'</td>
-                                             </tr>
-                                             <tr >
+                                                   Helvetica, Arial, sans-serif;">'.$rideDetails['distance'].' Km</td>
+                                             </tr>';
+                                            if ($rideDetails['discount']) {
+                                                $str .= '
+                                                 <tr>
+                                                    <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Discount :</td>
+                                                    <td align="right" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;
+                                                       Helvetica, Arial, sans-serif;">' . $rideDetails['discount'] . '</td>
+                                                 </tr>';
+                                            }
+                                            if ($rideDetails['credits']) {
+                                                $str .= '
+                                                <tr>
+                                                    <td align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;" height="30"> Credits Used :</td>
+                                                    <td align="right" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif;
+                                                       Helvetica, Arial, sans-serif;">' . $rideDetails['credits'] . '</td>
+                                                 </tr>';
+                                            }
+                                            $str .= '<tr >
                                                 <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="10" width="300" /></td>
                                              </tr>
                                              <tr>
@@ -467,12 +473,12 @@ function sendPaymentMailMember ($rideDetails) {
                                           <tbody>
                                              <tr>
                                                 <td align="center" style="font-size:14px; line-height:25px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">VEHICLE</td>
-                                                <td align="center" style="font-size:14px; line-height:25px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">KILOMETERS</td>
-                                                <td align="center" style="font-size:14px; line-height:25px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">TRIP TIME</td>
+                                                <td align="center" style="font-size:14px; line-height:25px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">REGISTRATION NO.</td>
+                                                <td align="center" style="font-size:14px; line-height:25px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">RIDE TIME</td>
                                              </tr>
                                              <tr>
                                                 <td align="center" style="font-size:14px; line-height:25px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$rideDetails['vehicleModel'].'</td>
-                                                <td align="center" style="font-size:14px; line-height:25px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$rideDetails['distance'].'</td>
+                                                <td align="center" style="font-size:14px; line-height:25px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$rideDetails['registrationNumber'].'</td>
                                                 <td align="center" style="font-size:14px; line-height:25px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$rideDetails['TravelTime'].'</td>
                                              </tr>
                                           </tbody>

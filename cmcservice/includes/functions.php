@@ -283,7 +283,7 @@ function mobikwikTransfersFromMerchant($amount, $merchantName, $merchantId, $ord
 
     $checksum = hash_hmac('sha256', $string, API_SECRET);
 
-    $fields = array('amount' => $amount, 'typeofmoney' => $typeOfMoney, 'cell' => $cell, 'orderid' => $orderId, 'creditmethod' => $creditMethod, 'walletid' => WALLET_ID, 'mid' => 'MBK9002', 'merchantname' => $merchantName, 'checksum' => $checksum);
+    $fields = array('amount' => $amount, 'typeofmoney' => $typeOfMoney, 'cell' => $cell, 'orderid' => $orderId, 'creditmethod' => $creditMethod, 'walletid' => WALLET_ID, 'mid' => $merchantId, 'merchantname' => $merchantName, 'checksum' => $checksum);
 
     $strParams = http_build_query($fields);
     $url = LOAD_MONEY_URL . '?' . $strParams;

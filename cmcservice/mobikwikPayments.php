@@ -49,7 +49,7 @@ if (!$error) {
         $isAssociate = 0;
         $serviceCharge = 5;
         $serviceTax = (14 / 100) * 5;
-        $totalDeductible = round($serviceCharge + $serviceTax);
+        $totalDeductible = $serviceCharge + $serviceTax;
         $paidAmount = 0;
         $paymentStatus = '';
         $debitFromCredits=0;
@@ -170,7 +170,7 @@ if (!$error) {
                         $merchantOrderid = time() . mt_rand(1, 10000);
                         $paidAmount1 = $discount + $credit;
                         $respPeerTransfer1 = mobikwikTransfersFromMerchant($paidAmount1, $merchantname, $mid, $merchantOrderid, $receivercell);
-                        logMobikwikTransaction($merchantOrderid, $receivercell, MERCHANT_NUMBER, $paidAmount1, $cabId, $respPeerTransfer1->status, 1, 0.0, 0.0, $respPeerTransfer->statusdescription);
+                        logMobikwikTransaction($merchantOrderid, MERCHANT_NUMBER, $receivercell, $paidAmount1, $cabId, $respPeerTransfer1->status, 1, 0.0, 0.0, $respPeerTransfer->statusdescription);
 
                         // Start Merchant Transaction For Platform Charges
                         $merchantOrderid1 = time() . mt_rand(1, 10000);
@@ -214,27 +214,31 @@ if (!$error) {
         }
 
         // Debit credits and discounts from account
-        if (($credit + $discount) > 0) {
 
-            if ($discount > 0) {
-                $sql = "INSERT INTO availedOffers(mobileNumber, offerId) VALUES ('$sendercellNew', '" . $offerDetail['id'] . "')";
-                $stmt = $con->prepare($sql);
-                $stmt->execute();
-            }
-            if (($credit > 0) && ($discount < $amount)) {
-                if ($credit >= ($amount - $discount)) {
-                    $debitFromCredits = ($amount - $discount);
-                } else {
-                    $debitFromCredits = $credit;
+        if($paymentStatus = 'success') {
+            if (($credit + $discount) > 0) {
+
+                if ($discount > 0) {
+                    $sql = "INSERT INTO availedOffers(mobileNumber, offerId) VALUES ('$sendercellNew', '" . $offerDetail['id'] . "')";
+                    $stmt = $con->prepare($sql);
+                    $stmt->execute();
                 }
-                $debitAmount = $credit - $debitFromCredits;
+                if (($credit > 0) && ($discount < $amount)) {
+                    if ($credit >= ($amount - $discount)) {
+                        $debitFromCredits = ($amount - $discount);
+                    } else {
+                        $debitFromCredits = $credit;
+                    }
+                    $debitAmount = $credit - $debitFromCredits;
 
-                $sql = "UPDATE registeredusers set 	totalCredits = '" . $debitAmount . "' where MobileNumber = '" . $sendercellNew . "'";
-                $stmt = $con->prepare($sql);
-                $stmt->execute();
+                    $sql = "UPDATE registeredusers set 	totalCredits = '" . $debitAmount . "' where MobileNumber = '" . $sendercellNew . "'";
+                    $stmt = $con->prepare($sql);
+                    $stmt->execute();
+                }
+
             }
-
         }
+
         // End Debit credits and discounts from account
 
         $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicleModel FROM registeredusers ru JOIN userprofileimage ui ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.MobileNumber = '" . $sendercellNew . "'");
@@ -257,7 +261,7 @@ if (!$error) {
                 $receiverDeviceToken = $row['DeviceToken'];
 
                 $NotificationType = "Payment_Received";
-                $Message = "Payment of Rs." . $amount . " received from " . $memberDetail['FullName'] . " Please check your registered email address with Mobikwik (including spam folders) to accept it.";
+                $Message = "Payment of Rs." . $amount . " received from " . $memberDetail['FullName'] . " Please login to your mobikwik account and check in transfers section to accept it.";
 
                 $paramsReceiver = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName' => $receiverName, 'ReceiveMemberNumber' => $receiverMobileNumber, 'Message' => $Message, 'CabId' => $_POST['cabId'], 'DateTime' => 'now()');
 
@@ -290,12 +294,12 @@ if (!$error) {
                 $stmt = $con->query($sql);
                 $cabDetail = $stmt->fetch();
 
-                $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicleModel FROM registeredusers ru JOIN userprofileimage ui ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.MobileNumber = '" . $receivercellNew . "'");
+                $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicleModel, uvd.registrationNumber FROM registeredusers ru JOIN userprofileimage ui ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.MobileNumber = '" . $receivercellNew . "'");
                 $ownerDetail = $stmt->fetch();
 
                 //$paidAmountByUSer = $amount$debitFromCredits
 
-                $rideDetails = array("TravelDate" => $cabDetail['TravelDate'], "TravelTime" => $cabDetail['TravelTime'], "perKmCharge" => $cabDetail['perKmCharge'], "MemberLocationAddress" => $cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" => $cabDetail['MemberEndLocationAddress'], "distance" => $cabDetail['distance'], "amount" => $cabDetail['amount'], "discount"=>$discount, "credits"=>$debitFromCredits, "vehicleModel" => $ownerDetail['vehicleModel'], "imagename" => $ownerDetail['imagename'], "memberEmail" => $memberDetail['Email'], "OwnerName" => $cabDetail['OwnerName']);
+                $rideDetails = array("TravelDate" => $cabDetail['TravelDate'], "TravelTime" => $cabDetail['TravelTime'], "perKmCharge" => $cabDetail['perKmCharge'], "MemberLocationAddress" => $cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" => $cabDetail['MemberEndLocationAddress'], "distance" => $cabDetail['distance'], "amount" => $cabDetail['amount'], "discount"=>$discount, "credits"=>$debitFromCredits, "vehicleModel" => $ownerDetail['vehicleModel'], "registrationNumber"=>$ownerDetail['registrationNumber'], "imagename" => $ownerDetail['imagename'], "memberEmail" => $memberDetail['Email'], "OwnerName" => $cabDetail['OwnerName']);
 
                 sendPaymentMailMember($rideDetails);
 
