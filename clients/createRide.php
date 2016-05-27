@@ -5,8 +5,6 @@ include_once('topmenu.php');
 include('../common.php');
 
 if (isset($_POST['submit'])) {
-    echo '<pre>';
-    print_r($_POST);die;
     $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'FromLocation', 'ToLocation', 'FromShortName', 'ToShortName', 'seats', 'distance', 'expTime', 'slat', 'slon', 'elat', 'elon'));
 
     if (!$error) {
@@ -16,7 +14,6 @@ if (isset($_POST['submit'])) {
         $eLon = $_POST['elon'];
         $sLatLon = $sLon.','.$sLon;
         $eLatLon = $eLat.','.$eLon;
-        $eLatLon = $_POST['eLatLon'];
 
         $proximity = rideProximity();
 
@@ -139,21 +136,21 @@ function checkPostForBlank($arrParams){
                 <div style="padding: 15px;">
                     <form method="post" action="">
                         <div>
-                            <div class="divRight bluetext"><input type="text" name="mobileNumber" id="mobileNumber" placeholder="Owner Number" onblur="checkDriverDetails()"><span id="driverDetails"></span></div>
+                            <div class="divRight bluetext"><input type="text" name="mobileNumber" id="mobileNumber" placeholder="Owner Number" onblur="checkDriverDetails()" style="width:300px;"><span id="driverDetails"></span></div>
                             <div style="clear:both;"></div>
                             <br/>
 
-                            <div class="divRight bluetext"><input id="from-location" name="FromLocation" class="controls" type="text" placeholder="From Location">
+                            <div class="divRight bluetext"><input id="from-location" name="FromLocation" class="controls" type="text" placeholder="From Location" style="width:300px;">
                             </div>
                             <div style="clear:both;"></div>
                             <br/>
 
-                            <div class="divRight bluetext"><input id="to-location" name="ToLocation" class="controls" type="text" placeholder="To Location">
+                            <div class="divRight bluetext"><input id="to-location" name="ToLocation" class="controls" type="text" placeholder="To Location" style="width:300px;">
                             </div>
                             <div style="clear:both;"></div>
                             <br/>
 
-                            <div class="divRight bluetext"><input type="text" name="seats" placeholder="Seats">
+                            <div class="divRight bluetext"><input type="text" name="seats" placeholder="Seats" style="width:300px;">
                             </div>
                             <div style="clear:both;"></div>
                             <br/>
@@ -382,7 +379,7 @@ function checkPostForBlank($arrParams){
             $.post( "checkDriverDetails.php", {"mobileNumber": mobileNumber}, function( data ) {
                 if (data =='fail'){
                     document.getElementById("driverDetails").innerHTML = " Invalid Phone Number";
-                } else {
+                } else if (data !='fail'){
                     var details = data.split("~");
                     document.getElementById("ownerName").value = details[0];
                     document.getElementById("driverDetails").innerHTML = " "+details[0]+" ("+details[1]+", "+details[2]+")";
