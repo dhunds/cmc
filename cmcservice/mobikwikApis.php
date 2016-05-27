@@ -5,6 +5,7 @@ include('includes/offers.php');
 include('includes/functions.php');
 
 if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='') {
+    $mobileNumber = $_POST['mobileNumber'];
 
     if ($_POST['act'] == 'saveToken') {
 

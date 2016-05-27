@@ -5,11 +5,11 @@ include_once('topmenu.php');
 include('../common.php');
 
 if (isset($_POST['submit'])) {
+    echo '<pre>';
+    print_r($_POST);die;
     $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'FromLocation', 'ToLocation', 'FromShortName', 'ToShortName', 'seats', 'distance', 'expTime', 'slat', 'slon', 'elat', 'elon'));
 
     if (!$error) {
-        echo '<pre>';
-        print_r($_POST);die;
         $sLat = $_POST['slat'];
         $sLon = $_POST['slon'];
         $eLat = $_POST['elat'];
@@ -20,7 +20,7 @@ if (isset($_POST['submit'])) {
 
         $proximity = rideProximity();
 
-        $MobileNumber = '0091' . substr(trim($_POST['mobileNumber']), -10);;
+        $MobileNumber = '0091' . substr(trim($_POST['mobileNumber']), -10);
         $CabId = time().$MobileNumber;
         $OwnerName = $_POST['ownerName'];
         $FromLocation = $_POST['FromLocation'];
@@ -139,12 +139,7 @@ function checkPostForBlank($arrParams){
                 <div style="padding: 15px;">
                     <form method="post" action="">
                         <div>
-                            <div class="divRight bluetext"><input type="text" name="mobileNumber" placeholder="Owner Number"></div>
-                            <div style="clear:both;"></div>
-                            <br/>
-
-                            <div class="divRight bluetext"><input type="text" name="ownerName" placeholder="Owner Name">
-                            </div>
+                            <div class="divRight bluetext"><input type="text" name="mobileNumber" id="mobileNumber" placeholder="Owner Number" onblur="checkDriverDetails()"><span id="driverDetails"></span></div>
                             <div style="clear:both;"></div>
                             <br/>
 
@@ -154,16 +149,6 @@ function checkPostForBlank($arrParams){
                             <br/>
 
                             <div class="divRight bluetext"><input id="to-location" name="ToLocation" class="controls" type="text" placeholder="To Location">
-                            </div>
-                            <div style="clear:both;"></div>
-                            <br/>
-
-                            <div class="divRight bluetext"><input name="FromShortName" type="text" placeholder="From Short Name">
-                            </div>
-                            <div style="clear:both;"></div>
-                            <br/>
-
-                            <div class="divRight bluetext"><input name="ToShortName" type="text" placeholder="To Short Name">
                             </div>
                             <div style="clear:both;"></div>
                             <br/>
@@ -180,6 +165,9 @@ function checkPostForBlank($arrParams){
                             <div class="divRight bluetext">
                                 <input type="hidden" name="distance" id="distance">
                                 <input  type="hidden" name="expTime" id="expTime">
+                                <input name="FromShortName" id="FromShortName" type="hidden">
+                                <input name="ToShortName" id="ToShortName" type="hidden">
+                                <input type="hidden" name="ownerName" id="ownerName">
                                 <input type="hidden" name="slat" id="slat">
                                 <input type="hidden" name="slon" id="slon">
                                 <input type="hidden" name="elat" id="elat">
@@ -211,7 +199,7 @@ function checkPostForBlank($arrParams){
                 center: {lat: 28.4940472, lng: 77.0820822},
                 zoom: 12
             });
-            console.log(map);
+
             directionsService = new google.maps.DirectionsService();
 
             var inputFrom = /** @type {!HTMLInputElement} */(
@@ -236,6 +224,8 @@ function checkPostForBlank($arrParams){
                 sLat = place.geometry.location.lat();
                 sLon = place.geometry.location.lng();
                 drawLocationFrom(sLat, sLon);
+
+                document.getElementById('FromShortName').value = createShortAddress(document.getElementById('from-location').value);
             });
 
             autocompleteTo.addListener('place_changed', function() {
@@ -249,6 +239,8 @@ function checkPostForBlank($arrParams){
                 eLon = place.geometry.location.lng();
 
                 drawLocationTo(eLat, eLon);
+
+                document.getElementById('ToShortName').value = createShortAddress(document.getElementById('to-location').value);
             });
         }
 
@@ -364,6 +356,41 @@ function checkPostForBlank($arrParams){
         function frmReset() {
             document.getElementById("groups").reset();
         }
+
+        function createShortAddress(address) {
+            var shortAddress;
+
+            if (address !='') {
+                var arrAddress = address.split(",");
+                addressCount = arrAddress.length;
+
+                if (addressCount==4){
+                    shortAddress = arrAddress[0].trim() + ', ' + arrAddress[1].trim();
+                } else if(addressCount ==5){
+                    shortAddress = arrAddress[1].trim() + ', ' + arrAddress[2].trim();
+                } else if(addressCount ==6){
+                    shortAddress = arrAddress[2].trim() + ', ' + arrAddress[3].trim();
+                } else {
+                    shortAddress = arrAddress[0].trim() + ', ' + arrAddress[1].trim();
+                }
+            }
+            return shortAddress;
+        }
+
+        function checkDriverDetails(){
+            var mobileNumber = document.getElementById("mobileNumber").value;
+            $.post( "checkDriverDetails.php", {"mobileNumber": mobileNumber}, function( data ) {
+                if (data =='fail'){
+                    document.getElementById("driverDetails").innerHTML = " Invalid Phone Number";
+                } else {
+                    var details = data.split("~");
+                    document.getElementById("ownerName").value = details[0];
+                    document.getElementById("driverDetails").innerHTML = " "+details[0]+" ("+details[1]+", "+details[2]+")";
+                }
+
+            });
+        }
+
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&libraries=places&callback=initMap" async defer></script>
     <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&callback=initMap"-->
