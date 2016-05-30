@@ -16,7 +16,7 @@ if ($cabExists > 0) {
         $stmt = $con->prepare($sql);
         $res = $stmt->execute();
 
-        $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" . $cabId . "'");
+        $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" . $cabId . "'");
         $cabDetail = $stmt->fetch();
 
         $stmt = $con->query("SELECT ru.FullName, ru.MobileNumber, ru.DeviceToken, ru.Platform, ru.PushNotification, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount, pl.serviceCharge, pl.serviceTax FROM registeredusers ru JOIN acceptedrequest ar ON ru.MobileNumber = ar.MemberNumber
