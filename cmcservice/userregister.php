@@ -99,7 +99,8 @@ if ($FullName != '' && ($MobileNumber != '' || $socialId !='')) {
     } else {
         http_response_code(500);
         header('Content-Type: application/json');
-        echo '{"status":"fail", "message":"Mobile number already exists. Please try to login or register with a different mobile number"}';
+        //echo '{"status":"fail", "message":"Mobile number already exists. Please try to login or register with a different mobile number"}';
+        echo '{"status":"fail", "message":"An error occured, please try again later."}';
         exit;
     }
 } else {

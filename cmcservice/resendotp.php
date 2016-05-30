@@ -1,5 +1,6 @@
 <?php
 include('connection.php');
+include('includes/functions.php');
 include_once('classes/class.notification.php');
 $objNotification = new Notification();
 
