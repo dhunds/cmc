@@ -16,7 +16,7 @@ if ($socialId !='') {
         $referralCode = $_POST['referralCode'];
 
         if (isReferralCodeUnique($_POST['referralCode'])) {
-            http_response_code(500);
+            http_response_code(200);
             header('Content-Type: application/json');
             echo '{"status":"fail", "message":"Invalid Referral Code"}';
             exit;
@@ -27,7 +27,7 @@ if ($socialId !='') {
         $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         if (!$found) {
-            http_response_code(500);
+            http_response_code(200);
             header('Content-Type: application/json');
             echo '{"status":"success", "message":"Referral programme is closed now"}';
             exit;
@@ -76,12 +76,13 @@ if ($res2 == true) {
 
     $objNotification->sendSMS($MobileNumber, $message);
 
-    /*if ($usrRows[0]['Email'] != '') {
-        $emailBody = 'Hi ' . $usrRows[0]['FullName'] . ',<br/><br/>' . $message . '<br/><br/>Thanks,<br/>iShareRyde Team';
-        $params = array('to' => $usrRows[0]['Email'], 'body' => $emailBody);
-        $resp = $objNotification->sendEmailOTP($params);
-    }*/
-    echo "SUCCESS";
+    http_response_code(200);
+    header('Content-Type: application/json');
+    echo '{"status":"success", "message":"OTP sent."}';
+    exit;
 } else {
-    echo "FAILURE";
+    http_response_code(200);
+    header('Content-Type: application/json');
+    echo '{"status":"fail", "message":"An error occured, please try again later."}';
+    exit;
 }
