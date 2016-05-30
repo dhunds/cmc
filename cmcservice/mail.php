@@ -11,28 +11,103 @@ $client = SesClient::factory(array(
 
 function sendRegistrationMail ($name, $email) {
     global $client;
-    $body = '<html>
-                <head>
-                    <title></title>
-                </head>
-                <body>
-                    <p>Hello '.ucfirst($name).',</p>
 
-                    <p>Great to have you onboard.</p>
-
-                    <p>Travel in a car for as low as <strong>Rs. 3/km</strong> !!</p>
-
-                    <p>If you own a car and love to drive, <strong>offer rides and share fuel cost</strong> with friends.</p>
-
-                    <p>If you don\'t, <strong>join a ride or share a cab.</strong></p>
-
-                    <p>And did we mention the reduction of traffic and pollution? - Like we said, it IS the smartest way to travel <span style="font-size:8px;"><img alt="smiley" height="23" src="http://bestpromotionsmails.in/js/ckeditor/plugins/smiley/images/regular_smile.png" title="smiley" width="23" /></span></p>
-
-                    <p>Team iShareRyde</p>
-
-                    <p> </p>
-                </body>
-             </html>';
+    $body = '<div  style="margin:0px;">
+   <table border="0" align="center" cellpadding="0" width="600" cellspacing="0" bgcolor="#f5f5f5" style="margin:0 auto;table-layout:fixed">
+      <tbody>
+         <tr>
+            <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+         </tr>
+         <tr>
+            <td>
+               <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+                  <tbody>
+                     <tr>
+                        <td align="center"><a href="https://www.ishareryde.com" target="_blank"><img alt="" src="'.IMG_URL.'/logo.png" style="display:block" border="0" /></a></td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="30" width="300" /></td>
+         </tr>
+         <tr>
+            <td>
+               <table align="center" border="0" bgcolor="#ffffff" cellpadding="0" cellspacing="0" width="560">
+                  <tbody>
+                     <tr>
+                        <td style="font-size:15px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif; padding:20 5 5 10px;">
+                           Dear <strong>'.ucfirst($name).'</strong>,<br /><br /></td>
+                     </tr>
+                     <tr>
+                        <td style="font-size:15px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif; padding:5 5 5 10px;">
+                           Great to have you onboard.</td>
+                     </tr>
+                     <tr>
+                        <td style="font-size:15px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif; padding:5 5 5 10px;">
+                           Travel in a car for as low as <b>Rs. 4/km !!</b></td>
+                     </tr>
+                     <tr>
+                        <td style="font-size:15px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif; padding:5 5 5 10px;">
+                           If you own a car and love to drive, <b>offer rides and share fuel cost</b> with friends.</td>
+                     </tr>
+                     <tr>
+                        <td style="font-size:15px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif; padding:5 5 5 10px;">
+                           If you don\'t, <b>join a ride or share a cab.</b></td>
+                     </tr>
+                     <tr>
+                        <td style="font-size:15px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif; padding:5 5 5 10px;">
+                           And did we mention the reduction of traffic and pollution? - Like we said, it IS the smartest way to travel</td>
+                     </tr>
+                     <tr>
+                        <td style="font-size:15px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif; padding:5 5 5 10px;">
+                           <br />
+                           Team iShareRyde</td>
+                     </tr>
+                     <tr >
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td>
+               <table align="center" border="0"cellpadding="0" cellspacing="0" width="450">
+                  <tbody>
+                     <tr >
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="20" width="300" /></td>
+                     </tr>
+                     <tr>
+                        <td align="center" style="font-size:14px; color:#6d6d6d; font-family: Helvetica, Arial, sans-serif; line-height:25px;" height="30"><a href="mailto:support@ishareryde.com" style="color:#6d6d6d; text-decoration:none;">support@iShareRyde.com</a><br/>
+                           <a href="https://www.ishareryde.com" target="_blank" style="color:#6d6d6d; text-decoration:none;">www.ishareryde.com</a>
+                        </td>
+                     </tr>
+                     <tr >
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
+                     </tr>
+                     <tr>
+                        <td align="center"><a href="https://www.facebook.com/ishareryde" target="_blank"><img src="'.IMG_URL.'/facebook.png" /></a> <a href="https://twitter.com/ishareryde" target="_blank"><img src="'.IMG_URL.'/twitter.png" /></a></td>
+                     </tr>
+                     <tr >
+                        <td colspan="2"><img alt="" src="'.IMG_URL.'/space.gif" style="display:block" border="0" height="15" width="300" /></td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+         </tr>
+      </tbody>
+   </table>
+   <div style="white-space:nowrap;font:15px courier;color:#ffffff">
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   </div>
+   <font color="#666666" size="1" face="Verdana,Helvetica"></font><br>
+   <div class="yj6qo"></div>
+   <div class="adL"></div>
+</div>';
 
     $msg = array();
     $msg['Source'] = "support@ishareryde.com";
