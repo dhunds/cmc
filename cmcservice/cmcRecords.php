@@ -117,9 +117,12 @@
 	if(isset($_REQUEST['CarType']))
 	{
 		$CarType = $_REQUEST['CarType'];
-	}	
-	
-	$sql2 = "INSERT INTO `cmccabrecords`(`CabNameID`, `CabType`, `ModeID`,`FromLocation`,`ToLocation`,`FromShortName`,`ToShortName`,`TravelDate`,`TravelTime`,`Distance`,`ExpTripDuration`,`CabId`,`FromLat`,`ToLat`,`MobileNumber`,`CabUserName`,`BookingRefNo`,`DriverName`,`DriverNumber`,`CarNumber`,`CarType`, `bookingRequestID`) VALUES ('$CabNameID','$CabType', '$ModeID','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$TravelDate','$TravelTime','$Distance','$ExpTripDuration','$CabId','$FromLat','$ToLat','$MobileNumber','$CabUserName','$BookingRefNo','$DriverName','$DriverNumber','$CarNumber','$CarType', '$RequestID')";
+	}
+
+	$rideType = 3;
+
+
+	$sql2 = "INSERT INTO cmccabrecords(CabNameID, CabType, ModeID,FromLocation,ToLocation,FromShortName,ToShortName,TravelDate,TravelTime,Distance,ExpTripDuration,CabId,FromLat,ToLat,MobileNumber,CabUserName,BookingRefNo,DriverName,DriverNumber,CarNumber,CarType, bookingRequestID) VALUES ('$CabNameID','$CabType', '$ModeID','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$TravelDate','$TravelTime','$Distance','$ExpTripDuration','$CabId','$FromLat','$ToLat','$MobileNumber','$CabUserName','$BookingRefNo','$DriverName','$DriverNumber','$CarNumber','$CarType', '$RequestID')";
 	$stmt2 = $con->prepare($sql2);
 	$res2 = $stmt2->execute();
 	$reqid =  $con->lastInsertId();	
@@ -129,7 +132,7 @@
 		{
 			if($CabId == '')
 			{			
-				$stmt1 = $con->query("SELECT * FROM `registeredusers` WHERE Trim(`MobileNumber`) = Trim('$MobileNumber') and `PushNotification` != 'off'");		
+				$stmt1 = $con->query("SELECT * FROM registeredusers WHERE Trim(MobileNumber) = Trim('$MobileNumber') and PushNotification != 'off'");		
 				$OwnerExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 				if ($OwnerExists > 0) 
 				{				
@@ -148,14 +151,14 @@
 
 				$startDate=$expTrip;
 				$ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
-				
-				$sqlCab = "INSERT INTO `cabopen`(`CabId`, `MobileNumber`, `OwnerName`, `FromLocation`, `ToLocation`, `FromShortName`, `ToShortName`, `TravelDate`, `TravelTime`, `Seats`, `RemainingSeats`, `Distance`, `OpenTime`, `ExpTripDuration`,`ExpStartDateTime`,`ExpEndDateTime`) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$TravelDate','$TravelTime','0','0','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime')";
+
+				$sqlCab = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime, rideType,) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$FromLat','$ToLat','$ToShortName','$TravelDate','$TravelTime','0','0','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime', '$rideType')";
 				$stmtCab = $con->prepare($sqlCab);
 				$resCab = $stmtCab->execute();	
 
 				if($resCab == true)
 				{
-					$sqlUpdate = "UPDATE `cmccabrecords` set `CabId` = '$CabId' where `reqid` = '$reqid'";
+					$sqlUpdate = "UPDATE cmccabrecords set CabId = '$CabId' where reqid = '$reqid'";
 					$stmtUpdate = $con->prepare($sqlUpdate);
 					$resUpdate = $stmtUpdate->execute();
 				}			
