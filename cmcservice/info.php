@@ -1,4 +1,6 @@
 <?php
+phpinfo();
+die;
 include('connection.php');
 include('../common.php');
 ini_set('max_execution_time', 0);
