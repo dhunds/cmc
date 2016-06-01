@@ -31,10 +31,6 @@ if(isset($_POST['rideType']) && $_POST['rideType'] !='') {
     $rideType = $_POST['rideType'];
 }
 
-if(isset($_POST['perKmCharge']) && $_POST['perKmCharge'] !='') {
-    $perKmCharge = $_POST['perKmCharge'];
-}
-
 $dateInput = explode('/', $TravelDate);
 $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
 
