@@ -14,8 +14,8 @@ const CLIENT_SECRET = '02UIbwOsXX1FXGPdOyU_95jjuW60YBKJAJd4seBX';
 
 const AUTHORIZATION_ENDPOINT = 'https://login.uber.com/oauth/authorize';
 const TOKEN_ENDPOINT = 'https://login.uber.com/oauth/token';
-const REDIRECT_URI = 'https://104.155.193.222/cmc/cmcservice/uberapi.php';
-const REDIRECT_PROCESS_URI = 'http://104.155.193.222/cmc/cmcservice/processing.php';
+const REDIRECT_URI = 'https://ishareryde.com/cmcservice/uberapi.php';
+const REDIRECT_PROCESS_URI = 'https://ishareryde.com/cmcservice/processing.php';
 
 if (isset($_GET['code'])) {
     $requestID = $_GET['requestid'];

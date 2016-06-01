@@ -4,7 +4,7 @@ require('OAuth2/Client.php');
 require('OAuth2/GrantType/IGrantType.php');
 require('OAuth2/GrantType/AuthorizationCode.php');
 
-$sType = $_GET['type'];
+$sType = $_REQUEST['type'];
 
 const CLIENT_ID = '-Q9kL1722l5XeCTUK5vS8YHiY0mJUijo';
 const SERVER_TOKEN = 'l4534hMQeJg5JREbbhRfOHJuM9-UbwFKPfrYpwAi';
@@ -26,18 +26,18 @@ const BOOKENDPOINT = 'requests';
 
 if ($sType != '') {
     if ($sType == 'products') {
-        $lat = $_GET['lat'];
-        $lon = $_GET['lon'];
+        $lat = $_REQUEST['lat'];
+        $lon = $_REQUEST['lon'];
         $fields = array(
             'latitude' => $lat,
             'longitude' => $lon,
         );
         $url = BASE_URL . ENDPOINT . '?' . http_build_query($fields);
     } else if ($sType == 'priceestimates') {
-        $lat = $_GET['lat'];
-        $lon = $_GET['lon'];
-        $elat = $_GET['elat'];
-        $elon = $_GET['elon'];
+        $lat = $_REQUEST['lat'];
+        $lon = $_REQUEST['lon'];
+        $elat = $_REQUEST['elat'];
+        $elon = $_REQUEST['elon'];
         $fields = array(
             'start_latitude' => $lat,
             'start_longitude' => $lon,
@@ -46,20 +46,20 @@ if ($sType != '') {
         );
         $url = BASE_URL . PRICEENDPOINT . '?' . http_build_query($fields);
     } else if ($sType == 'timeestimates') {
-        $lat = $_GET['lat'];
-        $lon = $_GET['lon'];
+        $lat = $_REQUEST['lat'];
+        $lon = $_REQUEST['lon'];
         $fields = array(
             'start_latitude' => $lat,
             'start_longitude' => $lon,
         );
         $url = BASE_URL . TIMEENDPOINT . '?' . http_build_query($fields);
     } else if ($sType == 'bookuber') {
-        $lat = $_GET['lat'];
-        $lon = $_GET['lon'];
-        $elat = $_GET['elat'];
-        $elon = $_GET['elon'];
-        $product_id = $_GET['productid'];
-        $access_token = $_GET['accesstoken'];
+        $lat = $_REQUEST['lat'];
+        $lon = $_REQUEST['lon'];
+        $elat = $_REQUEST['elat'];
+        $elon = $_REQUEST['elon'];
+        $product_id = $_REQUEST['productid'];
+        $access_token = $_REQUEST['accesstoken'];
 
         $fields = array(
             'start_latitude' => $lat,
