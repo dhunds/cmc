@@ -1,12 +1,12 @@
 <?php
 //ini_set('display_errors', 1);
 include('connection.php');
-const CLIENT_ID = 'ZmNhNTk3NDctNTZjOS00MTkxLTg3NDUtZWQwYzExNzVmMjMw';
+const OLA_CLIENT_ID = 'ZmNhNTk3NDctNTZjOS00MTkxLTg3NDUtZWQwYzExNzVmMjMw';
 const X_APP_TOKEN = '7e22de1177fb4ac4b173a8653c72e1f3';
 
 const BOOKING_URL = 'https://devapi.olacabs.com/v1/bookings/create';
 const CANCELLATION_URL = 'https://devapi.olacabs.com/v1/bookings/cancel';
-const AUTHORIZATION_ENDPOINT = 'https://devapi.olacabs.com/oauth2/authorize';
+const OLA_AUTHORIZATION_ENDPOINT = 'https://devapi.olacabs.com/oauth2/authorize';
 const REDIRECT_URI = 'http://104.155.193.222/cmc/cmcservice/olaApi.php';
 
 
@@ -116,7 +116,7 @@ if (isset($_REQUEST['access_token']) && $_REQUEST['access_token'] != '') {
         'state' => 'state123'
     );
 
-    $auth_url = AUTHORIZATION_ENDPOINT . '?' . http_build_query($params);
+    $auth_url = OLA_AUTHORIZATION_ENDPOINT . '?' . http_build_query($params);
 
     header('Location: ' . $auth_url);
     exit;
