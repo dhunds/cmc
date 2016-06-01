@@ -107,7 +107,7 @@ $stmt2 = $con->prepare($sql2);
 $res2 = $stmt2->execute();
 $reqid = $con->lastInsertId();
 
-if ($res2 == true) {
+if ($reqid) {
     if ($ModeID == "1") {
         if ($CabId == '') {
             $stmt1 = $con->query("SELECT * FROM registeredusers WHERE Trim(MobileNumber) = Trim('$MobileNumber') and PushNotification != 'off'");
@@ -129,7 +129,7 @@ if ($res2 == true) {
             $startDate = $expTrip;
             $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
 
-            $sqlCab = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime, rideType,) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$FromLat','$ToLat','$ToShortName','$TravelDate','$TravelTime','0','0','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime', '$rideType')";
+            $sqlCab = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime, rideType) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$FromLat','$ToLat','$TravelDate','$TravelTime','0','0','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime', '$rideType')";
             $stmtCab = $con->prepare($sqlCab);
             $resCab = $stmtCab->execute();
 

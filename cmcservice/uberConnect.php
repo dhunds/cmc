@@ -12,7 +12,7 @@ const CLIENT_SECRET = '02UIbwOsXX1FXGPdOyU_95jjuW60YBKJAJd4seBX';
 
 const AUTHORIZATION_ENDPOINT = 'https://login.uber.com/oauth/authorize';
 const TOKEN_ENDPOINT = 'https://login.uber.com/oauth/token';
-const REDIRECT_URI = 'http://104.155.193.222/cmc/cmcservice/uberConnect.php';
+const REDIRECT_URI = 'https://ishareryde.com/cmcservice/uberConnect.php';
 
 const BASE_URL = 'https://api.uber.com/v1/';
 const ENDPOINT = 'products';

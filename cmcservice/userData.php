@@ -9,6 +9,14 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
     $stmt = $con->query($sql);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    $sql = "SELECT id FROM offers WHERE status=1 AND validThru > now() AND type='referral'";
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if (!$found) {
+        $user['referralCode'] ="";
+    }
+
     $resp = array('header' => 200, 'status' => 'success', 'message' => '', 'data' => $user);
 
 } else {
