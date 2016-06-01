@@ -8,14 +8,8 @@ include('connection.php');
 
 $sType = $_GET['type'];
 
-const CLIENT_ID = '-Q9kL1722l5XeCTUK5vS8YHiY0mJUijo';
-const SERVER_TOKEN = 'l4534hMQeJg5JREbbhRfOHJuM9-UbwFKPfrYpwAi';
-const CLIENT_SECRET = '02UIbwOsXX1FXGPdOyU_95jjuW60YBKJAJd4seBX';
-
-const AUTHORIZATION_ENDPOINT = 'https://login.uber.com/oauth/authorize';
-const TOKEN_ENDPOINT = 'https://login.uber.com/oauth/token';
-const REDIRECT_URI = 'https://ishareryde.com/cmcservice/uberapi.php';
-const REDIRECT_PROCESS_URI = 'https://ishareryde.com/cmcservice/processing.php';
+const REDIRECT_URI = BASEURL.'/uberapi.php';
+const REDIRECT_PROCESS_URI = BASEURL.'/processing.php';
 
 if (isset($_GET['code'])) {
     $requestID = $_GET['requestid'];
