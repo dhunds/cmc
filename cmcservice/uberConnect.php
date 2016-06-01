@@ -6,7 +6,8 @@ require('OAuth2/GrantType/AuthorizationCode.php');
 
 $sType = $_REQUEST['type'];
 
-const REDIRECT_URI = BASEURL.'/uberConnect.php';
+define("REDIRECT_URI", BASEURL."/uberConnect.php");
+
 const ENDPOINT = 'products';
 const PRICEENDPOINT = 'estimates/price';
 const TIMEENDPOINT = 'estimates/time';

@@ -8,8 +8,8 @@ include('connection.php');
 
 $sType = $_GET['type'];
 
-const REDIRECT_URI = BASEURL.'/uberapi.php';
-const REDIRECT_PROCESS_URI = BASEURL.'/processing.php';
+define("REDIRECT_URI", BASEURL."/uberapi.php");
+define("REDIRECT_PROCESS_URI", BASEURL."/processing.php");
 
 if (isset($_GET['code'])) {
     $requestID = $_GET['requestid'];
