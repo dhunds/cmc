@@ -110,7 +110,7 @@ if (isset($_REQUEST['access_token']) && $_REQUEST['access_token'] != '') {
 
     $params = array(
         'response_type' => 'token',
-        'client_id' => CLIENT_ID,
+        'client_id' => OLA_CLIENT_ID,
         'redirect_uri' => REDIRECT_URI,
         'scope' => 'profile booking',
         'state' => 'state123'
