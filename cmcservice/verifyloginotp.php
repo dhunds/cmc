@@ -16,6 +16,12 @@ if($rows > 0)
 
     if($found > 0)
     {
+        if ($MobileNumber == '00919810000000') { 
+            $SingleUseVerified = 0;
+        } else {
+            $SingleUseVerified = 1;
+        }
+
         $sql2 = "UPDATE `registeredusers` SET SingleUseVerified = '1', Platform = '$Platform',DeviceToken = '$DeviceToken', LastLoginDateTime = now() where MobileNumber = '$MobileNumber'";
         $stmt2 = $con->prepare($sql2);
         $res2 = $stmt2->execute();
