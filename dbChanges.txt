@@ -1,0 +1,1 @@
+ALTER TABLE  `cabOwners` ADD  `cleintId` INT NOT NULL AFTER  `Name` ;

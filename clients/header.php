@@ -10,6 +10,11 @@
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="css/pagination.css" rel="stylesheet" type="text/css" />
     <script src="js/jquery.min.js" type="text/javascript"></script>
+    <!-- calender -->
+    <link rel="stylesheet" type="text/css" media="all" href="Calendar/calendar-blue.css" title="win2k-cold-1">
+    <script type="text/javascript" src="Calendar/calendar.js"></script>
+    <script type="text/javascript" src="Calendar/lang/calendar-en.js"></script>
+    <script type="text/javascript" src="Calendar/calendar-setup.js"></script>
 </head>
 <body>
 <div id="layout" class="pure-g">

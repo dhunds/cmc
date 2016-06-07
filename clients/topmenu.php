@@ -4,11 +4,11 @@
         <?php if ($_SESSION['username']=='cabservice') { ?>
              <li class="pure-menu-selected"><a href="createRide.php">Create Ride</a></li>
              <li class="pure-menu-selected"><a href="changepswd.php">Change Password</a></li>
+             <li class="pure-menu-selected" style="float: right;"><a href="logout.php">Logout</a></li>
         <?php } else { ?>
         <li class="pure-menu-selected"><a href="approveRequests.php">Pending Approvals</a></li>
         <li class="pure-menu-selected"><a href="changepswd.php">Change Password</a></li>
         <li class="pure-menu-selected"><a href="help.pdf" target="_blank">Help</a></li>
-        <li class="pure-menu-selected" style="float: right;"><a href="logout.php">Logout</a></li>
         <?php } ?>
     </ul>
 </div>

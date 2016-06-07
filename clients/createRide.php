@@ -22,8 +22,9 @@ if (isset($_POST['submit'])) {
         $OwnerName = $_POST['ownerName'];
         $FromLocation = $_POST['FromLocation'];
         $ToLocation = $_POST['ToLocation'];
-        $TravelDate = date("d/m/Y", strtotime("+30 minutes"));
-        $TravelTime = date("h:i A", strtotime("+30 minutes"));
+        
+        list($TravelDate, $TravelTime) = explode(" ", $_POST['time']);
+        $TravelTime = strtoupper($TravelTime);
         $Seats = $_POST['seats'];
         $RemainingSeats = $_POST['seats'];
         $Distance = $_POST['distance'];
@@ -128,9 +129,10 @@ function checkPostForBlank($arrParams){
 
 ?>
     <div class="content pure-u-1-1 pure-u-md-3-4">
+
         <div class="pure-u-4-4" id="mainContent">
 
-            <div>
+            <div style="width:40%; float:left;">
                 <h4 class="tHeading">Create Ride</h4>
                 <p style="margin-left: 10px;" id="errormsg"><?=$msg;?></p>
                 <div style="padding: 15px;">
@@ -146,6 +148,22 @@ function checkPostForBlank($arrParams){
                             <br/>
 
                             <div class="divRight bluetext"><input id="to-location" name="ToLocation" class="controls" type="text" placeholder="To Location" style="width:300px;">
+                            </div>
+                            <div style="clear:both;"></div>
+                            <br/>
+                            <div class="divRight bluetext"><input id="time" name="time" class="controls" type="text" placeholder="Time" style="width:300px;" disabled> <img src="images/calendar.png" id="dtFrom">&nbsp;
+                        <script type="text/javascript">
+                            Calendar.setup({
+                                inputField: 'time',
+                                ifFormat: "%d/%m/%Y %H:%M %P",
+                                button: "dtFrom",
+                                singleClick: true,
+                                showsTime:true,
+                                timeFormat:12,
+                                electric:true
+                            });
+                        </script>
+
                             </div>
                             <div style="clear:both;"></div>
                             <br/>
@@ -175,12 +193,61 @@ function checkPostForBlank($arrParams){
                             <div class="divRight bluetext"></div>
                         </div>
                     </form>
-
                     <br/>
                 </div>
-                <div style="clear:both;"></div>
             </div>
+            <div style="width:58%; float:right;">
+                
+                <div style="padding: 1px;" >
+                    <span id="rides">
+                        <?php 
+                            $sql = "SELECT c.* FROM cabopen c JOIN cabOwners co ON c.MobileNumber=co.mobileNumber AND co.cleintId=".$_SESSION['userId']." AND c.CabStatus='A'";
+$stmt = $con->query($sql);
+$found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
+$str = '';
+
+if ($found > 0) {
+    $str .= '<div class="pure-g dashboard-summary-heading">
+    <div class="pure-u-10-24"><p class="tHeading">Location</p></div>
+    <div class="pure-u-4-24"><p class="tHeading">Mobile Number</p></div>
+    <div class="pure-u-3-24"><p class="tHeading">Time</p></div>
+    <div class="pure-u-2-24"><p class="tHeading">Seats</p></div>
+    <div class="pure-u-5-24"><p class="tHeading">Remaining Seats</p></div>
+</div>';
+
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($result as $val) {
+
+        $str .= '<div class="pure-g pure-g1 dashboard-summary-heading">
+    <div class="pure-u-10-24">
+        <p class="dashboard-summary-title">'.$val['FromShortName'].' to '.$val['ToShortName'].'</p>
+    </div>
+    <div class="pure-u-4-24">
+        <p align="center" class="dashboard-summary-title">'.substr(trim($val['MobileNumber']), -10).'</p>
+    </div>
+    <div class="pure-u-3-24">
+        <p align="center" class="dashboard-summary-title">'.$val['TravelTime'].'</p>
+    </div>
+    <div class="pure-u-2-24">
+        <p align="center" class="dashboard-summary-title">'.$val['Seats'].'</p>
+    </div>
+    <div class="pure-u-5-24">
+        <p align="center" class="dashboard-summary-title">'.$val['RemainingSeats'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="updateRide.php?cabId='.$val['CabId'].'">Edit</a></p>
+    </div>
+</div>';
+
+    }
+
+} else {
+    $str = '<div class="pure-g pure-g1 dashboard-summary-heading"><div class="pure-u-24-24"><p align="center">No rides available !!</p></div></div>';
+}
+echo $str;
+                        ?>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -377,9 +444,12 @@ function checkPostForBlank($arrParams){
         function checkDriverDetails(){
             var mobileNumber = document.getElementById("mobileNumber").value;
             $.post( "checkDriverDetails.php", {"mobileNumber": mobileNumber}, function( data ) {
-                if (data =='fail'){
-                    document.getElementById("driverDetails").innerHTML = " Invalid Phone Number";
-                } else if (data !='fail'){
+                
+                if (data =='') {
+                    document.getElementById("driverDetails").innerHTML = " Mobile number required!";
+                } else if (data =='fail'){
+                    document.getElementById("driverDetails").innerHTML = " Invalid Mobile Number!";
+                } else {
                     var details = data.split("~");
                     document.getElementById("ownerName").value = details[0];
                     document.getElementById("driverDetails").innerHTML = " "+details[0]+" ("+details[1]+", "+details[2]+")";
@@ -387,6 +457,16 @@ function checkPostForBlank($arrParams){
 
             });
         }
+
+        $(document).ready(
+            function() {
+                setInterval(function() {
+                    $.post( "clientRides.php", function( data ) {
+                        document.getElementById("rides").innerHTML = data;
+                    });
+                }, 60000);
+            }
+        );
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&libraries=places&callback=initMap" async defer></script>
