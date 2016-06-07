@@ -27,7 +27,7 @@ if (isset($_POST['submit']) && isset($_POST['username']) && $_POST['username'] !
         $_SESSION['logo'] = $result['logo'];
         $_SESSION['type'] = $result['type'];
 
-        if($result['username']=='cabservice'){
+        if($result['type']==2){
             header('location:createRide.php');
         } else {
             header('location:groups.php');
