@@ -5,16 +5,15 @@ $sql = "SELECT c.* FROM cabopen c JOIN cabOwners co ON c.MobileNumber=co.mobileN
 $stmt = $con->query($sql);
 $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-$str = '';
-
-if ($found > 0) {
-	$str .= '<div class="pure-g dashboard-summary-heading">
+$str = '<div class="pure-g dashboard-summary-heading">
     <div class="pure-u-10-24"><p class="tHeading">Location</p></div>
     <div class="pure-u-4-24"><p class="tHeading">Mobile Number</p></div>
     <div class="pure-u-3-24"><p class="tHeading">Time</p></div>
     <div class="pure-u-2-24"><p class="tHeading">Seats</p></div>
     <div class="pure-u-5-24"><p class="tHeading">Remaining Seats</p></div>
 </div>';
+
+if ($found > 0) {
 
   	$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
