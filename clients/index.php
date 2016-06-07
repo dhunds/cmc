@@ -4,7 +4,7 @@ include_once('connection.php');
 
 if ((isset($_SESSION['username']) && $_SESSION['username'] !='')){
 
-    if ($_SESSION['username']=='cabservice') {
+    if ($_SESSION['type']==2) {
         header('location:createRide.php');
     } else {
         header('location:groups.php');
