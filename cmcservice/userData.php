@@ -21,7 +21,7 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-    if (!$found) {
+    if ($found) {
         $user['type'] =2;
     } else {
         $user['type'] =1;

@@ -41,15 +41,16 @@ class Mobikwik {
 
         if (!empty($wallet)) {
             $mobileNumber = substr(trim($mobileNumber), -10);
-            $msgCode = 507;
-            $tokenType = 1;
 
-            $string = "'".$mobileNumber ."''". $this->merchantName ."''". $this->merchantId ."''". $msgCode ."''". $wallet['token'] ."''". $tokenType."'";
-            $checksum = hash_hmac('sha256', $string, $this->tokenRegenerateKey);
+            $params = array('cell' => $mobileNumber, 'token' => $wallet['token'], 'tokentype' => 1, 'msgcode' => 507, 'mid' => $this->merchantId, 'merchantname' => $this->merchantName, 'encryptKey' => $this->tokenRegenerateKey);
+            $checksum = $this->generateChecksum($params);
 
-            $params = array('cell' => $mobileNumber, 'token' => $wallet['token'], 'tokentype' => $tokenType, 'msgcode' => $msgCode, 'mid' => $this->merchantId, 'merchantname' => $this->merchantName, 'checksum' => $checksum);
+            unlink($params['encryptKey']);
 
-            $this->curl_get($this->tokenRegenerateApi, $params);
+            if ($checksum) {
+                $params['checksum'] = $checksum;
+                $this->curl_get($this->tokenRegenerateApi, $params);
+            }
         }
         return false;
     }
@@ -89,6 +90,9 @@ class Mobikwik {
             $arrParams = [];
             $string = '';
 
+            $encryptKey = $param['encryptKey'];
+            unlink($param['encryptKey']);
+
             foreach ($params as $key => $value) {
                 $key = strtolower($key);
                 $arrParams[$key] = $value;
@@ -99,7 +103,9 @@ class Mobikwik {
             foreach ($arrParams as $value) {
                 $string .= $value;
             }
+            $checksum = hash_hmac('sha256', $string, $encryptKey);
 
+            return $checksum;
         }
         return false;
     }

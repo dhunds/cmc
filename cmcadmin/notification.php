@@ -1,10 +1,17 @@
 <?php
 include('connection.php');
-include('functions.php');
+include_once('../cmcservice/classes/class.notification.php');
+$objNotification = new Notification();
+
+//include('functions.php');
 
 if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != '') {
 
+    $_POST['mobileNumber'] = '0091' . substr(trim($_POST['mobileNumber']), -10);
+
 	$pushFrom = $_POST['pushfrom'];
+
+    $body = array('gcmText' => $_POST['message'], 'pushfrom' => $pushFrom);
 
     $sql = "SELECT * FROM registeredusers WHERE PushNotification='on' AND Platform='A'";
 
@@ -20,7 +27,11 @@ if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ($i == 1000) {
                 $gcm_array[] = $row['DeviceToken'];
-                $resp = sendAndroidNotification($gcm_array, $_POST['message'], $pushFrom, '');
+
+                $objNotification->setVariables($gcm_array, $body);
+                $res = $objNotification->sendGCMNotification();
+
+                //$resp = sendAndroidNotification($gcm_array, $_POST['message'], $pushFrom, '');
                 $gcm_array = array();
                 $i = 0;
             } else {
@@ -29,7 +40,9 @@ if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != 
             $i++;
         }
         if (count($gcm_array) > 0) {
-            $resp = sendAndroidNotification($gcm_array, $_POST['message'], $pushFrom, '');
+            $objNotification->setVariables($gcm_array, $body);
+            $res = $objNotification->sendGCMNotification();
+            //$resp = sendAndroidNotification($gcm_array, $_POST['message'], $pushFrom, '');
         }
         //echo '<pre>';
         //print_r($resp);
@@ -45,8 +58,6 @@ if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != 
 
     $stmt = $con->query($sql);
     $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-
-    $body = array('gcmText' => $_POST['message'], 'pushfrom' => $pushFrom);
     
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $apns_array = array();
