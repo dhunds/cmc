@@ -1,1 +1,29 @@
-ALTER TABLE  `cabOwners` ADD  `cleintId` INT NOT NULL AFTER  `Name` ;
+CREATE TABLE `paymentOptions` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `paymentOptions`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `paymentOptions`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE `userLinkedWallet` (
+  `id` int(11) NOT NULL,
+  `mobileNumber` varchar(20) NOT NULL,
+  `walletId` int(11) NOT NULL,
+  `token` varchar(100) NOT NULL,
+  `refresh_token` varchar(100) NOT NULL,
+  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `userLinkedWallet`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `userLinkedWallet`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+ALTER TABLE `registeredusers` ADD `defaultPaymentOption` INT NOT NULL AFTER `totalCredits`;
+ALTER TABLE `registeredusers` ADD `type` INT NOT NULL COMMENT '1-Normal User;2-system;' AFTER `defaultPaymentOption`;

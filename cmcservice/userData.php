@@ -17,6 +17,16 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
         $user['referralCode'] ="";
     }
 
+    $sql = "SELECT id FROM cabOwners WHERE mobileNumber='".$_POST['mobileNumber']."'";
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if (!$found) {
+        $user['type'] =2;
+    } else {
+        $user['type'] =1;
+    }
+
     $resp = array('header' => 200, 'status' => 'success', 'message' => '', 'data' => $user);
 
 } else {
