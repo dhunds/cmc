@@ -252,8 +252,8 @@ class Mobikwik
             $arrParams = [];
             $string = '';
 
-            $encryptKey = $param['encryptKey'];
-            unset($param['encryptKey']);
+            $encryptKey = $params['encryptKey'];
+            unset($params['encryptKey']);
 
             foreach ($params as $key => $value) {
                 $key = strtolower($key);
@@ -263,7 +263,7 @@ class Mobikwik
             ksort($arrParams);
 
             foreach ($arrParams as $value) {
-                $string .= $value;
+                $string .= "'".$value."'";
             }
             $checksum = hash_hmac('sha256', $string, $encryptKey);
 
