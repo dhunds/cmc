@@ -48,6 +48,7 @@ class Mobikwik
             if ($checksum) {
                 $params['checksum'] = $checksum;
                 $resp = $this->curl_get($this->balanceCheckApi, $params);
+                $resp = simplexml_load_string($resp);
 
                 if ($resp->status == 'SUCCESS') {
                     $this->regenerateToken($mobileNumberWithPrefix);
