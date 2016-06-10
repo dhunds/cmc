@@ -77,8 +77,8 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
 
         $resp = $objWallet->getWallet($_POST['mobileNumber']);
 
-        if (!empty($res)) {
-            setResponse(array("code"=>200, "status"=>"success", "token"=>$res['token']));
+        if (!empty($resp)) {
+            setResponse(array("code"=>200, "status"=>"success", "token"=>$resp['token']));
 
         } else {
             setResponse(array("code"=>200, "status"=>"fail", "message"=>"No Data"));
