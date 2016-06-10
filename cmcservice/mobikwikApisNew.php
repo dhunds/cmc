@@ -1,13 +1,15 @@
 <?php
-
+spl_autoload_register(function ($class_name) {
+    include 'classes/class.'.strtolower($class_name) . '.php';
+});
 include('connection.php');
 include('includes/offers.php');
 include('includes/functions.php');
-include ('classes/class.mobikwik.php');
 
-$objMobikwik = new Mobikwik();
-
-if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='') {
+if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='' && isset($_POST['paymentMethod']) && $_POST['paymentMethod'] !='') {
+    $paymentMethod = $_POST['paymentMethod'];
+    $objMobikwik = new $paymentMethod();
+    
     $mobileNumber = $_POST['mobileNumber'];
 
     if ($_POST['act'] == 'saveToken') {

@@ -585,7 +585,7 @@ function updateOfferUsed($mobileNumber, $offerId, $cabId) {
 function updateCreditUsed($mobileNumber, $debitFromCredits, $debitAmount, $cabId) {
     global $con;
 
-    $sql = "UPDATE registeredusers set 	totalCredits = '$debitAmount' WHERE MobileNumber = ' $mobileNumber'";
+    $sql = "UPDATE registeredusers set 	totalCredits = '$debitAmount' WHERE MobileNumber = '$mobileNumber'";
     $stmt = $con->prepare($sql);
     if ($stmt->execute()) {
         $sql = "INSERT INTO usedCredits(mobileNumber, amount, cabId) VALUES ('$mobileNumber', '$debitFromCredits', '$cabId')";

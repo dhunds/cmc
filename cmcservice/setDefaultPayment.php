@@ -3,7 +3,19 @@ include('connection.php');
 
 if (isset($_POST['payDefault']) && $_POST['payDefault'] !='') {
 
-    //$_POST['acceptPaymentDefault']
+    $payDefault = $_POST['payDefault'];
+    $mobileNumber = $_POST['mobileNumber'];
 
+    $sql = "UPDATE registeredusers set defaultPaymentOption = '$payDefault', defaultPaymentAcceptOption='$payDefault' WHERE MobileNumber = '$mobileNumber'";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
 
+    if ($stmt->execute()) {
+        setResponse(array("code"=>200, "status"=>"success", "message"=>"Default payment Updated"));
+    } else {
+        setResponse(array("code"=>200, "status"=>"fail", "message"=>"An error occured, please try again."));
+    }
+
+} else {
+    setResponse(array("code"=>200, "status"=>"fail", "message"=>"Invalid Params"));
 }
