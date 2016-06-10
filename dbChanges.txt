@@ -27,3 +27,65 @@ ALTER TABLE `userLinkedWallet`
 
 ALTER TABLE `registeredusers` ADD `defaultPaymentOption` INT NOT NULL AFTER `totalCredits`;
 ALTER TABLE `registeredusers` ADD `type` INT NOT NULL COMMENT '1-Normal User;2-system;' AFTER `defaultPaymentOption`;
+ALTER TABLE `registeredusers` ADD `defaultPaymentAcceptOption` INT NOT NULL AFTER `defaultPaymentOption`;
+ALTER TABLE `availedOffers` ADD `cabId` INT NOT NULL AFTER `offerId`;
+
+CREATE TABLE `usedCredits` (
+  `id` int(11) NOT NULL,
+  `mobileNumber` varchar(20) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `cabId` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+ALTER TABLE `usedCredits`
+  ADD PRIMARY KEY (`id`);
+  ALTER TABLE `usedCredits`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `usedCredits` CHANGE `amount` `amount` FLOAT(11) NOT NULL;
+
+
+CREATE TABLE `ridePayments` (
+  `id` int(11) NOT NULL,
+  `paidBy` varchar(20) NOT NULL,
+  `paidTo` varchar(20) NOT NULL,
+  `transactionId` varchar(50) NOT NULL,
+  `amount` float NOT NULL,
+  `serviceCharge` float NOT NULL,
+  `serviceTax` float NOT NULL,
+  `walletId` int(11) NOT NULL,
+  `cabId` varchar(50) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `ridePayments`
+  ADD PRIMARY KEY (`id`);
+
+CREATE TABLE `walletTransactionLogs` (
+  `id` int(11) NOT NULL,
+  `transactionId` varchar(50) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `paidBy` varchar(20) NOT NULL,
+  `paidTo` varchar(20) NOT NULL,
+  `amount` float NOT NULL,
+  `serviceCharge` float NOT NULL,
+  `serviceTax` tinyint(1) NOT NULL,
+  `cabId` varchar(50) NOT NULL,
+  `walletId` int(11) NOT NULL,
+  `status` varchar(30) NOT NULL,
+  `transactionResp` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `walletTransactionLogs`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `walletTransactionLogs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+  ALTER TABLE `ridePayments`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `walletTransactionLogs` ADD `orderId` VARCHAR(50) NOT NULL AFTER `transactionId`;
+ALTER TABLE `ridePayments` ADD `amountPaidByRider` FLOAT NOT NULL AFTER `serviceTax`, ADD `amountPaidByMerchant` FLOAT NOT NULL AFTER `amountPaidByRider`;
+ALTER TABLE `ridePayments` ADD `orderId` VARCHAR(50) NOT NULL AFTER `transactionId`;

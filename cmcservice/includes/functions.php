@@ -521,3 +521,137 @@ function logRidePayment ($sender, $receiver, $amount, $cabId, $status, $serviceC
     return $insertedId;
 }
 
+function logRidePayments ($paidBy, $paidTo, $transactionId, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $cabId) {
+    global $con;
+    $sql = "INSERT INTO ridePayments(paidBy, paidTo, transactionId, orderId, amount, serviceCharge, serviceTax, amountPaidByRider, amountPaidByMerchant, walletId, cabId) VALUES ('$paidBy', '$paidTo', '$transactionId', '$orderId', $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, '$cabId')";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    $insertedId = $con->lastInsertId();
+    return $insertedId;
+}
+
+function hasAlreadyPaidForTheRide($mobileNumber, $cabId) {
+    global $con;
+
+    $mobileNumber = '0091'.substr(trim($mobileNumber), -10);
+
+    $con->query("SELECT id FROM ridePayments WHERE 	paidBy='" . $mobileNumber . "' AND cabId='".$cabId."'");
+    $transactionExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($transactionExists) {
+        return true;
+    }
+
+    return false;
+}
+
+function isAssociate($mobileNumber) {
+    global $con;
+
+    $con->query("SELECT mobileNumber FROM cabOwners WHERE mobileNumber='" . $mobileNumber . "'");
+    $isAssociate = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($isAssociate) {
+        return true;
+    }
+
+    return false;
+}
+
+function getUserWalletForAcceptingPayment($mobileNumber) {
+    global $con;
+
+    $stmt = $con->query("SELECT po.name FROM paymentOptions po JOIN userLinkedWallet uw ON uw.walletId = po.id JOIN registeredusers ru ON ru.defaultPaymentAcceptOption = uw.walletId WHERE ru.MobileNumber='" . $mobileNumber . "'");
+    $wallet = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($wallet) {
+        $walletDetail = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $walletDetail;
+    }
+    return false;
+}
+
+function updateOfferUsed($mobileNumber, $offerId, $cabId) {
+    global $con;
+
+    $sql = "INSERT INTO availedOffers(mobileNumber, offerId, cabId) VALUES ('$mobileNumber', '$offerId', '$cabId')";
+    $stmt = $con->prepare($sql);
+    if ($stmt->execute()) {
+        return true;
+    }
+    return false;
+}
+
+function updateCreditUsed($mobileNumber, $debitFromCredits, $debitAmount, $cabId) {
+    global $con;
+
+    $sql = "UPDATE registeredusers set 	totalCredits = '$debitAmount' WHERE MobileNumber = ' $mobileNumber'";
+    $stmt = $con->prepare($sql);
+    if ($stmt->execute()) {
+        $sql = "INSERT INTO usedCredits(mobileNumber, amount, cabId) VALUES ('$mobileNumber', '$debitFromCredits', '$cabId')";
+        $stmt = $con->prepare($sql);
+        $stmt->execute()
+        return true;
+    }
+    return false;
+}
+
+function updateBoardedStatus($mobileNumber, $cabId, $hasBoarded)
+{
+    global $con;
+
+    $sql = "UPDATE acceptedrequest set hasBoarded = '$hasBoarded' where CabId = '$cabId' AND MemberNumber='$mobileNumber'";
+    $stmt = $con->prepare($sql);
+
+    if ($stmt->execute()) {
+        return true;
+    }
+    return false;
+}
+
+function sendNotification($mobileNumber, $NotificationType, $Message, $cabId, $objNotification)
+{
+    global $con;
+
+    $stmt = $con->query("SELECT MobileNumber, FullName, DeviceToken, Platform FROM registeredusers WHERE MobileNumber = '$mobileNumber'");
+    $userExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($userExists) {
+        $row = $stmt->fetch();
+
+        $receiverName = $row['FullName'];
+        $receiverMobileNumber = $row['MobileNumber'];
+        $receiverPlatform = $row['Platform'];
+        $receiverDeviceToken = $row['DeviceToken'];
+
+        $paramsReceiver = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName' => $receiverName, 'ReceiveMemberNumber' => $receiverMobileNumber, 'Message' => $Message, 'CabId' => $cabId, 'DateTime' => 'now()');
+
+        $notificationId = $objNotification->logNotification($paramsReceiver);
+
+        $body = array('gcmText' => $Message, 'pushfrom' => $NotificationType, 'notificationId' => $notificationId);
+
+        if ($receiverPlatform == 'A') {
+            $gcm_array = [];
+            $gcm_array[] = $receiverDeviceToken;
+            $objNotification->setVariables($gcm_array, $body);
+            $res = $objNotification->sendGCMNotification();
+        } else {
+            $apns_array = [];
+            $apns_array[] = $receiverDeviceToken;
+            $objNotification->setVariables($apns_array, $body);
+            $objNotification->sendIOSNotification();
+        }
+    }
+}
+
+
+
+function setResponse($args){
+    $code = $args['code'];
+    unset($args['code']);
+
+    http_response_code($code);
+    header('Content-Type: application/json');
+    echo json_encode($args);
+    exit;
+}
