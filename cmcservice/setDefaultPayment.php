@@ -8,8 +8,7 @@ if (isset($_POST['payDefault']) && $_POST['payDefault'] !='') {
 
     $sql = "UPDATE registeredusers set defaultPaymentOption = '$payDefault', defaultPaymentAcceptOption='$payDefault' WHERE MobileNumber = '$mobileNumber'";
     $stmt = $con->prepare($sql);
-    $stmt->execute();
-
+    
     if ($stmt->execute()) {
         setResponse(array("code"=>200, "status"=>"success", "message"=>"Default payment Updated"));
     } else {
