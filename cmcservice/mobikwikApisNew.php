@@ -8,13 +8,12 @@ include('includes/functions.php');
 
 if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='' && isset($_POST['paymentMethod']) && $_POST['paymentMethod'] !='') {
     $paymentMethod = $_POST['paymentMethod'];
-    $objMobikwik = new $paymentMethod();
-    
+    $objWallet = new $paymentMethod();
     $mobileNumber = $_POST['mobileNumber'];
 
     if ($_POST['act'] == 'saveToken') {
 
-        $resp = $objMobikwik->saveToken($_POST['mobileNumber'], $_POST['token']);
+        $resp = $objWallet->saveToken($_POST['mobileNumber'], $_POST['token']);
 
         if ($resp) {
             setResponse(array("code"=>200, "status"=>"success", "message"=>"Token Saved"));
@@ -25,7 +24,7 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
 
     } else if($_POST['act'] == 'checkBalance') {
 
-        $resp = $objMobikwik->checkBalance($_POST['mobileNumber']);
+        $resp = $objWallet->checkBalance($_POST['mobileNumber']);
 
         if ($resp && $resp->status =='SUCCESS') {
             setResponse(array("code"=>200, "status"=>"success", "balance"=>$resp->balanceamount));
@@ -36,11 +35,11 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
     } else if($_POST['act'] == 'checkBalanceForRide') {
 
         $user = getUserByMobileNumber($_POST['mobileNumber']);
-        $resp = $objMobikwik->getWallet($_POST['mobileNumber']);
+        $resp = $objWallet->getWallet($_POST['mobileNumber']);
         $mobikwikBalance = 0;
 
         if (!empty($resp) && $resp['token'] !='') {
-            $resp = $objMobikwik->checkBalance($_POST['mobileNumber']);
+            $resp = $objWallet->checkBalance($_POST['mobileNumber']);
 
             if ($resp && $resp->status =='SUCCESS') {
                 $mobikwikBalance = $resp->balanceamount;
@@ -73,7 +72,7 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
 
     } else if($_POST['act'] == 'getToken') {
 
-        $resp = $objMobikwik->getWallet($_POST['mobileNumber']);
+        $resp = $objWallet->getWallet($_POST['mobileNumber']);
 
         if (!empty($res)) {
             setResponse(array("code"=>200, "status"=>"success", "token"=>$res['token']));

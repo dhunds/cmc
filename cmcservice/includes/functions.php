@@ -590,7 +590,7 @@ function updateCreditUsed($mobileNumber, $debitFromCredits, $debitAmount, $cabId
     if ($stmt->execute()) {
         $sql = "INSERT INTO usedCredits(mobileNumber, amount, cabId) VALUES ('$mobileNumber', '$debitFromCredits', '$cabId')";
         $stmt = $con->prepare($sql);
-        $stmt->execute()
+        $stmt->execute();
         return true;
     }
     return false;

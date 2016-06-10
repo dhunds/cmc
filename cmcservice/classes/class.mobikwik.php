@@ -33,9 +33,9 @@ class Mobikwik
 
     public function checkBalance($mobileNumber)
     {
-
         $wallet = $this->getWallet($mobileNumber);
         $mobileNumberWithPrefix = $mobileNumber;
+
         if (!empty($wallet)) {
             $mobileNumber = substr(trim($mobileNumber), -10);
 
@@ -48,7 +48,7 @@ class Mobikwik
             if ($checksum) {
                 $params['checksum'] = $checksum;
                 $resp = $this->curl_get($this->balanceCheckApi, $params);
-
+                
                 if ($resp->status == 'SUCCESS') {
                     $this->regenerateToken($mobileNumberWithPrefix);
 
