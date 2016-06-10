@@ -278,7 +278,7 @@ class Mobikwik
 
         if ($mobileNumber != '') {
 
-            $con->query("SELECT token FROM userLinkedWallet WHERE mobileNumber = '" . $mobileNumber . "' AND walletId=2");
+            $stmt = $con->query("SELECT token FROM userLinkedWallet WHERE mobileNumber = '" . $mobileNumber . "' AND walletId=2");
             $walletLinked = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
             if ($walletLinked) {
