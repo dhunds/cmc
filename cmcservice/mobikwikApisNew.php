@@ -11,6 +11,9 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
     $objWallet = new $paymentMethod();
     $mobileNumber = $_POST['mobileNumber'];
 
+    //$resp = $objWallet->regenerateToken($_POST['mobileNumber'], $_POST['token']);
+    //print_r($resp);die;
+
     if ($_POST['act'] == 'saveToken') {
 
         $resp = $objWallet->saveToken($_POST['mobileNumber'], $_POST['token']);
@@ -27,7 +30,7 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
         $resp = $objWallet->checkBalance($_POST['mobileNumber']);
 
         if ($resp && $resp->status =='SUCCESS') {
-            setResponse(array("code"=>200, "status"=>"success", "balance"=>$resp->balanceamount));
+            setResponse(array("code"=>200, "status"=>"success", "balance"=>(string)$resp->balanceamount));
         } else {
             setResponse(array("code"=>200, "status"=>"fail", "statuscode"=>(string)$resp->statuscode, 'statusdescription'=>(string)$resp->statusdescription));
         }

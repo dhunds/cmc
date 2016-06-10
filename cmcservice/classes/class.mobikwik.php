@@ -55,7 +55,7 @@ class Mobikwik
 
                 } else if ((string)$resp->statuscode == '199') {
 
-                    $tokenResp = simplexml_load_string($this->regenerateToken($mobileNumberWithPrefix));
+                    $tokenResp = $this->regenerateToken($mobileNumberWithPrefix);
 
                     if ($tokenResp->status == 'SUCCESS') {
                         $this->checkBalance($mobileNumberWithPrefix);
@@ -99,7 +99,7 @@ class Mobikwik
                         $return = array("status"=>"success");
 
                     } else if ((string)$resp->statuscode == '199') {
-                        $tokenResp = simplexml_load_string($this->regenerateToken($mobileNumberWithPrefix));
+                        $tokenResp = $this->regenerateToken($mobileNumberWithPrefix);
 
                         if($tokenResp->status == 'SUCCESS') {
                             $this->transferFromUserToMerchant($mobileNumberWithPrefix, $amount, $orderId, $cabId, $serviceCharge, $serviceTax);
@@ -202,7 +202,7 @@ class Mobikwik
 
     public function regenerateToken($mobileNumber)
     {
-
+        $mobileNumberWithPrefix = $mobileNumber;
         $wallet = $this->getWallet($mobileNumber);
 
         if (!empty($wallet)) {
@@ -215,7 +215,12 @@ class Mobikwik
 
             if ($checksum) {
                 $params['checksum'] = $checksum;
-                $resp = $this->curl_get($this->tokenRegenerateApi, $params);
+                $resp = simplexml_load_string($this->curl_get($this->tokenRegenerateApi, $params));
+
+                if ($resp->status =='SUCCESS'){
+                    $this->saveToken($mobileNumberWithPrefix, (string)$resp->token);
+                }
+
                 return $resp;
             }
         }
