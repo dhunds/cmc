@@ -1,5 +1,7 @@
 <?php
 include('connection.php');
+include('includes/functions.php');
+
 
 if (isset($_POST['payDefault']) && $_POST['payDefault'] !='') {
 
