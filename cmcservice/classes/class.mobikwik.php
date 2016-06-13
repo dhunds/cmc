@@ -197,7 +197,7 @@ class Mobikwik
             $serviceTax = 0.0;
         }
 
-        $sql = "INSERT INTO walletTransactionLogs SET transactionId = '" . $responseObj->refId . "', orderId = '$orderId', paidBy='$paidBy', paidTo = '$paidTo', amount = $amount, serviceCharge =  $serviceCharge, serviceTax = '$serviceTax', cabId='$cabId', walletId=2, status='".$responseObj->status."', transactionResp='".json_encode($responseObj)."'";
+        $sql = "INSERT INTO walletTransactionLogs SET transactionId = '" . $responseObj->refId . "', orderId = '$orderId', paidBy='$paidBy', paidTo = '$paidTo', amount = $amount, serviceCharge = '$serviceCharge', serviceTax = '$serviceTax', cabId='$cabId', walletId=2, status='".$responseObj->status."', transactionResp='".json_encode($responseObj)."'";
 
         $stmt = $con->prepare($sql);
 
