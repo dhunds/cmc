@@ -11,9 +11,6 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
     $objWallet = new $paymentMethod();
     $mobileNumber = $_POST['mobileNumber'];
 
-    //$resp = $objWallet->regenerateToken($_POST['mobileNumber'], $_POST['token']);
-    //print_r($resp);die;
-
     if ($_POST['act'] == 'saveToken') {
 
         $resp = $objWallet->saveToken($_POST['mobileNumber'], $_POST['token']);
@@ -38,16 +35,22 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
     } else if($_POST['act'] == 'checkBalanceForRide') {
 
         $user = getUserByMobileNumber($_POST['mobileNumber']);
-        $resp = $objWallet->getWallet($_POST['mobileNumber']);
         $mobikwikBalance = 0;
 
-        if (!empty($resp) && $resp['token'] !='') {
-            $resp = $objWallet->checkBalance($_POST['mobileNumber']);
+        // Check If wallet is linked
+        $resp = $objWallet->getWallet($_POST['mobileNumber']);
 
-            if ($resp && $resp->status =='SUCCESS') {
-                $mobikwikBalance = $resp->balanceamount;
-            }
+        if (empty($resp) || $resp['token'] !='') {
+            setResponse(array("code"=>200, "status"=>"success", "walletStatusCode"=>"1", "message"=>"Wallet not linked"));
         }
+
+        // Proceed to balance check if wallet linked
+        $resp = $objWallet->checkBalance($_POST['mobileNumber']);
+
+        if ($resp && $resp->status =='SUCCESS') {
+            $mobikwikBalance = $resp->balanceamount;
+        }
+
         $discount = 0;
         $credit = $user ['totalCredits'];
 
@@ -65,10 +68,10 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
 
         if ($requiredBalance > $availableBalance){
 
-            $jsonResp = array("code"=>200, "status" => "success", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Insufficient balance for ride");
+            $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"2", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Insufficient balance for ride");
         } else {
 
-            $jsonResp = array("code"=>200, "status" => "success", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Balance sufficient for ride");
+            $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"3", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Balance sufficient for ride");
         }
 
         setResponse($jsonResp);
