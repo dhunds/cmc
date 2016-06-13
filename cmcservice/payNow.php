@@ -84,7 +84,7 @@ if (!$error) {
 
             if (($payableByRider == 0 || $riderPaymentStatus =='success') && !$isAssociate) {
                 $orderId = time() . mt_rand(1, 10000);
-                $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderId, $cabId);
+                $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderId, $cabId, 0.0, 0.0);
             }
         }
 
@@ -99,7 +99,7 @@ if (!$error) {
 
                 if ($payableByMerchant > 0) {
                     $orderId = time() . mt_rand(1, 10000);
-                    $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderId, $cabId);
+                    $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderId, $cabId, 0.0, 0.0);
                 }
 
             } else {

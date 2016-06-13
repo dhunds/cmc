@@ -67,7 +67,7 @@ class Mobikwik
         return false;
     }
 
-    public function transferFromUserToMerchant($mobileNumber, $amount, $orderId, $cabId, $serviceCharge='', $serviceTax='')
+    public function transferFromUserToMerchant($mobileNumber, $amount, $orderId, $cabId, $serviceCharge, $serviceTax)
     {
         $mobileNumberWithPrefix = $mobileNumber;
         $wallet = $this->getWallet($mobileNumber);
@@ -112,7 +112,7 @@ class Mobikwik
         return false;
     }
 
-    public function transferFromMerchantToDriver($mobileNumber, $amount, $orderId, $cabId, $serviceCharge='', $serviceTax='')
+    public function transferFromMerchantToDriver($mobileNumber, $amount, $orderId, $cabId, $serviceCharge, $serviceTax)
     {
         $mobileNumberWithPrefix = $mobileNumber;
         $mobileNumber = substr(trim($mobileNumber), -10);
