@@ -40,7 +40,7 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
         // Check If wallet is linked
         $resp = $objWallet->getWallet($_POST['mobileNumber']);
 
-        if (empty($resp) || $resp['token'] !='') {
+        if (empty($resp) || $resp['token'] =='') {
             setResponse(array("code"=>200, "status"=>"success", "walletStatusCode"=>"1", "message"=>"Wallet not linked"));
         }
 

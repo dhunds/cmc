@@ -117,14 +117,14 @@ class Mobikwik
         $mobileNumberWithPrefix = $mobileNumber;
         $mobileNumber = substr(trim($mobileNumber), -10);
 
-        $params = array('amount' => $amount, 'typeofmoney' => 0, 'cell' => $mobileNumber, 'orderid' => $orderId, 'creditmethod' => 'cashback', 'walletid' => $this->walletId, 'mid' => $this->merchantId, 'merchantname' => $this->merchantName, 'encryptKey' => $this->apiSecret);
+        $params = array('amount' => $amount, 'typeofmoney' => 0, 'cell' => $mobileNumber, 'orderid' => $orderId, 'creditmethod' => 'cashback', 'walletid' => $this->walletId, 'mid' => $this->merchantLoadMoneyId, 'merchantname' => $this->merchantName, 'encryptKey' => $this->apiSecret);
 
         $checksum = $this->generateChecksum($params);
         unset($params['encryptKey']);
 
         if ($checksum) {
             $params['checksum'] = $checksum;
-            $resp = $this->curl_get($this->debitApi, $params);
+            $resp = $this->curl_get($this->loadmoneyApi, $params);
 
             if ($resp === FALSE) {
                 return FALSE;
@@ -188,6 +188,14 @@ class Mobikwik
 
     public function logTransaction($responseObj, $paidBy, $paidTo, $amount, $serviceCharge, $serviceTax, $cabId, $orderId) {
         global $con;
+
+        if (!$serviceCharge || $serviceCharge='') {
+            $serviceCharge = 0.0;
+        }
+
+        if (!$serviceTax || $serviceTax='') {
+            $serviceTax = 0.0;
+        }
 
         $sql = "INSERT INTO walletTransactionLogs SET transactionId = '" . $responseObj->refId . "', orderId = '$orderId', paidBy='$paidBy', paidTo = '$paidTo', amount = $amount, serviceCharge =  $serviceCharge, serviceTax = '$serviceTax', cabId='$cabId', walletId=2, status='".$responseObj->status."', transactionResp='".json_encode($responseObj)."'";
 

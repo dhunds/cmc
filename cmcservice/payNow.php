@@ -120,7 +120,7 @@ if (!$error) {
             updateBoardedStatus($riderCellWithPrefix, $cabId, 1);
         }
 
-        logRidePayments ($riderCellWithPrefix, $driverCellWithPrefix, $transactionId, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $cabId);
+        logRidePayments ($riderCellWithPrefix, $driverCellWithPrefix, $transactionId, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, 2, $cabId);
 
 
         /* Debit from riders credits and also update offer status if any offer used */

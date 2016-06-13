@@ -8,6 +8,8 @@ if (isset($_POST['submit'])) {
     $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'FromLocation', 'ToLocation', 'FromShortName', 'ToShortName', 'seats', 'distance', 'expTime', 'slat', 'slon', 'elat', 'elon'));
 
     if (!$error) {
+    //echo '<pre>';
+    //print_r($_POST);
         $sLat = $_POST['slat'];
         $sLon = $_POST['slon'];
         $eLat = $_POST['elat'];
@@ -95,7 +97,7 @@ if (isset($_POST['submit'])) {
         if ($found > 0 || $createGroup) {
 
             $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$sLatLon','$eLatLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
-
+           //echo $sql;die;
             $stmt = $con->prepare($sql);
             $res = $stmt->execute();
 
@@ -151,7 +153,7 @@ function checkPostForBlank($arrParams){
                             </div>
                             <div style="clear:both;"></div>
                             <br/>
-                            <div class="divRight bluetext"><input id="time" name="time" class="controls" type="text" placeholder="Time" style="width:300px;" disabled> <img src="images/calendar.png" id="dtFrom">&nbsp;
+                            <div class="divRight bluetext"><input id="time" name="time" class="controls" type="text" placeholder="Time" style="width:300px;" readonly> <img src="images/calendar.png" id="dtFrom">&nbsp;
                         <script type="text/javascript">
                             Calendar.setup({
                                 inputField: 'time',
@@ -208,7 +210,7 @@ function checkPostForBlank($arrParams){
                         <div class="pure-u-5-24"><p class="tHeading">Remaining Seats</p></div>
                     </div>
                         <?php 
-                            $sql = "SELECT c.* FROM cabopen c JOIN cabOwners co ON c.MobileNumber=co.mobileNumber AND co.cleintId=".$_SESSION['userId']." AND c.CabStatus='A'";
+                           echo $sql = "SELECT c.* FROM cabopen c JOIN cabOwners co ON c.MobileNumber=co.mobileNumber WHERE co.cleintId=".$_SESSION['userId']." AND c.CabStatus='A'";
 $stmt = $con->query($sql);
 $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 

@@ -521,9 +521,9 @@ function logRidePayment ($sender, $receiver, $amount, $cabId, $status, $serviceC
     return $insertedId;
 }
 
-function logRidePayments ($paidBy, $paidTo, $transactionId, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $cabId) {
+function logRidePayments ($paidBy, $paidTo, $transactionId, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $walletId, $cabId) {
     global $con;
-    $sql = "INSERT INTO ridePayments(paidBy, paidTo, transactionId, orderId, amount, serviceCharge, serviceTax, amountPaidByRider, amountPaidByMerchant, walletId, cabId) VALUES ('$paidBy', '$paidTo', '$transactionId', '$orderId', $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, '$cabId')";
+    $sql = "INSERT INTO ridePayments(paidBy, paidTo, transactionId, orderId, amount, serviceCharge, serviceTax, amountPaidByRider, amountPaidByMerchant, walletId, cabId) VALUES ('$paidBy', '$paidTo', '$transactionId', '$orderId', $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $walletId, '$cabId')";
     $stmt = $con->prepare($sql);
     $stmt->execute();
     $insertedId = $con->lastInsertId();
@@ -561,7 +561,7 @@ function isAssociate($mobileNumber) {
 function getUserWalletForAcceptingPayment($mobileNumber) {
     global $con;
 
-    $stmt = $con->query("SELECT po.name FROM paymentOptions po JOIN userLinkedWallet uw ON uw.walletId = po.id JOIN registeredusers ru ON ru.defaultPaymentAcceptOption = uw.walletId WHERE ru.MobileNumber='" . $mobileNumber . "'");
+    $stmt = $con->query("SELECT po.id, po.name FROM  registeredusers ru JOIN paymentOptions po  ON po.id = ru.defaultPaymentAcceptOption WHERE ru.MobileNumber='" . $mobileNumber . "'");
     $wallet = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($wallet) {
