@@ -371,7 +371,7 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                      </tr>
                      <tr>
                         <td align="left" style="font-size:12px; color:#838383; font-family: Helvetica, Arial, sans-serif; border-bottom: 1px #f1f1f1 solid;
-                        padding-bottom: 10px;" height="15">'.$member['MemberLocationAddress'].'<br /> To <br/> '.$member['MemberEndLocationAddress'].'</td>
+                        padding-bottom: 10px;" height="15">'.$member['MemberLocationAddress'].'<br /> <div style="color:#000000; text-align:center; font-weight:bold;">TO </div> <br/> '.$member['MemberEndLocationAddress'].'</td>
                         <td align="right" style="font-size:12px; color:#838383; font-family: Helvetica, Arial, sans-serif; border-bottom: 1px #f1f1f1 solid;
                         padding-bottom: 10px;" height="15">'.$member['distance'].' km</td>
                      </tr>
