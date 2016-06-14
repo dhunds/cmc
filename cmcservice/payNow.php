@@ -29,6 +29,7 @@ if (!$error) {
     $serviceCharge = 5;
     $serviceTax = (15 / 100) * 5;
     $totalDeductible = $serviceCharge + $serviceTax;
+    $riderWalletId = 1;
 
     $discount = 0;
     $credit = 0;
@@ -64,12 +65,13 @@ if (!$error) {
         }
 
         /* Load payment class */
-        $riderWalletDetail  = getWalletIdByName($paymentMethod);
         $driverWalletDetails = getUserWalletForAcceptingPayment($driverCellWithPrefix);
         $driverWallet = new $driverWalletDetails['name']();
-        $riderWallet = new $paymentMethod();
-
+        
         if ($paymentMethod !='Cash'){
+            $riderWalletDetail  = getWalletIdByName($paymentMethod);
+            $riderWallet = new $paymentMethod();
+            $riderWalletId = $riderWalletDetail['id'];
 
             $riderPaymentStatus = 0;
 
@@ -119,7 +121,7 @@ if (!$error) {
             updateBoardedStatus($riderCellWithPrefix, $cabId, 1);
         }
 
-        logRidePayments ($riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletDetail['id'], $cabId, $payableByMerchant, $orderIdMerchant);
+        logRidePayments ($riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletId, $cabId, $payableByMerchant, $orderIdMerchant);
 
         /* Debit from riders credits and also update offer status if any offer used */
 
