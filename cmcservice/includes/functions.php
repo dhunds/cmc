@@ -355,7 +355,7 @@ function sendOwnerRatingNotification ($objNotification, $params, $deviceToken, $
     $notificationId = $objNotification->logNotification($params);
 
     if ($pushNotification !='off') {
-        $body = array('gcmText' => $params['Message'], 'pushfrom' => 'Cab_Rating', 'notificationId' => $notificationId);
+        $body = array('gcmText' => $params['Message'], 'pushfrom' => 'Cab_Rating', 'notificationId' => $notificationId, "ownerNumber"=>$params['ReceiveMemberNumber'], "cabId"=>$params['cabId']);
 
         if ($Platform == "A") {
             $gcm_array[] = $deviceToken;

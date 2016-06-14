@@ -30,7 +30,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
             $NotificationType = "Cab_Rating";
             $Message = "Please rate your ride from " . $cabDetail['FromShortName'] . " to  " . $cabDetail['ToShortName'] . " .";
 
-            $params = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$row['FullName'], 'ReceiveMemberNumber'=>(string)$row['MobileNumber'], 'Message'=>$Message, 'CabId'=>$cabDetail['CabId'], 'DateTime'=>'now()');
+            $params = array('NotificationType' => $NotificationType, 'SentMemberName' => 'system', 'SentMemberNumber' => '', 'ReceiveMemberName'=>$row['FullName'], 'ReceiveMemberNumber'=>(string)$row['MobileNumber'], 'Message'=>$Message, 'CabId'=>$cabDetail['CabId'], 'DateTime'=>'now()', 'cabId'=>$cabId);
 
             sendOwnerRatingNotification ($objNotification, $params, $row['DeviceToken'], $row['Platform'], $row['PushNotification']);
 
