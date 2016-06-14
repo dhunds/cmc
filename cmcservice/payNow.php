@@ -30,6 +30,8 @@ if (!$error) {
     $serviceTax = (15 / 100) * 5;
     $totalDeductible = $serviceCharge + $serviceTax;
     $riderWalletId = 1;
+    $orderIdMerchant='';
+    $orderId = '';
 
     $discount = 0;
     $credit = 0;
@@ -106,6 +108,7 @@ if (!$error) {
             } else {
                 $orderId = time() . mt_rand(1, 10000);
                 $driverWallet->transferFromUserToMerchant($driverCellWithPrefix, $totalDeductible, $orderId, $cabId, $serviceCharge, $serviceTax);
+                $orderId = '';
             }
         }
 
@@ -115,13 +118,16 @@ if (!$error) {
 
             $transactionId ='';
             updateBoardedStatus($riderCellWithPrefix, $cabId, 2);
+
+            logRidePayments($riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletId, $cabId, $payableByRider, $orderIdMerchant);
         } else {
 
             $transactionId = (isset($respRiderPayment['transactionId']))?$respRiderPayment['transactionId']:'';
             updateBoardedStatus($riderCellWithPrefix, $cabId, 1);
+
+            logRidePayments($riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletId, $cabId, $payableByMerchant, $orderIdMerchant);
         }
 
-        logRidePayments ($riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletId, $cabId, $payableByMerchant, $orderIdMerchant);
 
         /* Debit from riders credits and also update offer status if any offer used */
 
