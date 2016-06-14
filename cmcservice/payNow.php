@@ -33,6 +33,9 @@ if (!$error) {
     $orderIdMerchant='';
     $orderId = '';
 
+    $riderPaymentStatus = 0;
+    $merchantPaymentStatus = 0;
+
     $discount = 0;
     $credit = 0;
     $payableByRider = 0;
@@ -75,8 +78,6 @@ if (!$error) {
             $riderWallet = new $paymentMethod();
             $riderWalletId = $riderWalletDetail['id'];
 
-            $riderPaymentStatus = 0;
-
             if ($payableByRider > 0) {
                 $orderId = time() . mt_rand(1, 10000);
                 $respRiderPayment = $riderWallet->transferFromUserToMerchant($riderCellWithPrefix, $payableByRider, $orderId, $cabId, $serviceCharge, $serviceTax);
@@ -90,6 +91,7 @@ if (!$error) {
             if (($payableByRider == 0 || $riderPaymentStatus =='success') && !$isAssociate) {
                 $orderIdMerchant = time() . mt_rand(1, 10000);
                 $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderIdMerchant, $cabId, 0.0, 0.0);
+                $merchantPaymentStatus = $respMerchantPayment['status'];
             }
         }
 
@@ -103,6 +105,7 @@ if (!$error) {
                 if ($payableByMerchant > 0) {
                     $orderIdMerchant = time() . mt_rand(1, 10000);
                     $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderIdMerchant, $cabId, 0.0, 0.0);
+                    $merchantPaymentStatus = $respMerchantPayment['status'];
                 }
 
             } else {
@@ -162,8 +165,14 @@ if (!$error) {
 
             if ($isAssociate){
                 $Message = "Payment received from " . $riderProfile['FullName'] . ".";
-            } else{
-                $Message = "Payment of Rs." . ( $amount - $totalDeductible ). " received from " . $riderProfile['FullName'] . " Please login to your mobikwik account and check in transfers section to accept it.";
+            } else {
+
+                if ($merchantPaymentStatus == 'fail') {
+                    $Message = "We tried to credit Rs.".$payableByMerchant." in your wallet but it failed due to congestion in the network. We will attempt to send it again, be patient and enjoy the ride. In case you need any further assistance please write to support@ishareryde.com .";
+                    sendPaymentFailedMail ($cabId, $payableByMerchant, $riderCellWithPrefix, $orderIdMerchant, $driverCellWithPrefix);
+                } else {
+                    $Message = "Payment of Rs." . ( $amount - $totalDeductible ). " received from " . $riderProfile['FullName'] . ".";
+                }
             }
 
             $jsonResp = array('code'=>200, 'status' => "success", 'message' => 'Payment processed. Enjoy your ride!');
