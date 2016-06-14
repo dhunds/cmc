@@ -15,7 +15,7 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
     $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" .$cabId . "'");
     $cabDetail = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $sql = "SELECT rp.amount, rp.serviceCharge, rp.serviceTax, ru.FullName, ru.MobileNumber, ru.DeviceToken, ru.Platform, ru.PushNotification FROM ridePayments rp JOIN registeredusers ru ON rp.paidBy = ru.MobileNumber  WHERE rp.cabId='".$cabId."'";
+    $sql = "SELECT rp.amount, rp.serviceCharge, rp.serviceTax, ru.FullName, ru.MobileNumber, ru.DeviceToken, ru.Platform, ru.PushNotification, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance FROM ridePayments rp JOIN registeredusers ru ON rp.paidBy = ru.MobileNumber JOIN acceptedrequest ar ON ar.MemberNumber = rp.paidBy WHERE rp.cabId='".$cabId."' AND ar.CabId='".$cabId."'";
 
     $stmt = $con->query($sql);
 
