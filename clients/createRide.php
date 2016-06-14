@@ -20,7 +20,7 @@ if (isset($_POST['submit'])) {
         $proximity = rideProximity();
 
         $MobileNumber = '0091' . substr(trim($_POST['mobileNumber']), -10);
-        $CabId = time().$MobileNumber;
+        $CabId = $MobileNumber.time();
         $OwnerName = $_POST['ownerName'];
         $FromLocation = $_POST['FromLocation'];
         $ToLocation = $_POST['ToLocation'];

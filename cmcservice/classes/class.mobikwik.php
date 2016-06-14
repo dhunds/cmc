@@ -7,7 +7,6 @@
  */
 class Mobikwik
 {
-
     protected $_rider;
     protected $_driver;
 
@@ -96,7 +95,7 @@ class Mobikwik
 
                         $this->logTransaction($resp, $mobileNumberWithPrefix, 'system', $amount, $serviceCharge, $serviceTax, $cabId, $orderId);
 
-                        $return = array("status"=>"success");
+                        $return = array("status"=>"success", "transactionId"=>$resp->refId);
 
                     } else if ((string)$resp->statuscode == '199') {
                         $tokenResp = $this->regenerateToken($mobileNumberWithPrefix);

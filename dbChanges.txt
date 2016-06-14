@@ -89,3 +89,11 @@ ALTER TABLE `walletTransactionLogs`
 ALTER TABLE `walletTransactionLogs` ADD `orderId` VARCHAR(50) NOT NULL AFTER `transactionId`;
 ALTER TABLE `ridePayments` ADD `amountPaidByRider` FLOAT NOT NULL AFTER `serviceTax`, ADD `amountPaidByMerchant` FLOAT NOT NULL AFTER `amountPaidByRider`;
 ALTER TABLE `ridePayments` ADD `orderId` VARCHAR(50) NOT NULL AFTER `transactionId`;
+
+
+
+ALTER TABLE  `walletTransactionLogs` CHANGE  `serviceTax`  `serviceTax` FLOAT( 1 ) NOT NULL ;
+ALTER TABLE `ridePayments` DROP `transactionId`;
+
+ALTER TABLE  `ridePayments` ADD  `amountPaidToDriver` FLOAT NOT NULL AFTER  `amountPaidByMerchant` ,
+ADD  `driverPaymentOrderId` VARCHAR( 30 ) NOT NULL AFTER  `amountPaidToDriver` ;

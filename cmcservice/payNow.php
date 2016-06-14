@@ -64,6 +64,7 @@ if (!$error) {
         }
 
         /* Load payment class */
+        $riderWalletDetail  = getWalletIdByName($paymentMethod);
         $driverWalletDetails = getUserWalletForAcceptingPayment($driverCellWithPrefix);
         $driverWallet = new $driverWalletDetails['name']();
         $riderWallet = new $paymentMethod();
@@ -83,14 +84,12 @@ if (!$error) {
             }
 
             if (($payableByRider == 0 || $riderPaymentStatus =='success') && !$isAssociate) {
-                $orderId = time() . mt_rand(1, 10000);
-                $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderId, $cabId, 0.0, 0.0);
+                $orderIdMerchant = time() . mt_rand(1, 10000);
+                $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderIdMerchant, $cabId, 0.0, 0.0);
             }
         }
 
         /* When payment method is cash  */
-
-        $orderId = time() . mt_rand(1, 10000);
 
         if ($paymentMethod =='Cash' && !$isAssociate){
 
@@ -98,8 +97,8 @@ if (!$error) {
                 $payableByMerchant  = ($amount - $payableByRider) - $totalDeductible;
 
                 if ($payableByMerchant > 0) {
-                    $orderId = time() . mt_rand(1, 10000);
-                    $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderId, $cabId, 0.0, 0.0);
+                    $orderIdMerchant = time() . mt_rand(1, 10000);
+                    $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderIdMerchant, $cabId, 0.0, 0.0);
                 }
 
             } else {
@@ -116,12 +115,11 @@ if (!$error) {
             updateBoardedStatus($riderCellWithPrefix, $cabId, 2);
         } else {
 
-            $transactionId = (isset($respMerchantPayment['transactionId']))?$respMerchantPayment['transactionId']:'';
+            $transactionId = (isset($respRiderPayment['transactionId']))?$respRiderPayment['transactionId']:'';
             updateBoardedStatus($riderCellWithPrefix, $cabId, 1);
         }
 
-        logRidePayments ($riderCellWithPrefix, $driverCellWithPrefix, $transactionId, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, 2, $cabId);
-
+        logRidePayments ($riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletDetail['id'], $cabId, $payableByMerchant, $orderIdMerchant);
 
         /* Debit from riders credits and also update offer status if any offer used */
 
@@ -165,7 +163,6 @@ if (!$error) {
 
         $NotificationType = "Payment_Received";
         sendNotification($driverCellWithPrefix, $NotificationType, $Message, $cabId, $objNotification);
-
 
         // Sending payment mail to member
         if ($riderProfile['Email'] != '') {

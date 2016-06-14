@@ -521,9 +521,9 @@ function logRidePayment ($sender, $receiver, $amount, $cabId, $status, $serviceC
     return $insertedId;
 }
 
-function logRidePayments ($paidBy, $paidTo, $transactionId, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $walletId, $cabId) {
+function logRidePayments ($paidBy, $paidTo, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $walletId, $cabId, $amountPaidToDriver, $driverPaymentOrderId) {
     global $con;
-    $sql = "INSERT INTO ridePayments(paidBy, paidTo, transactionId, orderId, amount, serviceCharge, serviceTax, amountPaidByRider, amountPaidByMerchant, walletId, cabId) VALUES ('$paidBy', '$paidTo', '$transactionId', '$orderId', $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $walletId, '$cabId')";
+    $sql = "INSERT INTO ridePayments(paidBy, paidTo, orderId, amount, serviceCharge, serviceTax, amountPaidByRider, amountPaidByMerchant, walletId, cabId, amountPaidToDriver, driverPaymentOrderId) VALUES ('$paidBy', '$paidTo', '$orderId', $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $walletId, '$cabId', $amountPaidToDriver, '$driverPaymentOrderId')";
     $stmt = $con->prepare($sql);
     $stmt->execute();
     $insertedId = $con->lastInsertId();
@@ -562,6 +562,19 @@ function getUserWalletForAcceptingPayment($mobileNumber) {
     global $con;
 
     $stmt = $con->query("SELECT po.id, po.name FROM  registeredusers ru JOIN paymentOptions po  ON po.id = ru.defaultPaymentAcceptOption WHERE ru.MobileNumber='" . $mobileNumber . "'");
+    $wallet = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($wallet) {
+        $walletDetail = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $walletDetail;
+    }
+    return false;
+}
+
+function getWalletIdByName($walletName) {
+    global $con;
+
+    $stmt = $con->query("SELECT id FROM paymentOptions WHERE name='" . $walletName . "'");
     $wallet = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($wallet) {
