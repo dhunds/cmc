@@ -17,10 +17,11 @@ if ($cabExists > 0) {
         $res = $stmt->execute();
 
         $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" . $cabId . "'");
-        $cabDetail = $stmt->fetch();
+        $cabDetail = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt = $con->query("SELECT ru.FullName, ru.MobileNumber, ru.DeviceToken, ru.Platform, ru.PushNotification, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount, pl.serviceCharge, pl.serviceTax FROM registeredusers ru JOIN acceptedrequest ar ON ru.MobileNumber = ar.MemberNumber
-        JOIN paymentLogs pl ON ar.MemberNumber = pl.mobileNumberFrom WHERE ar.CabId='".$cabId."' AND pl.cabId='".$cabId."' AND ar.hasBoarded=1");
+        $sql = "SELECT rp.amount, rp.serviceCharge, rp.serviceTax, ru.FullName, ru.MobileNumber, ru.DeviceToken, ru.Platform, ru.PushNotification FROM ridePayments rp JOIN registeredusers ru ON rp.paidBy = ru.MobileNumber  WHERE rp.cabId='".$cabId."'";
+
+        $stmt = $con->query($sql);
 
         $membersJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 

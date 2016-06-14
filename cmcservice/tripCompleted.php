@@ -6,15 +6,18 @@ $objNotification = new Notification();
 
 if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
 
-    $sql = "UPDATE cabopen set CabStatus = 'C' where CabId = '" . $_POST['cabId'] . "'";
+    $cabId = $_POST['cabId'];
+
+    $sql = "UPDATE cabopen set CabStatus = 'C' where CabId = '" . $cabId . "'";
     $stmt = $con->prepare($sql);
     $res = $stmt->execute();
 
-    $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" . $_POST['cabId'] . "'");
-    $cabDetail = $stmt->fetch();
+    $stmt = $con->query("SELECT MobileNumber, CabId, FromShortName, ToShortName, Distance, date_format(ExpStartDateTime, '%M %d, %Y') as TravelDate FROM cabopen WHERE CabId = '" .$cabId . "'");
+    $cabDetail = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $stmt = $con->query("SELECT ru.FullName, ru.MobileNumber, ru.DeviceToken, ru.Platform, ru.PushNotification, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance, pl.amount, pl.serviceCharge, pl.serviceTax FROM registeredusers ru JOIN acceptedrequest ar ON ru.MobileNumber = ar.MemberNumber
-        JOIN paymentLogs pl ON ar.MemberNumber = pl.mobileNumberFrom WHERE ar.CabId='".$_POST['cabId']."' AND pl.cabId='".$_POST['cabId']."' AND ar.hasBoarded=1");
+    $sql = "SELECT rp.amount, rp.serviceCharge, rp.serviceTax, ru.FullName, ru.MobileNumber, ru.DeviceToken, ru.Platform, ru.PushNotification FROM ridePayments rp JOIN registeredusers ru ON rp.paidBy = ru.MobileNumber  WHERE rp.cabId='".$cabId."'";
+
+    $stmt = $con->query($sql);
 
     $membersJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -56,14 +59,8 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
         $stmt->execute();
     }
 
-    http_response_code(200);
-    header('Content-Type: application/json');
-    echo '{status:"success", message:"Updated sucessfully"}';
-    exit;
+    setResponse(array("code"=>200, "status"=>"success", "message"=>"Updated sucessfully"));
 
 } else {
-    http_response_code(200);
-    header('Content-Type: application/json');
-    echo '{"status":"failed", "message":"Invalid Params."}';
-    exit;
+    setResponse(array("code"=>200, "status"=>"failed", "message"=>"Invalid Params."));
 }

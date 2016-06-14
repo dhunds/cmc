@@ -188,14 +188,6 @@ class Mobikwik
     public function logTransaction($responseObj, $paidBy, $paidTo, $amount, $serviceCharge, $serviceTax, $cabId, $orderId) {
         global $con;
 
-        if (!$serviceCharge || $serviceCharge='') {
-            $serviceCharge = 0.0;
-        }
-
-        if (!$serviceTax || $serviceTax='') {
-            $serviceTax = 0.0;
-        }
-
         $sql = "INSERT INTO walletTransactionLogs SET transactionId = '" . $responseObj->refId . "', orderId = '$orderId', paidBy='$paidBy', paidTo = '$paidTo', amount = $amount, serviceCharge = '$serviceCharge', serviceTax = '$serviceTax', cabId='$cabId', walletId=2, status='".$responseObj->status."', transactionResp='".json_encode($responseObj)."'";
 
         $stmt = $con->prepare($sql);
