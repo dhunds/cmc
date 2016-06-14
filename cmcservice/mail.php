@@ -317,17 +317,17 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                                                       <table align="center" width="100%" border="0"cellpadding="0" cellspacing="0" >
                                                          <tbody>
                                                             <tr>
-                                                               <td align="left"  style="font-size:14px; line-height:30px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">TRIP DATE</td>
-                                                               <td align="right" style="font-size:14px; line-height:30px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$RideDetail['ride']['TravelDate'].'</td>
+                                                               <td align="left"  style="font-size:13px; line-height:30px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">TRIP DATE</td>
+                                                               <td align="right" style="font-size:13px; line-height:30px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.date_format($RideDetail['ride']['TravelDate'], 'jS M').'</td>
                                                             </tr>
 
                                                             <tr>
-                                                               <td align="left" style="font-size:14px; line-height:30px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">KILOMETERS</td>
-                                                               <td align="right" style="font-size:14px; line-height:30px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$RideDetail['ride']['Distance'].'</td>
+                                                               <td align="left" style="font-size:13px; line-height:30px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">KILOMETERS</td>
+                                                               <td align="right" style="font-size:13px; line-height:30px; color:#333333; font-family: Helvetica, Arial, sans-serif;">'.$RideDetail['ride']['Distance'].'</td>
                                                             </tr>
                                                             <tr>
-                                                               <td align="left"  style="font-size:14px; line-height:30px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">PAYMENTS</td>
-                                                               <td align="right" style="font-size:14px; line-height:30px; color:#333333; font-family: Helvetica, Arial, sans-serif;">&#8377; '.$RideDetail['ride']['amount'].'</td>
+                                                               <td align="left"  style="font-size:13px; line-height:30px; color:#8e8e8e; font-family: Helvetica, Arial, sans-serif;">PAYMENTS</td>
+                                                               <td align="right" style="font-size:13px; line-height:30px; color:#333333; font-family: Helvetica, Arial, sans-serif;">&#8377; '.$RideDetail['ride']['amount'].'</td>
                                                             </tr>
                                                          </tbody>
                                                       </table>
@@ -367,11 +367,11 @@ function sendPaymentMailOwner ($email, $RideDetail, $subject){
                <table bgcolor="#ffffff" style="padding:20px;" align="center" border="0"cellpadding="0" cellspacing="0" width="560">
                   <tbody>
                      <tr style="">
-                        <td colspan="2" align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif; line-height:22px;" height="30">'.$member['FullName'].'<br/></td>
+                        <td colspan="2" align="left" style="font-size:16px; color:#333333; font-family: Helvetica, Arial, sans-serif; line-height:22px; width: 100px;" height="30">'.$member['FullName'].'<br/></td>
                      </tr>
                      <tr>
                         <td align="left" style="font-size:12px; color:#838383; font-family: Helvetica, Arial, sans-serif; border-bottom: 1px #f1f1f1 solid;
-                        padding-bottom: 10px;" height="15">'.$member['MemberLocationAddress'].' &#8594; '.$member['MemberEndLocationAddress'].'</td>
+                        padding-bottom: 10px;" height="15">'.$member['MemberLocationAddress'].'<br /> To <br/>; '.$member['MemberEndLocationAddress'].'</td>
                         <td align="right" style="font-size:12px; color:#838383; font-family: Helvetica, Arial, sans-serif; border-bottom: 1px #f1f1f1 solid;
                         padding-bottom: 10px;" height="15">'.$member['distance'].' km</td>
                      </tr>
