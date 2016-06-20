@@ -210,7 +210,7 @@ function checkPostForBlank($arrParams){
                         <div class="pure-u-5-24"><p class="tHeading">Remaining Seats</p></div>
                     </div>
                         <?php 
-                           echo $sql = "SELECT c.* FROM cabopen c JOIN cabOwners co ON c.MobileNumber=co.mobileNumber WHERE co.cleintId=".$_SESSION['userId']." AND c.CabStatus='A'";
+                           $sql = "SELECT c.* FROM cabopen c JOIN cabOwners co ON c.MobileNumber=co.mobileNumber WHERE co.cleintId=".$_SESSION['userId']." AND c.CabStatus='A'";
 $stmt = $con->query($sql);
 $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 

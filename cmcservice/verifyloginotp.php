@@ -11,7 +11,7 @@ $rows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 if($rows > 0)
 {
-    $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$MobileNumber' and SingleUsePassword = '$singleusepassword' and SingleUseExpiry > NOW()");
+    $stmt = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$MobileNumber' and SingleUsePassword = '$singleusepassword' and SingleUseExpiry > NOW()");
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if($found > 0)
@@ -20,6 +20,11 @@ if($rows > 0)
             $SingleUseVerified = 0;
         } else {
             $SingleUseVerified = 1;
+        }
+
+        if (isset($_POST['appName']) && $_POST['appName']=='itrackryde') {
+            $user = $stmt->fetch();
+            $DeviceToken = $user['DeviceToken'];
         }
 
         $sql2 = "UPDATE `registeredusers` SET SingleUseVerified = '1', Platform = '$Platform',DeviceToken = '$DeviceToken', LastLoginDateTime = now() where MobileNumber = '$MobileNumber'";

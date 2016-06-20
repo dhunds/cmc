@@ -22,9 +22,9 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($found) {
-        $user['type'] =2;
+        $user['type'] ='2';
     } else {
-        $user['type'] =1;
+        $user['type'] ='1';
     }
 
     $resp = array('header' => 200, 'status' => 'success', 'message' => '', 'data' => $user);

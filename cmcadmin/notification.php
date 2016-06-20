@@ -7,8 +7,6 @@ $objNotification = new Notification();
 
 if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != '') {
 
-    $_POST['mobileNumber'] = '0091' . substr(trim($_POST['mobileNumber']), -10);
-
 	$pushFrom = $_POST['pushfrom'];
 
     $body = array('gcmText' => $_POST['message'], 'pushfrom' => $pushFrom);
@@ -16,6 +14,7 @@ if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != 
     $sql = "SELECT * FROM registeredusers WHERE PushNotification='on' AND Platform='A'";
 
     if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
+        $_POST['mobileNumber'] = '0091' . substr(trim($_POST['mobileNumber']), -10);
         $sql .= " AND MobileNumber='" . $_POST['mobileNumber'] . "'";
     }
 
