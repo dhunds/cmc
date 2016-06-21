@@ -29,7 +29,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
           ) AS origin,
          (
             6371 * acos (
-              cos ( radians($sLat) )
+              cos ( radians($eLat) )
               * cos( radians( endLat ) )
               * cos( radians( endLon ) - radians($eLon) )
               + sin ( radians($eLat) )
