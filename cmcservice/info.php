@@ -5,6 +5,25 @@ include('connection.php');
 include('../common.php');
 ini_set('max_execution_time', 0);
 
+/*
+include('connection.php');
+ini_set('max_execution_time', 0);
+
+$stmt = $con->query("SELECT MobileNumber, DeviceToken FROM registeredusers1");
+
+while ($user = $stmt->fetch()){
+	if ($user['MobileNumber'] !=''){
+
+		$sql1 = "UPDATE registeredusers SET DeviceToken='".$user['DeviceToken']."' WHERE MobileNumber='".$user['MobileNumber']."' AND DeviceToken=''";
+		$stmt1 = $con->prepare($sql1);
+		$stmt1->execute();
+	}
+}
+
+die;
+*/
+
+/*
 $string = "Golf Course Rd, Gurgaon to Sohna Rd, Gurgaon
 Golf Course Rd, Gurgaon to DLF Cyber City, Gurgaon
 Golf Course Rd, Gurgaon to Dwarka, New Delhi
@@ -17742,5 +17761,5 @@ foreach ($arr1 as $val) {
 echo '<pre>';
 print_r($groupsCreated);
 exit;
-
+*/
 

@@ -69,14 +69,14 @@ class Notification {
         } else {
             $data = json_decode($result);
 
-            if ($data->failure) {
+            /*if ($data->failure) {
 
                 foreach ($this->_deviceIds as $gcmToken){
                     $sql = "UPDATE registeredusers SET DeviceToken='' WHERE DeviceToken='".trim($gcmToken)."'";
                     $stmt = $con->prepare($sql);
                     $stmt->execute();
                 }
-            }
+            }*/
             return $result;
         }
 

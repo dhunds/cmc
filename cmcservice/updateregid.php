@@ -5,6 +5,7 @@ include ('connection.php');
 $MobileNumber = $_POST['MobileNumber'];
 $DeviceToken = $_POST['DeviceToken'];
 
+if ($MobileNumber !='') {
 	$sql2 = "UPDATE `registeredusers` SET `DeviceToken`='$DeviceToken' WHERE `MobileNumber` = '$MobileNumber'";
 	$stmt2 = $con->prepare($sql2);
 	$res2 = $stmt2->execute();
@@ -13,7 +14,7 @@ $DeviceToken = $_POST['DeviceToken'];
 	$stmt23 = $con->prepare($sql23);
 	$res23 = $stmt23->execute();
 	
-	if(res2 == true && res23 == true)
+	if($res2 == true && $res23 == true)
 	{
 		echo "device token updated";
 	}
@@ -21,4 +22,8 @@ $DeviceToken = $_POST['DeviceToken'];
 	{
 		echo "error while device token updating";
 	}
- ?>
+} else {
+	echo "mobile number empty.";
+}
+ 
+?>

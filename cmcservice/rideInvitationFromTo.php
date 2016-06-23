@@ -12,6 +12,13 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
     list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
     list($eLat, $eLon) = explode(',', $_POST['eLatLon']);
 
+    $startLocation = $_POST['startLocation'];
+    $endLocation = $_POST['endLocation'];
+
+    $sql = "INSERT INTO searchLocations (fromLocation, toLocation, mobileNumber) VALUES ('$startLocation','$endLocation','$mobileNumber')";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    
 
     $proximity = rideProximity();
 

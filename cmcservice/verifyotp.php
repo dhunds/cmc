@@ -34,8 +34,7 @@ $user_exists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 if ($user_exists == 0) {
     echo "FAILURE";
 } else {
-    $stmt2 = $con->query("SELECT * FROM tmp_register WHERE MobileNumber = '$MobileNumber' and SingleUsePassword = '$singleusepassword'
-and SingleUseExpiry > NOW()");
+    $stmt2 = $con->query("SELECT * FROM tmp_register WHERE MobileNumber = '$MobileNumber' AND SingleUsePassword = '$singleusepassword' AND SingleUseExpiry > NOW()");
     $user_exists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($user_exists == 0) {
@@ -48,7 +47,7 @@ and SingleUseExpiry > NOW()");
 
         if ($isAlreadyRegistered) {
 
-            $userDetailsOld = $stmt2->fetch();
+            $userDetailsOld = $stmt->fetch();
             
             if ($user['FullName'] !='') {
                 $FullName = $user['FullName'];
@@ -66,9 +65,13 @@ and SingleUseExpiry > NOW()");
             $stmt = $con->prepare($sql);
             $res = $stmt->execute();
 
-            $sql = "DELETE FROM  tmp_register WHERE socialId='" . $socialId . "'";
-            $stmt = $con->prepare($sql);
-            $stmt->execute();
+            if ($res == true) {
+                $sql = "DELETE FROM  tmp_register WHERE socialId='" . $socialId . "'";
+                $stmt = $con->prepare($sql);
+                $stmt->execute();
+            }
+
+            
             
         } else {
 
