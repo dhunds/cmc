@@ -8,13 +8,14 @@ if (isset($_POST['submit'])) {
     $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'FromLocation', 'ToLocation', 'FromShortName', 'ToShortName', 'seats', 'distance', 'expTime', 'slat', 'slon', 'elat', 'elon'));
 
     if (!$error) {
-    //echo '<pre>';
+   // echo '<pre>';
     //print_r($_POST);
+    //die;
         $sLat = $_POST['slat'];
         $sLon = $_POST['slon'];
         $eLat = $_POST['elat'];
         $eLon = $_POST['elon'];
-        $sLatLon = $sLon.','.$sLon;
+        $sLatLon = $sLat.','.$sLon;
         $eLatLon = $eLat.','.$eLon;
 
         $proximity = rideProximity();
