@@ -4,7 +4,7 @@
         <?php if ($_SESSION['type']==2) { ?>
              <li class="pure-menu-selected"><a href="createRide.php">Create Ride</a></li>
              <?php if ($_SESSION['username']=='attach') { ?>
-             <li class="pure-menu-selected"><a href="cabmembers.php">Members</a></li>
+             <li class="pure-menu-selected"><a href="cabMembers.php">Members</a></li>
              <?php } ?>
              <li class="pure-menu-selected"><a href="changepswd.php">Change Password</a></li>
              <li class="pure-menu-selected" style="float: right;"><a href="logout.php">Logout</a></li>

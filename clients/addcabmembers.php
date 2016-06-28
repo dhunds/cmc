@@ -37,7 +37,7 @@ if (isset($_POST['submit']) && $_POST['memberDetails'] != '' ) {
             if ($found > 0) {
                 $arrDuplicate[] =  substr(trim($val[0]), -10);
             } else {
-                echo $sql = "INSERT INTO cabOwners(Name, mobileNumber, cleintId) VALUES ('" . $val[1] . "', '" . $val[0] . "', ".$_SESSION['userId'].")";
+                 $sql = "INSERT INTO cabOwners(Name, mobileNumber, cleintId) VALUES ('" . $val[1] . "', '" . $val[0] . "', ".$_SESSION['userId'].")";
                 $stmt = $con->prepare($sql);
                 $res2 = $stmt->execute();
                 $i++;
