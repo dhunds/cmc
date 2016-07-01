@@ -4,6 +4,9 @@ include_once('classes/class.notification.php');
 include('../common.php');
 $objNotification = new Notification();
 
+list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
+list($eLat, $eLon) = explode(',', $_POST['eLatLon']);
+
 $CabId = $_POST['CabId'];
 $MobileNumber = $_POST['MobileNumber'];
 $OwnerName = $_POST['OwnerName'];
@@ -41,7 +44,7 @@ $ExpEndDateTime = date('Y-m-d H:i:s', $newdate);
 $startDate = $expTrip;
 $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
 
-$sql2 = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$sLatLon','$eLatLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+$sql2 = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
 
 $stmt2 = $con->prepare($sql2);
 $res2 = $stmt2->execute();
