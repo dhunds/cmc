@@ -83,6 +83,9 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
                     $nearbyRides[] = $rides;
                     $nearbyGroupIds[] = $rides['PoolId'];
                 }
+            } else {
+                $nearbyRides[] = $rides;
+                $nearbyGroupIds[] = $rides['PoolId'];
             }
         }
     }
