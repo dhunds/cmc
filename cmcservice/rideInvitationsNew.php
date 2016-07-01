@@ -91,6 +91,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     }
 
     $publicRides = [];
+    
+    $nearbyGroupIds = array_unique($nearbyGroupIds);
 
     foreach ($nearbyGroupIds as $id){
         $tempArr = [];
