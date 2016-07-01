@@ -78,13 +78,10 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     if ($found > 0) {
 
         while ($rides = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
-            $nearbyRides[] = $rides;
-
             if (!empty($PrivateRideCabIds)) {
                 if (!in_array($rides['CabId'], $PrivateRideCabIds)) {
                     $nearbyRides[] = $rides;
-                    $nearbyGroupIds = $rides['PoolId'];
+                    $nearbyGroupIds[] = $rides['PoolId'];
                 }
             }
         }
