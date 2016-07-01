@@ -39,7 +39,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
     AND co.status < 1
     AND co.CabStatus ='A'
     AND co.RemainingSeats >0
-    AND NOT EXISTS (SELECT 1 FROM acceptedrequest ar2 WHERE ar2.CabId = co.CabId AND ar2.MemberNumber='$mobileNumber')";
+    AND NOT EXISTS (SELECT 1 FROM acceptedrequest ar2 WHERE ar2.CabId = co.CabId AND ar2.MemberNumber='$mobileNumber')
+    ORDER BY co.ExpStartDateTime";
 
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
@@ -90,7 +91,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
     AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.MemberNumber='$mobileNumber')
     HAVING origin < ".$proximity."
     AND destination < ".$proximity."
-    ORDER BY origin";
+    ORDER BY co.ExpStartDateTime";
 
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
@@ -114,7 +115,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
 
     $publicRides = [];
     $nearbyGroupIds = array_unique($nearbyGroupIds);
-    
+
     foreach ($nearbyGroupIds as $id){
         $tempArr = [];
         $tempRides = [];
