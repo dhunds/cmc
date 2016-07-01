@@ -11,6 +11,8 @@ $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'FromLocation', '
         $sLon = $_POST['slon'];
         $eLat = $_POST['elat'];
         $eLon = $_POST['elon'];
+        $sLatLon = $sLat.','.$sLon;
+        $eLatLon = $eLat.','.$eLon;
 
         $proximity = rideProximity();
 
@@ -90,7 +92,7 @@ $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'FromLocation', '
 
         if ($found > 0 || $createGroup) {
 
-            $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+            $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
 
             $stmt = $con->prepare($sql);
             $res = $stmt->execute();
