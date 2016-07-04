@@ -71,7 +71,18 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
             $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"2", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Insufficient balance for ride");
         } else {
 
-            $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"3", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Balance sufficient for ride");
+            // Amount payable by rider
+            if (($discount + $credit) < 1) {
+                $payableByRider = $amount;
+            } else {
+                if ($amount <= $discount || ($amount <= ($discount + $credit))) {
+                    $payableByRider = 0;
+                } else {
+                    $payableByRider = $amount - ($discount + $credit);
+                }
+            }
+
+            $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"3", "balance" => ($resp->balanceamount + $credit + $discount), "payableByRider"=>$payableByRider, "message" =>"Balance sufficient for ride");
         }
 
         setResponse($jsonResp);
