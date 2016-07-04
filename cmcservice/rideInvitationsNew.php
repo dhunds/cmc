@@ -21,7 +21,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
     LEFT JOIN acceptedrequest ar ON cm.CabId = ar.CabId
     LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
-    JOIN vehicle v ON v.id = vd.vehicleId
+    LEFT JOIN vehicle v ON v.id = vd.vehicleId
     WHERE TRIM(cm.MemberNumber) = '" . $mobileNumber . "'
     AND NOW() < DATE_ADD(co.ExpStartDateTime, INTERVAL 30 MINUTE)
     AND co.MobileNumber !='$mobileNumber'
@@ -60,9 +60,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
     LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
     LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
-    LEFT JOIN cabmembers cm ON co.CabId = cm.CabId
     LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
-    JOIN vehicle v ON v.id = vd.vehicleId
+    LEFT JOIN vehicle v ON v.id = vd.vehicleId
     WHERE NOW() < DATE_ADD(co.ExpStartDateTime, INTERVAL 30 MINUTE)
     AND co.MobileNumber !='$mobileNumber'
     AND co.status < 1

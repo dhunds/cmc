@@ -1,6 +1,8 @@
 <?php
 include('connection.php');
+include_once('classes/class.notification.php');
 include('../common.php');
+$objNotification = new Notification();
 
 if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] != '' && $_POST['eLatLon'] != '' && isset($_POST['CabId']) && $_POST['CabId'] != '' && isset($_POST['MobileNumber']) && $_POST['MobileNumber'] != '') {
 
@@ -102,6 +104,40 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
 
         $stmt = $con->prepare($sql);
         $res = $stmt->execute();
+
+        // Send Members Notification About ride
+            $sql = "SELECT ru.MobileNumber, ru.Platform, ru.DeviceToken FROM registeredusers ru JOIN userpoolsslave us ON ru.MobileNumber =  us.MemberNumber WHERE AND us.PoolId = $groupId AND ru.PushNotification ='on' AND ru.DeviceToken !='' AND ru.lastNotificationSentOn < CURRENT_DATE()";
+
+            $stmt = $con->query($sql);
+            $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+            
+            if ($found) {
+
+                $message = 'You have open rides in your group.';
+
+                $body = array('gcmText' => $message, 'pushfrom' => 'CabId_', 'CabId' => $CabId);
+                $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($users as $user) {
+                    if ($user['Platform'] == "A") {
+                        $gcm_array = array();
+                        $gcm_array[] = $user['DeviceToken'];
+                        $objNotification->setVariables($gcm_array, $body);
+                        $res = $objNotification->sendGCMNotification();
+                    } else {
+                        $apns_array = array();
+                        $apns_array[] = $user['DeviceToken'];
+                        $objNotification->setVariables($apns_array, $body);
+                        $objNotification->sendIOSNotification();
+                    }
+
+                    $sql = "UPDATE registeredusers set lastNotificationSentOn = now() WHERE MobileNumber = '".$user['MobileNumber']."'";
+                    $stmt = $con->prepare($sql);
+                    $stmt->execute();
+                }
+            }
+            
+        // End sending notifications to members
 
         if ($res) {
             http_response_code(200);
