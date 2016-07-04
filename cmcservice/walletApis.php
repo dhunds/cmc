@@ -73,12 +73,12 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
 
             // Amount payable by rider
             if (($discount + $credit) < 1) {
-                $payableByRider = $amount;
+                $payableByRider = $requiredBalance;
             } else {
-                if ($amount <= $discount || ($amount <= ($discount + $credit))) {
+                if ($requiredBalance <= $discount || ($requiredBalance <= ($discount + $credit))) {
                     $payableByRider = 0;
                 } else {
-                    $payableByRider = $amount - ($discount + $credit);
+                    $payableByRider = $requiredBalance - ($discount + $credit);
                 }
             }
 
