@@ -113,9 +113,9 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
             
             if ($found) {
 
-                $message = 'You have open rides in your group.';
+                $message = 'New rides available on your routes. Join now to book your seat!!!';
 
-                $body = array('gcmText' => $message, 'pushfrom' => 'newRidesAvailable', 'CabId' => $CabId);
+                $body = array('gcmText' => $message, 'pushfrom' => 'genericnotification', 'CabId' => $CabId);
                 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 foreach ($users as $user) {
