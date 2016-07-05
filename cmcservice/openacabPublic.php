@@ -106,7 +106,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
         $res = $stmt->execute();
 
         // Send Members Notification About ride
-            $sql = "SELECT ru.MobileNumber, ru.Platform, ru.DeviceToken FROM registeredusers ru JOIN userpoolsslave us ON ru.MobileNumber =  us.MemberNumber WHERE AND us.PoolId = $groupId AND ru.PushNotification ='on' AND ru.DeviceToken !='' AND ru.lastNotificationSentOn < CURRENT_DATE()";
+            $sql = "SELECT ru.MobileNumber, ru.Platform, ru.DeviceToken FROM registeredusers ru JOIN userpoolsslave us ON ru.MobileNumber =  us.MemberNumber WHERE us.PoolId = $groupId AND ru.MobileNumber = '$MobileNumber' AND ru.PushNotification ='on' AND ru.DeviceToken !='' AND ru.lastNotificationSentOn < CURRENT_DATE()";
 
             $stmt = $con->query($sql);
             $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
