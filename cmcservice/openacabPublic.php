@@ -106,7 +106,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
         $res = $stmt->execute();
 
         // Send Members Notification About ride
-            $sql = "SELECT ru.MobileNumber, ru.Platform, ru.DeviceToken FROM registeredusers ru JOIN userpoolsslave us ON ru.MobileNumber =  us.MemberNumber WHERE us.PoolId = $groupId AND ru.MobileNumber = '$MobileNumber' AND ru.PushNotification ='on' AND ru.DeviceToken !='' AND ru.lastNotificationSentOn < CURRENT_DATE()";
+            $sql = "SELECT ru.MobileNumber, ru.Platform, ru.DeviceToken FROM registeredusers ru JOIN userpoolsslave us ON ru.MobileNumber =  us.MemberNumber WHERE us.PoolId = $groupId AND ru.MobileNumber != '$MobileNumber' AND ru.PushNotification ='on' AND ru.DeviceToken !='' AND ru.lastNotificationSentOn < CURRENT_DATE()";
 
             $stmt = $con->query($sql);
             $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
@@ -115,7 +115,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
 
                 $message = 'You have open rides in your group.';
 
-                $body = array('gcmText' => $message, 'pushfrom' => 'CabId_', 'CabId' => $CabId);
+                $body = array('gcmText' => $message, 'pushfrom' => 'newRidesAvailable', 'CabId' => $CabId);
                 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 foreach ($users as $user) {
