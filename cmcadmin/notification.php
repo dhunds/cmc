@@ -5,8 +5,8 @@ $objNotification = new Notification();
 $imageName = '';
 
 if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != '') {
-
-    if (!empty($_FILES)) {
+   
+    if (is_uploaded_file($_FILES['imageFile']['tmp_name'])) {
 
         $file_tmp =$_FILES['imageFile']['tmp_name'];
         $file_size =$_FILES['imageFile']['size'];

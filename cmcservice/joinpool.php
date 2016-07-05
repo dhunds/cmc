@@ -37,7 +37,7 @@ if (($Seats - $RemainingSeats) > 0) {
         $stmt->execute();
 
         if ($PoolId) {
-            $stmt = $con->query("SELECT PoolSubId FROM userpoolsslave WHERE MemberNumber = '$MemberNumber' AND PoolId != '$PoolId'");
+            $stmt = $con->query("SELECT PoolId FROM userpoolsslave WHERE MemberNumber = '$MemberNumber' AND PoolId != '$PoolId'");
             $isAlreadyMember = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
             if (!$isAlreadyMember) {
