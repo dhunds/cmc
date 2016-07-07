@@ -23,37 +23,6 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
 
     $proximity = rideProximity();
 
-    $sql = "SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge,
-     ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, v.vehicleModel, vd.registrationNumber, vd.isCommercial
-    FROM cabopen co
-    JOIN cabmembers cm ON co.CabId = cm.CabId
-    LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
-    LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
-    LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
-    LEFT JOIN acceptedrequest ar ON cm.CabId = ar.CabId
-    LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
-    LEFT JOIN vehicle v ON v.id = vd.vehicleId
-    WHERE TRIM(cm.MemberNumber) = '" . $mobileNumber . "'
-    AND NOW() < DATE_ADD(co.ExpStartDateTime, INTERVAL 30 MINUTE)
-    AND co.MobileNumber !='$mobileNumber'
-    AND co.status < 1
-    AND co.CabStatus ='A'
-    AND co.RemainingSeats >0
-    AND NOT EXISTS (SELECT 1 FROM acceptedrequest ar2 WHERE ar2.CabId = co.CabId AND ar2.MemberNumber='$mobileNumber')
-    ORDER BY co.ExpStartDateTime";
-
-    $stmt = $con->query($sql);
-    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-
-    if ($found > 0) {
-        $privateRides = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    $PrivateRideCabIds = [];
-    foreach ($privateRides as $val) {
-        $PrivateRideCabIds[] = $val['CabId'];
-    }
-
     $sql = "SELECT 
         (
             6371 * acos (
@@ -99,16 +68,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
     if ($found > 0) {
 
         while ($rides = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
-            if (!empty($PrivateRideCabIds)) {
-                if (!in_array($rides['CabId'], $PrivateRideCabIds)) {
-                    $nearbyRides[] = $rides;
-                    $nearbyGroupIds[] = $rides['PoolId'];
-                }
-            } else {
-                $nearbyRides[] = $rides;
-                $nearbyGroupIds[] = $rides['PoolId'];
-            }
+            $nearbyRides[] = $rides;
+            $nearbyGroupIds[] = $rides['PoolId'];
         }
     }
 
