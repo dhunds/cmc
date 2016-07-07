@@ -25,7 +25,7 @@ if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != 
             exit;
         }
 
-        if (move_uploaded_file($file_tmp, '../images/notimages/'.$imageName)) {
+        if (!move_uploaded_file($file_tmp, '../images/notimages/'.$imageName)) {
             echo 'An error occured while uploading file.';
             exit;
         }

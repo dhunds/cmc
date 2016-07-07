@@ -68,6 +68,11 @@ if (!$error) {
                 $payableByRider = $amount - ($discount + $credit);
             }
         }
+        if (!$isAssociate) {
+            /* Load payment class */
+            $driverWalletDetails = getUserWalletForAcceptingPayment($driverCellWithPrefix);
+            $driverWallet = new $driverWalletDetails['name']();
+        }
         
         if ($paymentMethod !='Cash'){
             $riderWalletDetail  = getWalletIdByName($paymentMethod);
@@ -85,10 +90,6 @@ if (!$error) {
             }
 
             if (($payableByRider == 0 || $riderPaymentStatus =='success') && !$isAssociate) {
-                /* Load payment class */
-                $driverWalletDetails = getUserWalletForAcceptingPayment($driverCellWithPrefix);
-                $driverWallet = new $driverWalletDetails['name']();
-                
                 $orderIdMerchant = time() . mt_rand(1, 10000);
                 $respMerchantPayment = $driverWallet->transferFromMerchantToDriver($driverCellWithPrefix, $payableByMerchant, $orderIdMerchant, $cabId, 0.0, 0.0);
                 $merchantPaymentStatus = $respMerchantPayment['status'];
