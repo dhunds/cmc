@@ -186,6 +186,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
         }
     }
 
+    $publicGroupIds = array_unique($publicGroupIds);
+
     foreach ($publicGroupIds as $id){
         
         $tempArr = [];
