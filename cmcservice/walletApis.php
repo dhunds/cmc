@@ -27,21 +27,23 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
         $availableBalance = $credit + $discount;
         $requiredBalance = $_POST['amount'];
 
+        // Amount payable by rider
+        if (($discount + $credit) < 1) {
+            $payableByRider = $requiredBalance;
+        } else {
+            if ($requiredBalance <= $discount || ($requiredBalance <= ($discount + $credit))) {
+                $payableByRider = 0;
+            } else {
+                $payableByRider = $requiredBalance - ($discount + $credit);
+            }
+        }
+
         if ($requiredBalance > $availableBalance){
 
-            $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"2", "balance" => $availableBalance, "message" =>"Insufficient balance for ride");
+            $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"2", "balance" => $availableBalance, "payableByRider"=>$payableByRider, "message" =>"Insufficient balance for ride");
         } else {
 
-            // Amount payable by rider
-            if (($discount + $credit) < 1) {
-                $payableByRider = $requiredBalance;
-            } else {
-                if ($requiredBalance <= $discount || ($requiredBalance <= ($discount + $credit))) {
-                    $payableByRider = 0;
-                } else {
-                    $payableByRider = $requiredBalance - ($discount + $credit);
-                }
-            }
+            
 
             $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"3", "balance" => $availableBalance, "payableByRider"=>$payableByRider, "message" =>"Balance sufficient for ride");
         }
@@ -106,22 +108,21 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
             $availableBalance = $credit + $discount + $mobikwikBalance;
             $requiredBalance = $_POST['amount'];
 
+            // Amount payable by rider
+            if (($discount + $credit) < 1) {
+                $payableByRider = $requiredBalance;
+            } else {
+                if ($requiredBalance <= $discount || ($requiredBalance <= ($discount + $credit))) {
+                    $payableByRider = 0;
+                } else {
+                    $payableByRider = $requiredBalance - ($discount + $credit);
+                }
+            }
+
             if ($requiredBalance > $availableBalance){
 
-                $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"2", "balance" => ($resp->balanceamount + $credit + $discount), "message" =>"Insufficient balance for ride");
+                $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"2", "balance" => ($resp->balanceamount + $credit + $discount), "payableByRider"=>$payableByRider, "message" =>"Insufficient balance for ride");
             } else {
-
-                // Amount payable by rider
-                if (($discount + $credit) < 1) {
-                    $payableByRider = $requiredBalance;
-                } else {
-                    if ($requiredBalance <= $discount || ($requiredBalance <= ($discount + $credit))) {
-                        $payableByRider = 0;
-                    } else {
-                        $payableByRider = $requiredBalance - ($discount + $credit);
-                    }
-                }
-
                 $jsonResp = array("code"=>200, "status" => "success", "walletStatusCode"=>"3", "balance" => ($resp->balanceamount + $credit + $discount), "payableByRider"=>$payableByRider, "message" =>"Balance sufficient for ride");
             }
 
