@@ -109,7 +109,7 @@ function sendnotification($ids,$Msg,$pushfromtext,$cid)
 	echo $result;
 }
 	
-	$stmt1 = $con->query("select a.*,c.`cabid`,c.`MobileNumber` as `OwnerNumber`,c.`fromshortname`,c.`toshortname` from `registeredusers` a, `acceptedrequest` b, `cabopen` c where a.`PushNotification` != 'off' and a.`MobileNumber` = b.`MemberNumber` and b.`cabid` = c.`cabid` and c.`cabid` IN (SELECT `cabid` from `cabopen` where TIMESTAMPDIFF(MINUTE, NOW(), `ExpStartDateTime`) < 10  AND `uptripnotification` = 0 and `CabStatus` = 'A')");
+	$stmt1 = $con->query("select a.*,c.`cabid`,c.`MobileNumber` as `OwnerNumber`,c.`fromshortname`,c.`toshortname` from `registeredusers` a, `acceptedrequest` b, `cabopen` c where a.`PushNotification` != 'off' and a.`MobileNumber` = b.`MemberNumber` and b.`cabid` = c.`cabid`AND b.Status !='Dropped' and c.`cabid` IN (SELECT `cabid` from `cabopen` where TIMESTAMPDIFF(MINUTE, NOW(), `ExpStartDateTime`) < 10  AND `uptripnotification` = 0 and `CabStatus` = 'A')");
 	//$no_of_users = $stmt1->rowCount();
 	$no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 	if ($no_of_users > 0) 
