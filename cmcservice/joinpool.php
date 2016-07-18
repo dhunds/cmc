@@ -86,6 +86,7 @@ if (($Seats - $RemainingSeats) > 0) {
                 $objNotification->setVariables($apns_array, $body);
                 $objNotification->sendIOSNotification();
             }
+            echo "success";
         } else {
             echo "no one in database";
         }

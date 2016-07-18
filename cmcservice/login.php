@@ -26,13 +26,6 @@ if ($MobileNumber == '00919810000000') {  // Dummy login for apple testing
         $MobileNumber = '[' . $MobileNumber . ']';
 
         $objNotification->sendSMS($MobileNumber, $message);
-
-        /*if ($usrRows[0]['Email'] != '') {
-            $emailBody = 'Hi ' . $usrRows[0]['FullName'] . ',<br/><br/>' . $message . '<br/><br/>Thanks,<br/>iShareRyde Team';
-            $params = array('to' => $usrRows[0]['Email'], 'body' => $emailBody);
-            $resp = $objNotification->sendEmailOTP($params);
-        }*/
-
         $MobileNumber = $_POST['MobileNumber'];
 
         $sql2 = "UPDATE registeredusers SET SingleUsePassword='$singleusepassword', SingleUseExpiry= '$timestamp' WHERE Trim(MobileNumber) = Trim('$MobileNumber')";
@@ -42,23 +35,4 @@ if ($MobileNumber == '00919810000000') {  // Dummy login for apple testing
     } else {
         echo "login error";
     }
-}
-
-function sendSMS($nos, $message)
-{
-    $ch1 = curl_init();
-    $fields_string = '';
-    $fieldsNew = array(
-        'Message' => $message,
-        'Numbers' => $nos
-    );
-    foreach ($fieldsNew as $key => $value) {
-        $fields_string .= $key . '=' . urlencode($value) . '&';
-    }
-    rtrim($fields_string, '&');
-    curl_setopt($ch1, CURLOPT_URL, "http://127.0.0.1/cmc/cmcservice/sendsms.php");
-    curl_setopt($ch1, CURLOPT_POST, true);
-    curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch1, CURLOPT_POSTFIELDS, $fields_string);
-    $resultNew = curl_exec($ch1);
 }

@@ -43,6 +43,8 @@ $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'FromLocation', '
 
         $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
 
+        $TravelTime = date('g:i A', strtotime($TravelTime));
+        
         $sql = "SELECT
                   PoolId,
                   PoolName,

@@ -206,14 +206,13 @@ function checkForOffers ($mobileNumber) {
     global $con;
 
     $offerCode = '1STFREE';
-    $sql = "SELECT o.id, o.amount, o.maxUse, o.maxUsePerUser, o.status FROM offers o JOIN userOffers uo ON o.id = uo.offerId WHERE o.status=1 AND o.validThru > now() AND o.code='".$offerCode."' AND uo.mobileNumber='".$mobileNumber."' AND uo.status=1";
+    $sql = "SELECT o.id, o.amount, o.maxUse, o.maxUsePerUser, o.status FROM offers o JOIN userOffers uo ON o.id = uo.offerId WHERE o.status=1 AND o.validThru > now() AND uo.mobileNumber='".$mobileNumber."' AND uo.status=1";
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 
     if ($found > 0) {
         $offer = $stmt->fetch(PDO::FETCH_ASSOC);
-
 
         $sql = "SELECT COUNT(id) as useCount FROM availedOffers WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "'";
         $stmt = $con->query($sql);
