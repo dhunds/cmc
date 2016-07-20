@@ -1,11 +1,12 @@
 <?php
 include('../common.php');
 
-if (isset($_POST['submit']) && $_POST['clubName'] != '') {
+if (isset($_POST['submit']) && $_POST['from'] != '' && $_POST['to'] != '') {
 
     $MobileNumber = '00911234567890';
     $FullName = 'Admin';
-    $groupName = $_POST['clubName'];
+    $from = $_POST['from'];
+    $to = $_POST['to'];
     $sLat = $_POST['slat'];
     $sLon = $_POST['slon'];
     $eLat = $_POST['elat'];
@@ -22,7 +23,7 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
         if ($found > 0) {
             echo "Group Name '" . $groupName . "' Already Exist<br />";
         } else {
-            $createGroup = createPublicGroups($con, $groupName, $sLat, $sLon, $eLat, $eLon);
+            $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $from, $to);
             if ($createGroup == true) {
                 echo "Group Created.";
             }
@@ -55,8 +56,13 @@ if (isset($_POST['submit']) && $_POST['clubName'] != '') {
 
             <form id="groups" method="post" action="">
                 <div style="margin-left: 5px;">
-                    <div class="divLeft bluetext">&nbsp;&nbsp;Group Name:</div>
-                    <div class="divRight bluetext"><input type="text" name="clubName"></div>
+                    <div class="divLeft bluetext">&nbsp;&nbsp;From:</div>
+                    <div class="divRight bluetext"><input type="text" name="from"></div>
+                    <div style="clear:both;"></div>
+                    <br/>
+
+                    <div class="divLeft bluetext">&nbsp;&nbsp;To:</div>
+                    <div class="divRight bluetext"><input type="text" name="to"></div>
                     <div style="clear:both;"></div>
                     <br/>
 

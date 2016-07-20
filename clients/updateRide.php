@@ -10,6 +10,7 @@ if (isset($_POST['submit']) && $_POST['cabId'] !='') {
     $seats = $_POST['seat'];
     $totalSeats = $_POST['totalSeats'];
     $remainingSeats = $_POST['remainingSeats'];
+    $distance = $_POST['distance'];
     ///echo '<pre>';
     //print_r($_POST);
     if ($totalSeats > $seats) {
@@ -19,10 +20,8 @@ if (isset($_POST['submit']) && $_POST['cabId'] !='') {
     } else {
         $remaining = $remainingSeats;
     }
-    //echo $remaining;
-    //die;
 
-    $sql = "UPDATE cabopen SET Seats='".$_POST['seat']."', RemainingSeats= '".$remaining."' WHERE CabId='".$_POST['cabId']."'";
+    $sql = "UPDATE cabopen SET Seats='".$_POST['seat']."', RemainingSeats= '".$remaining."', Distance= '".$distance."' WHERE CabId='".$_POST['cabId']."'";
     //echo $sql;die;
     $stmt = $con->prepare($sql);
 
@@ -65,6 +64,11 @@ if($rowCount > 0){
                         <br>
 
                          <div class="divRight bluetext">Remaining Seats: <span style="color:black"><?=$ride['RemainingSeats']?> </span> </div>
+                        <div style="clear:both;"></div>
+                        <br>
+
+                        <br>
+                        <div class="divRight bluetext">Distance: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="distance" placeholder="Distance" value="<?=$ride['Distance']?>"> </div>
                         <div style="clear:both;"></div>
                         <br>
 
