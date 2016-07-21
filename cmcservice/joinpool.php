@@ -45,6 +45,24 @@ if (($Seats - $RemainingSeats) > 0) {
                 $stmt = $con->prepare($sql);
                 $stmt->execute();
             }
+
+            // Add to reverse pool also
+            $stmt = $con->query("SELECT rGid FROM userpoolsmaster WHERE PoolId = '$PoolId'");
+            $stmt->execute();
+            $reverseGroupId = (int)$stmt->fetchColumn();
+
+            if ($reverseGroupId) {
+                $stmt = $con->query("SELECT PoolId FROM userpoolsslave WHERE MemberNumber = '$MemberNumber' AND PoolId = '$reverseGroupId'");
+                $isAlreadyMember = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+                if (!$isAlreadyMember) {
+                    $sql = "INSERT INTO userpoolsslave(PoolId, MemberName, MemberNumber, IsActive) VALUES ('$reverseGroupId', '$MemberName', '$MemberNumber', '1')";
+                    $stmt = $con->prepare($sql);
+                    $stmt->execute();
+                }
+            }
+            // End adding to reverse pool
+            
         }
     }
 

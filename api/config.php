@@ -1,17 +1,6 @@
 <?php
 
-$dsn = 'mysql:host=localhost;dbname=cmcdev';
-$us = 'root';
-$pa = 'root';
-define('PAGESIZE', 30);
-
-try {
-    $con = new PDO($dsn, $us, $pa);
-} catch (PDOException $e) {
-    $error_message = $e->getMessage();
-    echo $error_message;
-    exit();
-}
+include_once('db.php');
 
 if (isset($_POST['username']) && $_POST['username'] !='' && isset($_POST['password']) && $_POST['password'] !=''){
     //
@@ -21,10 +10,13 @@ if (isset($_POST['username']) && $_POST['username'] !='' && isset($_POST['passwo
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($found < 1){
-        setResponse(array("code"=>200, "status"=>"failure", "message"=>"Bad Request"));
+        setResponse(array("code"=>200, "status"=>"Error", "message"=>"Bad Request"));
+    } else {
+        $client = $stmt->fetch();
+        $client_id = $client['id'];
     }
 } else{
-    setResponse(array("code"=>200, "status"=>"failure", "message"=>"Bad Request"));
+    setResponse(array("code"=>200, "status"=>"Error", "message"=>"Bad Request"));
 }
 
 
@@ -36,4 +28,14 @@ function setResponse($args){
     header('Content-Type: application/json');
     echo json_encode($args);
     exit;
+}
+
+function checkPostForBlank($arrParams){
+    $error = 0;
+    foreach ($arrParams as $value) {
+        if (!isset($_POST[$value]) || $_POST[$value] =='') {
+            $error = 1;
+        }
+    }
+    return $error;
 }

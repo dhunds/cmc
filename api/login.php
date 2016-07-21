@@ -14,10 +14,8 @@ if (isset($_POST['username']) && $_POST['username'] !='' && isset($_POST['passwo
         $sql = "UPDATE clients SET token = '$token' updated=now() WHERE username = '$username'";
         $stmt = $con->prepare($sql);
         $stmt->execute();
-        setResponse(array("code"=>200, "status"=>"success", "token"=>$token));
-    } else {
-        setResponse(array("code"=>200, "status"=>"failure", "message"=>"Invalid Credentials"));
+        setResponse(array("code"=>200, "status"=>"Success", "token"=>$token));
     }
 } else{
-    setResponse(array("code"=>200, "status"=>"failure", "message"=>"Bad Request"));
+    setResponse(array("code"=>200, "status"=>"Error", "message"=>"Bad Request"));
 }
