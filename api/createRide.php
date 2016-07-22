@@ -16,17 +16,24 @@ if (!$error) {
         $stmt = $con->prepare($sql);
         $stmt->execute();
 
-        $sql = "INSERT INTO  clubmycab.userprofileimage (MobileNumber ,imagename)VALUES ('".$_POST['mobileNumber']."',  '');";
+        $sql = "INSERT INTO  userprofileimage (MobileNumber ,imagename)VALUES ('".$_POST['mobileNumber']."',  '');";
         $stmt = $con->prepare($sql);
         $stmt->execute();
 
     } else {
-        $stmt = $con->query("SELECT id FROM cabOwners WHERE mobileNumber = '".$_POST['mobileNumber']."' AND cleintId='$client_id'");
+        $stmt = $con->query("SELECT id, cleintId FROM cabOwners WHERE mobileNumber = '".$_POST['mobileNumber']."'");
         $userAssociated = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-        if ($userAssociated < 1) {
-            // Need clarification
-            setResponse(array("code"=>200, "status"=>"Error", "message"=>"User is not authorised"));
+        if ($userAssociated > 0) {
+            $cabOwner = $stmt->fetch();
+
+            if ($cabOwner['clientId'] != $client_id){
+                setResponse(array("code"=>200, "status"=>"Error", "message"=>"User is not authorised"));
+            }
+        } else {
+            $sql = "INSERT INTO  cabOwners (`mobileNumber` ,`Name`, `cleintId`)VALUES ('".$_POST['mobileNumber']."',  '".$_POST['name']."', '$client_id');";
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
         }
     }
 
@@ -54,17 +61,18 @@ if (!$error) {
     $addressModelFrom = getAddessModel($_POST['from']);
     $addressModelTo = getAddessModel($_POST['to']);
 
-    $shortAddressFrom =  createShortAddress($addressModelFrom->{'results'}[0]->{'formatted_address'});
-    $shortAddressTo =  createShortAddress($addressModelTo->{'results'}[0]->{'formatted_address'});
-
+    $FromLocation = $addressModelFrom->{'results'}[0]->{'formatted_address'};
+    $ToLocation = $addressModelTo->{'results'}[0]->{'formatted_address'};
     $sLat = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
     $sLon = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
-
     $eLat = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
     $eLon = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
 
-    $slatlon = $sLat.','.$sLon;
-    $elatlon = $eLat.','.$eLon;
+    $sLatLon = $sLat.','.$sLon;
+    $eLatLon = $eLat.','.$eLon;
+
+    $FromShortName =  createShortAddress($FromLocation);
+    $ToShortName =  createShortAddress($ToLocation);
 
     $proximity = rideProximity();
     $CabId = $_POST['mobileNumber'].time();
@@ -121,6 +129,35 @@ if (!$error) {
     // Create Ride
     if ($found > 0 || $createGroup) {
 
+        $MobileNumber = '0091' . substr(trim($_POST['mobileNumber']), -10);
+        $OwnerName = $_POST['name'];
+
+        list($TravelDate, $TravelTime) = explode(" ", $_POST['startTime']);
+
+        $TravelTime = strtoupper($TravelTime);
+        $Seats = $_POST['seats'];
+        $RemainingSeats = $_POST['seats'];
+
+        $dist = getDrivingDistance($sLat, $sLon, $eLat, $eLon);
+        $Distance = $dist['distance'];
+        $ExpTripDuration = $dist['time'];
+
+        $rideType = 4;
+        $perKmCharge = perKMChargeIntracity();
+
+        $dateInput = explode('/', $TravelDate);
+        $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
+
+        $expTrip = strtotime($cDate . ' ' . $TravelTime);
+        $newdate = $expTrip + $ExpTripDuration;
+        $ExpEndDateTime = date('Y-m-d H:i:s', $newdate);
+
+        $startDate = $expTrip;
+
+        $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
+
+        $TravelTime = date('g:i A', strtotime($TravelTime));
+
         $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
         //echo $sql;die;
         $stmt = $con->prepare($sql);
@@ -132,17 +169,13 @@ if (!$error) {
         $res = $stmt->execute();
 
         if ($res) {
-            $msg = 'Ride created.';
+            setResponse(array("code"=>200, "status"=>"Success", "cabId"=>$CabId));
         } else {
-            $msg = 'An Error occured, Please try later.';
+            setResponse(array("code"=>200, "status"=>"Error", "message"=>"An Error occured, Please try later."));
         }
     } else {
-        $msg = 'An Error occured, Please try later.';
+        setResponse(array("code"=>200, "status"=>"Error", "message"=>"An Error occured, Please try later."));
     }
-
-    //create ride
-
-
 
 } else {
     setResponse(array("code"=>200, "status"=>"Error", "message"=>"One or more parameters is missing."));
