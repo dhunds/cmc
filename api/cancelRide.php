@@ -4,9 +4,9 @@ include_once('config.php');
 include_once('../cmcservice/classes/class.notification.php');
 $objNotification = new Notification();
 
-if (isset($_POST['CabId']) && $_POST['CabId'] != '') {
+if (isset($_POST['cabId']) && $_POST['cabId'] != '') {
 
-    $CabId = $_POST['CabId'];
+    $CabId = $_POST['cabId'];
 
     $stmt = $con->query("SELECT c.CabId, c.OwnerName, c.MobileNumber FROM cabopen c JOIN cabOwners co ON c.MobileNumber=co.mobileNumber WHERE co.cleintId=" . $client_id . " AND c.CabStatus='A' AND c.CabId='$CabId'");
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();

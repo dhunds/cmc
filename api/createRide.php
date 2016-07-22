@@ -178,5 +178,5 @@ if (!$error) {
     }
 
 } else {
-    setResponse(array("code"=>200, "status"=>"Error", "message"=>"One or more parameters is missing."));
+    setResponse(array("code"=>200, "status"=>"Error", "message"=>"One or more parameter is missing."));
 }
