@@ -11,7 +11,7 @@ if (!$error) {
     $userExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($userExists < 1) {
-        $sql = "INSERT INTO registeredusers (FullName, Password, MobileNumber, DeviceToken, Email, Gender, DOB, Platform, PushNotification, LastLoginDateTime, SingleUsePassword, SingleUseExpiry, SingleUseVerified, ResetPasswordOTP, CreatedOn, isAdminType, referralCode, usedReferralCode, totalCredits, defaultPaymentOption, defaultPaymentAcceptOption, type, status, socialId, socialType, mobikwikToken) VALUES ('".$_POST['name']."', '', '".$_POST['mobileNumber']."', '', '', '', '', '', 'off', CURRENT_TIMESTAMP, NULL, NULL, '0', NULL, NULL, '0', '', '', '', '1', '1', '2', '1', '', '', '')";
+        $sql = "INSERT INTO registeredusers (FullName, Password, MobileNumber, DeviceToken, Email, Gender, DOB, Platform, PushNotification, LastLoginDateTime, SingleUsePassword, SingleUseExpiry, SingleUseVerified, ResetPasswordOTP, CreatedOn, isAdminType, referralCode, usedReferralCode, totalCredits, defaultPaymentOption, defaultPaymentAcceptOption, type, status, socialId, socialType, mobikwikToken) VALUES ('".$_POST['name']."', '', '".$_POST['mobileNumber']."', '', '".$_POST['email']."', '', '', '', 'off', CURRENT_TIMESTAMP, NULL, NULL, '0', NULL, NULL, '0', '', '', '', '1', '1', '2', '1', '', '', '')";
 
         $stmt = $con->prepare($sql);
         $stmt->execute();
@@ -25,9 +25,9 @@ if (!$error) {
         $userAssociated = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         if ($userAssociated > 0) {
-            $cabOwner = $stmt->fetch();
+            $cabOwner = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($cabOwner['clientId'] != $client_id){
+            if ($cabOwner['cleintId'] != $client_id){
                 setResponse(array("code"=>200, "status"=>"Error", "message"=>"User is not authorised"));
             }
         } else {
