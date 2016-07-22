@@ -62,7 +62,7 @@ if (($Seats - $RemainingSeats) > 0) {
                 }
             }
             // End adding to reverse pool
-            
+
         }
     }
 

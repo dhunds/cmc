@@ -15,10 +15,10 @@ $pageSize = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($pageSize['setValue'] > 0)
     $resultsToShow = $pageSize['setValue'];
 
-$sql = "SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge,
- ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType
+$sql = "SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, ru.socialType, ru.CreatedOn
 FROM cabopen co
 JOIN cabmembers cm ON co.CabId = cm.CabId
+JOIN registeredusers ru ON co.MobileNumber = ru.MobileNumber
 JOIN acceptedrequest ar ON cm.CabId = ar.CabId
 LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
 LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
@@ -29,8 +29,9 @@ AND cm.DropStatus !='Yes'
 UNION
 
 SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'Y' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge,
- ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType
+ ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, ru.socialType, ru.CreatedOn
 FROM cabopen co
+JOIN registeredusers ru ON co.MobileNumber = ru.MobileNumber
 LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
 LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
 LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID

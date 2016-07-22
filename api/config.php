@@ -2,6 +2,15 @@
 
 include_once('db.php');
 
+$address = getAddessModel('Sikanderpur, DLF Phase 2, Gurgaon, Haryana');
+echo createShortAddress($address->{'results'}[0]->{'formatted_address'});
+
+die;
+
+//    $lat = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+//    $long = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+//    return $lat.','.$long;
+
 if (isset($_POST['username']) && $_POST['username'] !='' && isset($_POST['password']) && $_POST['password'] !=''){
     //
 } else if (isset($_POST['token']) && $_POST['token'] !=''){
@@ -38,4 +47,36 @@ function checkPostForBlank($arrParams){
         }
     }
     return $error;
+}
+
+function getAddessModel($address){
+
+    $address = str_replace(" ", "+", $address);
+
+    $json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=$address&sensor=false");
+
+    $json = json_decode($json);
+
+    return $json;
+}
+
+function createShortAddress($address)
+{
+    $shortAddress = '';
+
+    if ($address != '') {
+        $arrAddress = explode(',', $address);
+        $addressCount = count($arrAddress);
+
+        if ($addressCount == 4) {
+            $shortAddress = trim($arrAddress[0]) . ', ' . trim($arrAddress[1]);
+        } else if ($addressCount == 5) {
+            $shortAddress = trim($arrAddress[1]) . ', ' . trim($arrAddress[2]);
+        } else if ($addressCount == 6) {
+            $shortAddress = trim($arrAddress[2]) . ', ' . trim($arrAddress[3]);
+        } else {
+            $shortAddress = trim($arrAddress[0]) . ', ' . trim($arrAddress[1]);
+        }
+    }
+    return $shortAddress;
 }

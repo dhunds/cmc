@@ -4,7 +4,9 @@ include('connection.php');
 $CabId = $_POST['CabId'];
 $MemberNumber = $_POST['MemberNumber'];
 
-$stmt = $con->query("SELECT * FROM acceptedrequest WHERE (CabId = '$CabId' AND Status != 'Dropped' AND MemberNumber != '$MemberNumber')");
+$sql = "SELECT ac.*, ru.socialType, ru.CreatedOn FROM acceptedrequest ac JOIN registeredusers ru ON ac.MemberNumber=ru.MobileNumber WHERE ac.CabId = '$CabId' AND ac.Status != 'Dropped' AND ac.MemberNumber != '$MemberNumber'";
+
+$stmt = $con->query($sql);
 $no_of_rows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 if ($no_of_rows > 0) {

@@ -49,6 +49,11 @@ if (!$error) {
         $stmt->execute();
     }
 
+    $slatlon = get_lat_long($_POST['from']);
+    list($slat, $slong) = explode($slatlon, ',');
+
+    $elatlon = get_lat_long($_POST['to']);
+    list($elat, $elong) = explode($elatlon, ',');
     //create ride
 
 } else {
