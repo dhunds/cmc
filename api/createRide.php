@@ -65,8 +65,8 @@ if (!$error) {
     $ToLocation = $addressModelTo->{'results'}[0]->{'formatted_address'};
     $sLat = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
     $sLon = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
-    $eLat = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
-    $eLon = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+    $eLat = $addressModelTo->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+    $eLon = $addressModelTo->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
 
     $sLatLon = $sLat.','.$sLon;
     $eLatLon = $eLat.','.$eLon;
@@ -138,8 +138,8 @@ if (!$error) {
         $Seats = $_POST['seats'];
         $RemainingSeats = $_POST['seats'];
 
-        $dist = getDrivingDistance($sLat, $sLon, $eLat, $eLon);
-        $Distance = $dist['distance'];
+        $dist = getDrivingDistance($sLat, $eLat, $sLon, $eLon);
+        $Distance = ($dist['distance']/1000);
         $ExpTripDuration = $dist['time'];
 
         $rideType = 4;
