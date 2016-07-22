@@ -5,6 +5,8 @@ include_once('config.php');
 $error = checkPostForBlank (array('mobileNumber', 'name', 'email', 'vehicle', 'registrationNumber', 'from', 'to', 'startTime', 'seats' ));
 
 if (!$error) {
+    $_POST['mobileNumber'] = '0091' . substr(trim($_POST['mobileNumber']), -10);
+
     $stmt = $con->query("SELECT FullName FROM registeredusers WHERE MobileNumber = '".$_POST['mobileNumber']."'");
     $userExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -49,12 +51,98 @@ if (!$error) {
         $stmt->execute();
     }
 
-    $slatlon = get_lat_long($_POST['from']);
-    list($slat, $slong) = explode($slatlon, ',');
+    $addressModelFrom = getAddessModel($_POST['from']);
+    $addressModelTo = getAddessModel($_POST['to']);
 
-    $elatlon = get_lat_long($_POST['to']);
-    list($elat, $elong) = explode($elatlon, ',');
+    $shortAddressFrom =  createShortAddress($addressModelFrom->{'results'}[0]->{'formatted_address'});
+    $shortAddressTo =  createShortAddress($addressModelTo->{'results'}[0]->{'formatted_address'});
+
+    $sLat = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+    $sLon = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+
+    $eLat = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+    $eLon = $addressModelFrom->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+
+    $slatlon = $sLat.','.$sLon;
+    $elatlon = $eLat.','.$eLon;
+
+    $proximity = rideProximity();
+    $CabId = $_POST['mobileNumber'].time();
+
+    // Search Nearby groups
+
+    $sql = "SELECT
+                  PoolId,
+                  PoolName,
+                  (
+                    6371 * acos (
+                      cos ( radians($sLat) )
+                      * cos( radians( startLat ) )
+                      * cos( radians( startLon ) - radians($sLon) )
+                      + sin ( radians($sLat) )
+                      * sin( radians( startLat ) )
+                    )
+                  ) AS origin,
+                  (
+                    6371 * acos (
+                      cos ( radians($eLat) )
+                      * cos( radians( endLat ) )
+                      * cos( radians( endLon ) - radians($eLon) )
+                      + sin ( radians($eLat) )
+                      * sin( radians( endLat ) )
+                    )
+                  ) AS destination
+
+                FROM userpoolsmaster
+                WHERE poolType=2
+                HAVING origin < " . $proximity . " AND destination < " . $proximity . "
+                ORDER BY origin, destination LIMIT 0,1";
+
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+    $createGroup = 0;
+
+    if ($found < 1) {
+        $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
+        $groupId = $createGroup;
+
+        if ($groupId) {
+            // Send Mail to support
+            require_once '../cmcservice/mail.php';
+            $groupName = $FromShortName . ' to ' . $ToShortName;
+            sendGroupCreationMail($groupName);
+        }
+
+    } else {
+        $nearbyGroup = $stmt->fetch(PDO::FETCH_ASSOC);
+        $groupId = $nearbyGroup['PoolId'];
+    }
+
+    // Create Ride
+    if ($found > 0 || $createGroup) {
+
+        $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+        //echo $sql;die;
+        $stmt = $con->prepare($sql);
+        $res = $stmt->execute();
+
+        $sql = "INSERT INTO groupCabs(groupId, cabId) VALUES ($groupId, '$CabId')";
+
+        $stmt = $con->prepare($sql);
+        $res = $stmt->execute();
+
+        if ($res) {
+            $msg = 'Ride created.';
+        } else {
+            $msg = 'An Error occured, Please try later.';
+        }
+    } else {
+        $msg = 'An Error occured, Please try later.';
+    }
+
     //create ride
+
+
 
 } else {
     setResponse(array("code"=>200, "status"=>"Error", "message"=>"One or more parameters is missing."));
