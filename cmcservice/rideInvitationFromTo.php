@@ -67,7 +67,25 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
 
         $sql .= " UNION
 
-        SELECT null as origin, null as destination,
+        SELECT
+        (
+            6371 * acos (
+              cos ( radians($sLat) )
+              * cos( radians( sLat ) )
+              * cos( radians( sLon ) - radians($sLon) )
+              + sin ( radians($sLat) )
+              * sin( radians( sLat ) )
+            )
+          ) AS origin,
+         (
+            6371 * acos (
+              cos ( radians($eLat) )
+              * cos( radians( eLat ) )
+              * cos( radians( eLon ) - radians($eLon) )
+              + sin ( radians($eLat) )
+              * sin( radians( eLat ) )
+            )
+          ) AS destination,
             co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, pm.PoolId, pm.PoolName, pm.rGid, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
     FROM cabopen co
     JOIN groupCabs gc ON co.CabId = gc.cabId
