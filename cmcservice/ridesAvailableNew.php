@@ -5,6 +5,9 @@ include('../common.php');
 $nearbyRides = array();
 $publicGroupRides = array();
 $privateRides = array();
+$interCityRides = array();
+$interCityRideCabIds = array();
+$toCities = array();
 
 if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
 
@@ -13,7 +16,10 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
 
     $proximity = rideProximity();
 
-    $sql = "SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
+    $fromCity = $_POST['fromCity'];
+    $groupCities = getGroupCities($fromCity);
+
+    $sql = "SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.fromCity, co.toCity, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
     FROM cabopen co
     JOIN cabmembers cm ON co.CabId = cm.CabId
     JOIN registeredusers ru ON co.MobileNumber = ru.MobileNumber
@@ -35,13 +41,23 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-    if ($found > 0) {
-        $privateRides = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     $PrivateRideCabIds = [];
-    foreach ($privateRides as $val) {
-        $PrivateRideCabIds[] = $val['CabId'];
+
+    if ($found > 0) {
+        while ($val = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            if (strtolower($val['fromCity']) == strtolower($fromCity) && (!in_array($val['toCity'], $groupCities))) {
+
+                $interCityRides[] = $val;
+                $toCities[] = strtolower($val['toCity']);
+                $interCityRideCabIds[] = $val['CabId'];
+            } else {
+
+                $privateRides[] = $val;
+            }
+
+            $PrivateRideCabIds[] = $val['CabId'];
+        }
     }
 
     // Nearby Rides
@@ -55,7 +71,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
               * sin( radians( sLat ) )
             )
           ) AS origin,
-            co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, pm.PoolId, pm.PoolName, pm.rGid, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
+            co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.fromCity, co.toCity,  co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, pm.PoolId, pm.PoolName, pm.rGid, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
     FROM cabopen co
     JOIN groupCabs gc ON co.CabId = gc.cabId
     JOIN userpoolsmaster pm ON gc.groupId = pm.PoolId
@@ -124,7 +140,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
 
         if (!empty($myGroupIds)) {
 
-            $sql = "SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, pm.PoolId, pm.PoolName, pm.rGid, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
+            $sql = "SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.fromCity, co.toCity, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, pm.PoolId, pm.PoolName, pm.rGid, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
                 FROM cabopen co
                 JOIN groupCabs gc ON co.CabId = gc.cabId
                 JOIN userpoolsmaster pm ON gc.groupId = pm.PoolId
@@ -174,12 +190,22 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
         $tempRides = [];
 
         foreach($nearbyRides as $ride){
-            if ($id == $ride['PoolId']) {
-                $tempArr['id'] = $ride['PoolId'];
-                $tempArr['rGid'] = $ride['rGid'];
-                $tempArr['name'] = $ride['PoolName'];
+            // Check For Intercity Rides
 
-                $tempRides[] = $ride;
+            if (strtolower($ride['fromCity']) == strtolower($fromCity) && (!in_array($ride['toCity'], $groupCities))) {
+
+                $interCityRides[] = $ride;
+                $toCities[] = strtolower($ride['toCity']);
+                $interCityRideCabIds[] = $ride['CabId'];
+            } else {
+
+                if ($id == $ride['PoolId']) {
+                    $tempArr['id'] = $ride['PoolId'];
+                    $tempArr['rGid'] = $ride['rGid'];
+                    $tempArr['name'] = $ride['PoolName'];
+
+                    $tempRides[] = $ride;
+                }
             }
         }
         if (!empty($tempRides)) {
@@ -197,19 +223,96 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
 
         foreach($publicGroupRides as $ride){
 
-            if ($id == $ride['PoolId']) {
-                $tempArr['id'] = $ride['PoolId'];
-                $tempArr['rGid'] = $ride['rGid'];
-                $tempArr['name'] = $ride['PoolName'];
+            if (strtolower($ride['fromCity']) == strtolower($fromCity) && (!in_array($ride['toCity'], $groupCities))) {
+
+                $interCityRides[] = $ride;
+                $toCities[] = strtolower($ride['toCity']);
+                $interCityRideCabIds[] = $ride['CabId'];
+            } else {
+
+                if ($id == $ride['PoolId']) {
+                    $tempArr['id'] = $ride['PoolId'];
+                    $tempArr['rGid'] = $ride['rGid'];
+                    $tempArr['name'] = $ride['PoolName'];
+
+                    $tempRides[] = $ride;
+                }
+            }
+        }
+
+        if (!empty($tempRides)) {
+            $tempArr['rides'] = $tempRides;
+            $myPublicGroupRides[] = $tempArr;
+        }
+    }
+
+    // Start Intercity Rides
+    $condition = '';
+
+    if (!empty($groupCities)) {
+        $groupCitiesStr = implode("','", $groupCities);
+        $groupCitiesStr = "'".$groupCitiesStr."'";
+        $condition = ' AND co.toCity NOT IN ('.$groupCitiesStr.') ';
+    } else {
+        $condition = " AND co.toCity !='".$fromCity."')";
+    }
+
+    $sql = "SELECT  co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.fromCity, co.toCity, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, pm.PoolId, pm.PoolName, pm.rGid, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
+    FROM cabopen co
+    JOIN groupCabs gc ON co.CabId = gc.cabId
+    JOIN userpoolsmaster pm ON gc.groupId = pm.PoolId
+    JOIN registeredusers ru ON co.MobileNumber = ru.MobileNumber
+    LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
+    LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
+    LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
+    LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
+    LEFT JOIN vehicle v ON v.id = vd.vehicleId
+    WHERE NOW() < DATE_ADD(co.ExpStartDateTime, INTERVAL 30 MINUTE)
+    AND co.MobileNumber !='$mobileNumber'
+    AND co.status < 1
+    AND co.CabStatus ='A'
+    AND co.fromCity ='$fromCity'
+    ".$condition."
+    AND co.RemainingSeats >0
+    AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.MemberNumber='$mobileNumber')
+    ORDER BY co.ExpStartDateTime";
+
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($found > 0) {
+        while ($ride = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            if (!in_array($ride['CabId'], $interCityRideCabIds)){
+                $interCityRides[] = $ride;
+                $toCities[] = strtolower($ride['toCity']);
+            }
+
+        }
+    }
+
+    $toCities = array_unique($toCities);
+
+    foreach ($toCities as $city){
+
+        $tempArr = [];
+        $tempRides = [];
+
+        foreach($interCityRides as $ride) {
+            if (strtolower($city) == strtolower($ride['toCity'])) {
+                $tempArr['id'] = null;
+                $tempArr['rGid'] = null;
+                $tempArr['name'] = ucfirst($fromCity) . ' to ' . ucfirst($city);
 
                 $tempRides[] = $ride;
             }
         }
         if (!empty($tempRides)) {
             $tempArr['rides'] = $tempRides;
-            $myPublicGroupRides[] = $tempArr;
+            $publicRides[] = $tempArr;
         }
     }
+
 
     $AllRides['privateRides'] = $privateRides;
     $AllRides['publicRides'] = $publicRides;
