@@ -85,11 +85,10 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
     AND co.fromCity ='".$fromCity."'
     AND co.toCity ='".$toCity."'
     AND co.RemainingSeats >0
-    AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.MemberNumber='$mobileNumber')
-    ORDER BY co.ExpStartDateTime";
+    AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.MemberNumber='$mobileNumber')";
     }
 
-    $sql .= " ORDER BY co.ExpStartDateTime";
+    $sql .= " ORDER BY ExpStartDateTime";
 
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
