@@ -103,16 +103,22 @@ function getGroupCities($fromCity){
     global $con;
     $cities = [];
 
-    $stmt = $con->query("SELECT City FROM groupcities WHERE City = '$fromCity'");
+    $stmt = $con->query("SELECT CityGroup FROM groupcities WHERE City = '".trim($fromCity)."'");
     $cityRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($cityRows > 0) {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $groupCity = $row['CityGroup'];
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            $cities[] = $row['City'];
+        $stmt = $con->query("SELECT City FROM groupcities WHERE CityGroup = '".trim($groupCity)."'");
+        $rows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+        if ($rows > 0) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                $cities[] = $row['City'];
+            }
+            return $cities;
         }
-
-        return $cities;
     }
 
     return $cities;
