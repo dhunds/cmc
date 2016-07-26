@@ -27,6 +27,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     $ExpTripDuration = $_POST['ExpTripDuration'];
     $FromShortName = $_POST['FromShortName'];
     $ToShortName = $_POST['ToShortName'];
+    $fromCity = $_POST['fromCity'];
+    $toCity = $_POST['toCity'];
 
     $rideType = '';
 
@@ -34,7 +36,11 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
         $rideType = $_POST['rideType'];
     }
 
-    $perKmCharge = perKMChargeIntercity();
+    if (isIntracityRide($fromCity, $toCity)){
+        $perKmCharge = perKMChargeIntracity();
+    } else {
+        $perKmCharge = perKMChargeIntercity();
+    }
 
     $dateInput = explode('/', $TravelDate);
     $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
@@ -95,7 +101,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
 
     if ($found > 0 || $createGroup) {
 
-        $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+        $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName,  fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
 
         $stmt = $con->prepare($sql);
         $res = $stmt->execute();

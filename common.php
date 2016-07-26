@@ -72,3 +72,48 @@ function perKMChargeIntracity(){
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $result[0]['setValue'];
 }
+
+function isIntracityRide($fromCity, $toCity){
+    global $con;
+
+    $fromGroup = '';
+    $stmt = $con->query("SELECT CityGroup FROM groupcities WHERE City = '$fromCity'");
+    $cityRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($cityRows > 0) {
+        $fromGroup = $stmt->fetchColumn();
+    }
+
+    $toGroup = '';
+    $stmt = $con->query("SELECT CityGroup FROM groupcities WHERE City = '$toCity'");
+    $cityRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($cityRows > 0) {
+        $toGroup = $stmt->fetchColumn();
+    }
+
+    if ($fromGroup == $toGroup) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function getGroupCities($fromCity){
+    global $con;
+    $cities = [];
+
+    $stmt = $con->query("SELECT City FROM groupcities WHERE City = '$fromCity'");
+    $cityRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($cityRows > 0) {
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $cities[] = $row['City'];
+        }
+
+        return $cities;
+    }
+
+    return $cities;
+}

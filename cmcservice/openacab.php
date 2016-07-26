@@ -23,12 +23,19 @@ $Message = $_POST['Message'];
 $ExpTripDuration = $_POST['ExpTripDuration'];
 $FromShortName = $_POST['FromShortName'];
 $ToShortName = $_POST['ToShortName'];
+$fromCity = $_POST['fromCity'];
+$toCity = $_POST['toCity'];
 $sLatLon = $_POST['sLatLon'];
 $eLatLon = $_POST['eLatLon'];
 
 $rideType = '';
 
-$perKmCharge = perKMChargeIntercity();
+if (isIntracityRide($fromCity, $toCity)){
+    $perKmCharge = perKMChargeIntracity();
+} else {
+    $perKmCharge = perKMChargeIntercity();
+}
+
 
 if(isset($_POST['rideType']) && $_POST['rideType'] !='') {
     $rideType = $_POST['rideType'];
@@ -44,7 +51,7 @@ $ExpEndDateTime = date('Y-m-d H:i:s', $newdate);
 $startDate = $expTrip;
 $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
 
-$sql2 = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+$sql2 = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
 
 $stmt2 = $con->prepare($sql2);
 $res2 = $stmt2->execute();
