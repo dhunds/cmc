@@ -59,8 +59,37 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
     AND co.RemainingSeats >0
     AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.MemberNumber='$mobileNumber')
     HAVING origin < ".$proximity."
-    AND destination < ".$proximity."
+    AND destination < ".$proximity;
+
+    if (isset($_POST['fromCity']) && $_POST['fromCity'] !='' && isset($_POST['toCity']) && $_POST['toCity'] !='') {
+        $fromCity = $_POST['fromCity'];
+        $toCity = $_POST['toCity'];
+
+        $sql .= " UNION
+
+        SELECT null as origin, null as destination,
+            co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, pm.PoolId, pm.PoolName, pm.rGid, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
+    FROM cabopen co
+    JOIN groupCabs gc ON co.CabId = gc.cabId
+    JOIN userpoolsmaster pm ON gc.groupId = pm.PoolId
+    JOIN registeredusers ru ON co.MobileNumber = ru.MobileNumber
+    LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
+    LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
+    LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
+    LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
+    LEFT JOIN vehicle v ON v.id = vd.vehicleId
+    WHERE NOW() < DATE_ADD(co.ExpStartDateTime, INTERVAL 30 MINUTE)
+    AND co.MobileNumber !='$mobileNumber'
+    AND co.status < 1
+    AND co.CabStatus ='A'
+    AND co.fromCity ='".$fromCity."'
+    AND co.toCity ='".$toCity."'
+    AND co.RemainingSeats >0
+    AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.MemberNumber='$mobileNumber')
     ORDER BY co.ExpStartDateTime";
+    }
+
+    $sql .= " ORDER BY co.ExpStartDateTime";
 
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
