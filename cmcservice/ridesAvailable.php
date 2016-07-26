@@ -46,7 +46,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     if ($found > 0) {
         while ($val = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-            if (strtolower($val['fromCity']) == strtolower($fromCity) && in_array($val['toCity'], $groupCities)) {
+            if (strtolower($val['fromCity']) == strtolower($fromCity) && (!in_array($val['toCity'], $groupCities))) {
 
                 $interCityRides[] = $val;
                 $toCities[] = strtolower($val['toCity']);
@@ -192,7 +192,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
         foreach($nearbyRides as $ride){
             // Check For Intercity Rides
 
-            if (strtolower($ride['fromCity']) == strtolower($fromCity) && in_array($ride['toCity'], $groupCities)) {
+            if (strtolower($ride['fromCity']) == strtolower($fromCity) && (!in_array($ride['toCity'], $groupCities))) {
 
                 $interCityRides[] = $ride;
                 $toCities[] = strtolower($ride['toCity']);
@@ -223,7 +223,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
         
         foreach($publicGroupRides as $ride){
 
-            if (strtolower($ride['fromCity']) == strtolower($fromCity) && in_array($ride['toCity'], $groupCities)) {
+            if (strtolower($ride['fromCity']) == strtolower($fromCity) && (!in_array($ride['toCity'], $groupCities))) {
 
                 $interCityRides[] = $ride;
                 $toCities[] = strtolower($ride['toCity']);
