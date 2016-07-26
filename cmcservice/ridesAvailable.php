@@ -308,7 +308,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
         }
         if (!empty($tempRides)) {
             $tempArr['rides'] = $tempRides;
-            $myPublicGroupRides[] = $tempArr;
+            $publicRides[] = $tempArr;
         }
     }
 
