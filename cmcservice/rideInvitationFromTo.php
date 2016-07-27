@@ -137,7 +137,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
                 if (strtolower($ride['fromCity']) == strtolower($fromCity) && (!in_array($ride['toCity'], $groupCities))) {
                     $tempArr['id'] = null;
                     $tempArr['rGid'] = null;
-                    $tempArr['name'] = ucfirst($fromCity) . ' to ' . ucfirst($city);
+                    $tempArr['name'] = ucfirst($ride['fromCity']) . ' to ' . ucfirst($ride['toCity']);
                     $ride['isIntercity'] = "1";
                 } else {
                     $tempArr['id'] = $ride['PoolId'];
