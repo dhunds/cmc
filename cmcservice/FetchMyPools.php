@@ -36,6 +36,7 @@ LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
 JOIN vehicle v ON v.id = vd.vehicleId
 WHERE TRIM(co.MobileNumber) = '" . $MobileNumber . "'
 AND co.CabStatus ='A'
+ORDER BY ExpStartDateTime
 ";
 
 $stmt = $con->query($sql);

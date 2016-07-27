@@ -45,7 +45,7 @@ LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
 JOIN vehicle v ON v.id = vd.vehicleId
 WHERE TRIM(co.MobileNumber) = '" . $MobileNumber . "'
 AND co.ExpStartDateTime >  '2016-05-27 23:59:00'
-ORDER BY OpenTime DESC LIMIT $startLimit, $pageSize
+ORDER BY ExpStartDateTime DESC LIMIT $startLimit, $pageSize
 ";
 
 $stmt = $con->query($sql);

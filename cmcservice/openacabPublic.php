@@ -36,12 +36,6 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
         $rideType = $_POST['rideType'];
     }
 
-    if (isIntracityRide($fromCity, $toCity)){
-        $perKmCharge = perKMChargeIntracity();
-    } else {
-        $perKmCharge = perKMChargeIntercity();
-    }
-
     $dateInput = explode('/', $TravelDate);
     $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
 
@@ -52,7 +46,32 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     $startDate = $expTrip;
     $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
 
-    $sql = "SELECT
+    if (isIntracityRide($fromCity, $toCity)){
+
+        $perKmCharge = perKMChargeIntracity();
+
+        $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName,  fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+
+        $stmt = $con->prepare($sql);
+        $res = $stmt->execute();
+
+        if ($res) {
+            http_response_code(200);
+            header('Content-Type: application/json');
+            echo '{"status":"success", "message":"Ride created."}';
+            exit;
+        } else {
+            http_response_code(200);
+            header('Content-Type: application/json');
+            echo '{"status":"fail", "message":"An Error Occured, Please try again later!"}';
+            exit;
+        }
+
+    } else {
+
+        $perKmCharge = perKMChargeIntercity();
+
+        $sql = "SELECT
               PoolId,
               PoolName,
               (
@@ -79,44 +98,44 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
             HAVING origin < ".$proximity." AND destination < ".$proximity."
             ORDER BY origin, destination LIMIT 0,1";
 
-    $stmt = $con->query($sql);
-    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-    $createGroup = 0;
+        $stmt = $con->query($sql);
+        $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+        $createGroup = 0;
 
-    if ($found < 1) {
-        $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
-        $groupId = $createGroup;
+        if ($found < 1) {
+            $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
+            $groupId = $createGroup;
 
-        if ($groupId) {
-            // Send Mail to support
-            require_once 'mail.php';
-            $groupName = $FromShortName . ' to ' . $ToShortName;
-            sendGroupCreationMail ($groupName);
+            if ($groupId) {
+                // Send Mail to support
+                require_once 'mail.php';
+                $groupName = $FromShortName . ' to ' . $ToShortName;
+                sendGroupCreationMail ($groupName);
+            }
+
+        } else {
+            $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $groupId = $nearbyGroup[0]['PoolId'];
         }
 
-    } else {
-        $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $groupId = $nearbyGroup[0]['PoolId'];
-    }
+        if ($found > 0 || $createGroup) {
 
-    if ($found > 0 || $createGroup) {
+            $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName,  fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
 
-        $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName,  fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+            $stmt = $con->prepare($sql);
+            $res = $stmt->execute();
 
-        $stmt = $con->prepare($sql);
-        $res = $stmt->execute();
+            $sql = "INSERT INTO groupCabs(groupId, cabId) VALUES ($groupId, '$CabId')";
 
-        $sql = "INSERT INTO groupCabs(groupId, cabId) VALUES ($groupId, '$CabId')";
+            $stmt = $con->prepare($sql);
+            $res = $stmt->execute();
 
-        $stmt = $con->prepare($sql);
-        $res = $stmt->execute();
-
-        // Send Members Notification About ride
+            // Send Members Notification About ride
             $sql = "SELECT DISTINCT(ru.MobileNumber), ru.Platform, ru.DeviceToken FROM registeredusers ru JOIN userpoolsslave us ON ru.MobileNumber =  us.MemberNumber WHERE us.PoolId = $groupId AND ru.MobileNumber != '$MobileNumber' AND ru.PushNotification ='on' AND ru.DeviceToken !='' AND ru.lastNotificationSentOn < CURRENT_DATE()";
 
             $stmt = $con->query($sql);
             $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-            
+
             if ($found) {
 
                 $message = 'New rides available on your routes. Join now to book your seat!!!';
@@ -142,25 +161,28 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
                     $stmt->execute();
                 }
             }
-            
-        // End sending notifications to members
 
-        if ($res) {
-            http_response_code(200);
-            header('Content-Type: application/json');
-            echo '{"status":"success", "message":"Ride created."}';
-            exit;
+            // End sending notifications to members
+
+            if ($res) {
+                http_response_code(200);
+                header('Content-Type: application/json');
+                echo '{"status":"success", "message":"Ride created."}';
+                exit;
+            } else {
+                http_response_code(200);
+                header('Content-Type: application/json');
+                echo '{"status":"fail", "message":"An Error Occured, Please try again later!"}';
+                exit;
+            }
         } else {
-            http_response_code(200);
+            http_response_code(500);
             header('Content-Type: application/json');
-            echo '{"status":"fail", "message":"An Error Occured, Please try again later!"}';
-            exit;
+            echo '{"status":"failed", "message":"An Error occured, Please try later."}';
         }
-    } else {
-        http_response_code(500);
-        header('Content-Type: application/json');
-        echo '{"status":"failed", "message":"An Error occured, Please try later."}';
     }
+
+
 
 } else {
     http_response_code(500);
