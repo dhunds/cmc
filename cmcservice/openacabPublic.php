@@ -50,27 +50,6 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
 
         $perKmCharge = perKMChargeIntracity();
 
-        $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName,  fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
-
-        $stmt = $con->prepare($sql);
-        $res = $stmt->execute();
-
-        if ($res) {
-            http_response_code(200);
-            header('Content-Type: application/json');
-            echo '{"status":"success", "message":"Ride created."}';
-            exit;
-        } else {
-            http_response_code(200);
-            header('Content-Type: application/json');
-            echo '{"status":"fail", "message":"An Error Occured, Please try again later!"}';
-            exit;
-        }
-
-    } else {
-
-        $perKmCharge = perKMChargeIntercity();
-
         $sql = "SELECT
               PoolId,
               PoolName,
@@ -180,9 +159,28 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
             header('Content-Type: application/json');
             echo '{"status":"failed", "message":"An Error occured, Please try later."}';
         }
+
+    } else {
+
+        $perKmCharge = perKMChargeIntercity();
+
+        $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName,  fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+
+        $stmt = $con->prepare($sql);
+        $res = $stmt->execute();
+
+        if ($res) {
+            http_response_code(200);
+            header('Content-Type: application/json');
+            echo '{"status":"success", "message":"Ride created."}';
+            exit;
+        } else {
+            http_response_code(200);
+            header('Content-Type: application/json');
+            echo '{"status":"fail", "message":"An Error Occured, Please try again later!"}';
+            exit;
+        }
     }
-
-
 
 } else {
     http_response_code(500);
