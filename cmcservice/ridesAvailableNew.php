@@ -203,7 +203,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
                     $tempArr['id'] = $ride['PoolId'];
                     $tempArr['rGid'] = $ride['rGid'];
                     $tempArr['name'] = $ride['PoolName'];
-
+                    $ride['isIntercity'] = "0";
                     $tempRides[] = $ride;
                 }
             }
@@ -257,8 +257,10 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
         $condition = " AND co.toCity !='".$fromCity."')";
     }
 
-    $sql = "SELECT  co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.fromCity, co.toCity, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
+    $sql = "SELECT  co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.fromCity, co.toCity, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, pm.PoolId, pm.PoolName, pm.rGid, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn
     FROM cabopen co
+    LEFT JOIN groupCabs gc ON co.CabId = gc.cabId
+    LEFT JOIN userpoolsmaster pm ON gc.groupId = pm.PoolId
     JOIN registeredusers ru ON co.MobileNumber = ru.MobileNumber
     LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
     LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
@@ -301,7 +303,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
                 $tempArr['id'] = null;
                 $tempArr['rGid'] = null;
                 $tempArr['name'] = ucfirst($fromCity) . ' to ' . ucfirst($city);
-
+                $ride['isIntercity'] = "1";
                 $tempRides[] = $ride;
             }
         }
