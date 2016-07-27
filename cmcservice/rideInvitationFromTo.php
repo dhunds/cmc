@@ -131,14 +131,17 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
         $tempRides = [];
 
         foreach($nearbyRides as $ride){
-            if ($id == $ride['PoolId']) {
-                $tempArr['id'] = $ride['PoolId'];
-                $tempArr['rGid'] = $ride['rGid'];
-                $tempArr['name'] = $ride['PoolName'];
 
+            if ($id == $ride['PoolId']) {
                 if (strtolower($ride['fromCity']) == strtolower($fromCity) && (!in_array($ride['toCity'], $groupCities))) {
+                    $tempArr['id'] = null;
+                    $tempArr['rGid'] = null;
+                    $tempArr['name'] = ucfirst($fromCity) . ' to ' . ucfirst($city);
                     $ride['isIntercity'] = "1";
                 } else {
+                    $tempArr['id'] = $ride['PoolId'];
+                    $tempArr['rGid'] = $ride['rGid'];
+                    $tempArr['name'] = $ride['PoolName'];
                     $ride['isIntercity'] = "0";
                 }
                 
