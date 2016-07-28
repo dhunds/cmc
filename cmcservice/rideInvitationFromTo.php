@@ -5,6 +5,7 @@ include('../common.php');
 $nearbyRides = array();
 $privateRides = array();
 $groupCities = array();
+$myPublicGroupRides = array();
 
 if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != ''){
     $fromCity = '';
@@ -157,6 +158,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
 
     $AllRides['privateRides'] = $privateRides;
     $AllRides['publicRides'] = $publicRides;
+    $AllRides['myPublicGroupRides'] = $myPublicGroupRides;
 
     if (count($AllRides) > 0) {
         $finalArray['status'] = 'success';
