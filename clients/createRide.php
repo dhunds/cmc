@@ -8,9 +8,9 @@ if (isset($_POST['submit'])) {
     $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'FromLocation', 'ToLocation', 'FromShortName', 'ToShortName', 'seats', 'distance', 'expTime', 'slat', 'slon', 'elat', 'elon'));
 
     if (!$error) {
-   // echo '<pre>';
-    //print_r($_POST);
-    //die;
+//    echo '<pre>';
+//    print_r($_POST);
+//    die;
         $sLat = $_POST['slat'];
         $sLon = $_POST['slon'];
         $eLat = $_POST['elat'];
@@ -49,6 +49,8 @@ if (isset($_POST['submit'])) {
         $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
         
         $TravelTime = date('g:i A', strtotime($TravelTime));
+        $fromCity = $_POST['fromCity'];
+        $toCity = $_POST['toCity'];
 
         $sql = "SELECT
                   PoolId,
@@ -99,7 +101,7 @@ if (isset($_POST['submit'])) {
 
         if ($found > 0 || $createGroup) {
 
-            $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName','$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+            $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
            //echo $sql;die;
             $stmt = $con->prepare($sql);
             $res = $stmt->execute();
@@ -187,6 +189,9 @@ function checkPostForBlank($arrParams){
                                 <input  type="hidden" name="expTime" id="expTime">
                                 <input name="FromShortName" id="FromShortName" type="hidden">
                                 <input name="ToShortName" id="ToShortName" type="hidden">
+                                <input name="fromCity" id="fromCity" type="hidden">
+                                <input name="toCity" id="toCity" type="hidden">
+
                                 <input type="hidden" name="ownerName" id="ownerName">
                                 <input type="hidden" name="slat" id="slat">
                                 <input type="hidden" name="slon" id="slon">
@@ -290,6 +295,13 @@ echo $str;
                     window.alert("Autocomplete's returned place contains no geometry");
                     return;
                 }
+
+                for (i = 0; i < place.address_components.length; i++) {
+                    if (place.address_components[i].types[0] == "locality"){
+                        document.getElementById('fromCity').value = place.address_components[i].long_name;
+                    }
+                }
+
                 sLat = place.geometry.location.lat();
                 sLon = place.geometry.location.lng();
                 drawLocationFrom(sLat, sLon);
@@ -304,12 +316,19 @@ echo $str;
                     window.alert("Autocomplete's returned place contains no geometry");
                     return;
                 }
+
                 eLat = place.geometry.location.lat();
                 eLon = place.geometry.location.lng();
 
                 drawLocationTo(eLat, eLon);
 
                 document.getElementById('ToShortName').value = createShortAddress(document.getElementById('to-location').value);
+
+                for (i = 0; i < place.address_components.length; i++) {
+                    if (place.address_components[i].types[0] == "locality"){
+                        document.getElementById('toCity').value = place.address_components[i].long_name;
+                    }
+                }
             });
         }
 

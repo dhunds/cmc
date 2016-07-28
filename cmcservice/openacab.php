@@ -30,9 +30,13 @@ $eLatLon = $_POST['eLatLon'];
 
 $rideType = '';
 
+$isIntercity =0;
+
 if (isIntracityRide($fromCity, $toCity)){
+    $isIntercity =0;
     $perKmCharge = perKMChargeIntracity();
 } else {
+    $isIntercity =1;
     $perKmCharge = perKMChargeIntercity();
 }
 
@@ -51,7 +55,7 @@ $ExpEndDateTime = date('Y-m-d H:i:s', $newdate);
 $startDate = $expTrip;
 $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
 
-$sql2 = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge')";
+$sql2 = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge, isIntercity) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge', $isIntercity)";
 
 $stmt2 = $con->prepare($sql2);
 $res2 = $stmt2->execute();
