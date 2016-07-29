@@ -293,6 +293,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
 
     $toCities = array_unique($toCities);
 
+    $i=1000000;
+
     foreach ($toCities as $city){
 
         $tempArr = [];
@@ -300,12 +302,13 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
 
         foreach($interCityRides as $ride) {
             if (strtolower($city) == strtolower($ride['toCity'])) {
-                $tempArr['id'] = null;
+                $tempArr['id'] = $i;
                 $tempArr['rGid'] = null;
                 $tempArr['name'] = ucfirst($fromCity) . ' to ' . ucfirst($city);
                 $ride['isIntercity'] = "1";
                 $tempRides[] = $ride;
             }
+            $i++;
         }
         if (!empty($tempRides)) {
             $tempArr['rides'] = $tempRides;

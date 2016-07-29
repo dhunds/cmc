@@ -128,6 +128,8 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
     $publicRides = [];
     $nearbyGroupIds = array_unique($nearbyGroupIds);
 
+    $i=1000000;
+
     foreach ($nearbyGroupIds as $id){
         $tempArr = [];
         $tempRides = [];
@@ -136,7 +138,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
 
             if ($id == $ride['PoolId']) {
                 if (strtolower($ride['fromCity']) == strtolower($fromCity) && (!in_array($ride['toCity'], $groupCities))) {
-                    $tempArr['id'] = null;
+                    $tempArr['id'] = $i;
                     $tempArr['rGid'] = null;
                     $tempArr['name'] = ucfirst($ride['fromCity']) . ' to ' . ucfirst($ride['toCity']);
                     $ride['isIntercity'] = "1";
@@ -149,6 +151,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
                 
                 $tempRides[] = $ride;
             }
+            $i++;
         }
         if (!empty($tempRides)) {
             $tempArr['rides'] = $tempRides;
