@@ -1,5 +1,6 @@
 <?php
 include('connection.php');
+include_once('includes/functions.php');
 
 if (isset($_POST['CabId']) && $_POST['CabId'] !='' && isset($_POST['TravelDate']) && $_POST['TravelDate'] !='' && isset($_POST['TravelTime']) && $_POST['TravelTime'] !='') {
 
@@ -20,5 +21,13 @@ if (isset($_POST['CabId']) && $_POST['CabId'] !='' && isset($_POST['TravelDate']
     $sql = "UPDATE cabopen SET TravelDate='$TravelDate', TravelTime='$TravelTime', ExpEndDateTime='$ExpEndDateTime', ExpStartDateTime='$ExpStartDateTime', OpenTime=now() WHERE CabId='$CabId'";
 
     $stmt = $con->prepare($sql);
-    $stmt->execute();
+
+    if ($stmt->execute()){
+        setResponse(array("code"=>200, "status"=>"success", "message"=>"Ride details updated."));
+    } else {
+        setResponse(array("code"=>200, "status"=>"Error", "message"=>"An error occurred, please try again later."));
+    }
+
+} else {
+    setResponse(array("code"=>200, "status"=>"Error", "message"=>"Invalid Parameters"));
 }
