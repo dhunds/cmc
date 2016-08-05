@@ -5,7 +5,7 @@ include_once('topmenu.php');
 include('../common.php');
 
 if (isset($_POST['submit'])) {
-    $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'FromLocation', 'ToLocation', 'FromShortName', 'ToShortName', 'seats', 'distance', 'expTime', 'slat', 'slon', 'elat', 'elon'));
+    $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'email', 'vehicle', 'registrationNumber', 'FromLocation', 'ToLocation', 'FromShortName', 'ToShortName', 'seats', 'distance', 'expTime', 'slat', 'slon', 'elat', 'elon'));
 
     if (!$error) {
 //    echo '<pre>';
@@ -154,6 +154,20 @@ function checkPostForBlank($arrParams){
                             <div class="divRight bluetext"><input type="text" name="mobileNumber" id="mobileNumber" placeholder="Owner Number" onblur="checkDriverDetails()" style="width:300px;"><span id="driverDetails"></span></div>
                             <div style="clear:both;"></div>
                             <br/>
+                            <div class="divRight bluetext"><input type="text" name="ownerName" id="ownerName" placeholder="Owner Name"  style="width:300px;"></span></div>
+                            <div style="clear:both;"></div>
+                            <br/>
+
+                            <div class="divRight bluetext"><input type="text" name="email" id="email" placeholder="Email"  style="width:300px;"></div>
+                            <div style="clear:both;"></div>
+                            <br/>
+
+                            <div class="divRight bluetext"><input type="text" name="vehicle" id="vehicle" placeholder="Vehicle"  style="width:300px;"></div>
+                            <div style="clear:both;"></div>
+                            <br/>
+                            <div class="divRight bluetext"><input type="text" name="registrationNumber" id="registrationNumber" placeholder="Registration Number"  style="width:300px;"></div>
+                            <div style="clear:both;"></div>
+                            <br/>
 
                             <div class="divRight bluetext"><input id="from-location" name="FromLocation" class="controls" type="text" placeholder="From Location" style="width:300px;">
                             </div>
@@ -197,8 +211,6 @@ function checkPostForBlank($arrParams){
                                 <input name="ToShortName" id="ToShortName" type="hidden">
                                 <input name="fromCity" id="fromCity" type="hidden">
                                 <input name="toCity" id="toCity" type="hidden">
-
-                                <input type="hidden" name="ownerName" id="ownerName">
                                 <input type="hidden" name="slat" id="slat">
                                 <input type="hidden" name="slon" id="slon">
                                 <input type="hidden" name="elat" id="elat">
@@ -477,12 +489,23 @@ echo $str;
                 
                 if (data =='') {
                     document.getElementById("driverDetails").innerHTML = " Mobile number required!";
+                    document.getElementById("ownerName").value = '';
+                    document.getElementById("email").value = '';
+                    document.getElementById("vehicle").value = '';
+                    document.getElementById("registrationNumber").value = '';
                 } else if (data =='fail'){
-                    document.getElementById("driverDetails").innerHTML = " Invalid Mobile Number!";
+                    document.getElementById("ownerName").value = '';
+                    document.getElementById("email").value = '';
+                    document.getElementById("vehicle").value = '';
+                    document.getElementById("registrationNumber").value = '';
+                    //document.getElementById("driverDetails").innerHTML = " Invalid Mobile Number!";
                 } else {
                     var details = data.split("~");
                     document.getElementById("ownerName").value = details[0];
-                    document.getElementById("driverDetails").innerHTML = " "+details[0]+" ("+details[1]+", "+details[2]+")";
+                    document.getElementById("email").value = details[1];
+                    document.getElementById("vehicle").value = details[2];
+                    document.getElementById("registrationNumber").value = details[3];
+                    //document.getElementById("driverDetails").innerHTML = " "+details[0]+" ("+details[1]+", "+details[2]+")";
                 }
 
             });
