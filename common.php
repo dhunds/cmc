@@ -76,23 +76,18 @@ function perKMChargeIntracity(){
 function isIntracityRide($fromCity, $toCity){
     global $con;
 
-    $fromGroup = '';
-    $stmt = $con->query("SELECT CityGroup FROM groupcities WHERE City = '$fromCity'");
+    $stmt = $con->query("SELECT City, CityGroup FROM groupcities WHERE City = '$fromCity' OR City = '$toCity'");
     $cityRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-    if ($cityRows > 0) {
-        $fromGroup = $stmt->fetchColumn();
-    }
-
-    $toGroup = '';
-    $stmt = $con->query("SELECT CityGroup FROM groupcities WHERE City = '$toCity'");
-    $cityRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+    $cities = [];
 
     if ($cityRows > 0) {
-        $toGroup = $stmt->fetchColumn();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $cities[$row['City']] = $row['CityGroup'];
+        }
     }
 
-    if ($fromGroup == $toGroup) {
+    if ($cities[$fromCity] == $cities[$toCity]) {
         return true;
     } else {
         return false;
@@ -103,22 +98,14 @@ function getGroupCities($fromCity){
     global $con;
     $cities = [];
 
-    $stmt = $con->query("SELECT CityGroup FROM groupcities WHERE City = '".trim($fromCity)."'");
-    $cityRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+    $stmt = $con->query("SELECT City FROM groupcities WHERE  CityGroup = (SELECT CityGroup FROM groupcities WHERE City='".trim($fromCity)."')");
+    $rows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-    if ($cityRows > 0) {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $groupCity = $row['CityGroup'];
-
-        $stmt = $con->query("SELECT City FROM groupcities WHERE CityGroup = '".trim($groupCity)."'");
-        $rows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-
-        if ($rows > 0) {
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                $cities[] = $row['City'];
-            }
-            return $cities;
+    if ($rows > 0) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $cities[] = $row['City'];
         }
+        return $cities;
     }
 
     return $cities;
