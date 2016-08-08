@@ -135,7 +135,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
                 if ($isIntercity) {
                     $tempArr['id'] = $i;
                     $tempArr['rGid'] = null;
-                    $tempArr['name'] = ucfirst($ride['fromCity']) . ' to ' . ucfirst($ride['toCity']);\
+                    $tempArr['name'] = ucfirst($ride['fromCity']) . ' to ' . ucfirst($ride['toCity']);
                 } else {
                     $tempArr['id'] = $ride['PoolId'];
                     $tempArr['rGid'] = $ride['rGid'];
