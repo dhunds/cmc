@@ -7,6 +7,9 @@ $unauthorised =0;
 
 if (isset($_POST['submit']) && $_POST['cabId'] !='') {
 
+    $stmt = $con->query("SELECT ExpTripDuration FROM cabopen WHERE CabId ='".$_POST['cabId']."'");
+    $ExpTripDuration = $stmt->fetchColumn();
+
     $seats = $_POST['seat'];
     $totalSeats = $_POST['totalSeats'];
     $remainingSeats = $_POST['remainingSeats'];
@@ -21,7 +24,16 @@ if (isset($_POST['submit']) && $_POST['cabId'] !='') {
         $remaining = $remainingSeats;
     }
 
-    $sql = "UPDATE cabopen SET Seats='".$_POST['seat']."', RemainingSeats= '".$remaining."', Distance= '".$distance."' WHERE CabId='".$_POST['cabId']."'";
+    list($TravelDate, $TravelTime) = explode(" ", $_POST['startTime']);
+    $dateInput = explode('/', $TravelDate);
+    $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
+    $expTrip = strtotime($cDate . ' ' . $TravelTime);
+    $newdate = $expTrip + $ExpTripDuration;
+    $ExpEndDateTime = date('Y-m-d H:i:s', $newdate);
+    $startDate = $expTrip;
+    $ExpStartDateTime = date('Y-m-d H:i:s', $startDate);
+
+    $sql = "UPDATE cabopen SET TravelDate='$TravelDate', TravelTime='$TravelTime', ExpEndDateTime='$ExpEndDateTime', ExpStartDateTime='$ExpStartDateTime', OpenTime=now(), Seats='".$_POST['seat']."', RemainingSeats= '".$remaining."', Distance= '".$distance."' WHERE CabId='".$_POST['cabId']."'";
     //echo $sql;die;
     $stmt = $con->prepare($sql);
 
@@ -32,7 +44,7 @@ if (isset($_POST['submit']) && $_POST['cabId'] !='') {
     }
 }
 //print_r($_REQUEST);
-$sql = "SELECT c.* FROM cabopen c JOIN cabOwners co ON c.MobileNumber=co.mobileNumber AND co.cleintId=".$_SESSION['userId']." AND c.CabId='".$_REQUEST['cabId']."'";
+$sql = "SELECT c.*, DATE_FORMAT(c.ExpStartDateTime,'%d/%m/%Y %H:%i %p') as startTime  FROM cabopen c JOIN cabOwners co ON c.MobileNumber=co.mobileNumber AND co.cleintId=".$_SESSION['userId']." AND c.CabId='".$_REQUEST['cabId']."'";
 $stmt = $con->query($sql);
 $rowCount = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -67,11 +79,24 @@ if($rowCount > 0){
                         <div style="clear:both;"></div>
                         <br>
 
-                        <br>
                         <div class="divRight bluetext">Distance: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="distance" placeholder="Distance" value="<?=$ride['Distance']?>"> </div>
                         <div style="clear:both;"></div>
                         <br>
 
+                        <div class="divRight bluetext">Time: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="startTime" id="startTime" placeholder="Start Time" value="<?=strtolower($ride['startTime'])?>"> <img src="images/calendar.png" id="dtFrom"> </div>
+                        <div style="clear:both;"></div>
+                        <br>
+                        <script type="text/javascript">
+                            Calendar.setup({
+                                inputField: 'startTime',
+                                ifFormat: "%d/%m/%Y %H:%M %P",
+                                button: "dtFrom",
+                                singleClick: true,
+                                showsTime:true,
+                                timeFormat:12,
+                                electric:true
+                            });
+                        </script>
                         <div class="divLeft bluetext">
                             <input type="hidden" name="cabId" value="<?=$_REQUEST['cabId']?>">
                             <input type="hidden" name="totalSeats" value="<?=$ride['Seats']?>">

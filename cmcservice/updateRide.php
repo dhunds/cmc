@@ -4,6 +4,9 @@ include_once('includes/functions.php');
 
 if (isset($_POST['CabId']) && $_POST['CabId'] !='' && isset($_POST['TravelDate']) && $_POST['TravelDate'] !='' && isset($_POST['TravelTime']) && $_POST['TravelTime'] !='') {
 
+    $stmt = $con->query("SELECT ExpTripDuration FROM cabopen WHERE CabId ='".$_POST['CabId']."'");
+    $ExpTripDuration = $stmt->fetchColumn();
+
     $CabId = $_POST['CabId'];
     $TravelDate = $_POST['TravelDate'];
     $TravelTime = $_POST['TravelTime'];
