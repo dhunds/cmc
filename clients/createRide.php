@@ -26,7 +26,7 @@ if (isset($_POST['submit'])) {
         $OwnerName = $_POST['ownerName'];
         $FromLocation = $_POST['FromLocation'];
         $ToLocation = $_POST['ToLocation'];
-        
+        $vehicleId = $_POST['vehicle'];
         list($TravelDate, $TravelTime) = explode(" ", $_POST['time']);
         $TravelTime = strtoupper($TravelTime);
         $Seats = $_POST['seats'];
@@ -83,38 +83,28 @@ if (isset($_POST['submit'])) {
 
                 if ($cabOwner['cleintId'] != $_SESSION['userId']){
                     $msg = 'User is not authorised.';
-                    //setResponse(array("code"=>200, "status"=>"Error", "message"=>"User is not authorised"));
+                    $error=1;
                 }
             } else {
-                $sql = "INSERT INTO  cabOwners (`mobileNumber` ,`Name`, `cleintId`)VALUES ('".$_POST['mobileNumber']."',  '".$_POST['name']."', '$client_id');";
+                $sql = "INSERT INTO  cabOwners (`mobileNumber` ,`Name`, `cleintId`)VALUES ('".$MobileNumber."',  '".$_POST['name']."', '$client_id');";
                 $stmt = $con->prepare($sql);
                 $stmt->execute();
             }
-         }
 
-         $stmt = $con->query("SELECT id FROM vehicle WHERE vehicleModel LIKE '%".$_POST['vehicle']."%'");
-         $isValidVehicle = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+            if (!$error){
 
-        if ($isValidVehicle < 1) {
-            $msg = 'Invalid Vehicle name.';
-            //setResponse(array("code"=>200, "status"=>"Error", "message"=>"Invalid Vehicle name"));
-        } else {
-            $vehicle = $stmt->fetch();
-            $vehicleId = $vehicle['id'];
-        }
+                $stmt = $con->query("SELECT id FROM userVehicleDetail WHERE mobileNumber = '".$MobileNumber."'");
+                $isVehicleAttached = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-        $stmt = $con->query("SELECT id FROM userVehicleDetail WHERE mobileNumber = '".$_POST['mobileNumber']."'");
-        $isVehicleAttached = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+                if ($isVehicleAttached < 1) {
+                    $stmt = $con->prepare("INSERT INTO userVehicleDetail SET vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."', mobileNumber = '".$MobileNumber."', created=now()");
+                    $stmt->execute();
+                } else {
+                    $stmt = $con->prepare("UPDATE userVehicleDetail SET vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."' WHERE mobileNumber = '".$MobileNumber."'");
+                    $stmt->execute();
+                }
 
-        if ($isVehicleAttached < 1) {
-            $stmt = $con->prepare("INSERT INTO userVehicleDetail SET vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."', mobileNumber = '".$_POST['mobileNumber']."', created=now()");
-            $stmt->execute();
-        } else {
-            $stmt = $con->prepare("UPDATE userVehicleDetail SET vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."' WHERE mobileNumber = '".$_POST['mobileNumber']."'");
-            $stmt->execute();
-        }
-
-        $sql = "SELECT
+                $sql = "SELECT
                   PoolId,
                   PoolName,
                   (
@@ -141,46 +131,49 @@ if (isset($_POST['submit'])) {
                 HAVING origin < " . $proximity . " AND destination < " . $proximity . "
                 ORDER BY origin, destination LIMIT 0,1";
 
-        $stmt = $con->query($sql);
-        $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-        $createGroup = 0;
+                $stmt = $con->query($sql);
+                $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+                $createGroup = 0;
 
-        if ($found < 1) {
-            $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
-            $groupId = $createGroup;
+                if ($found < 1) {
+                    $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
+                    $groupId = $createGroup;
 
-            if ($groupId) {
-                // Send Mail to support
-                require_once '../cmcservice/mail.php';
-                $groupName = $FromShortName . ' to ' . $ToShortName;
-                sendGroupCreationMail($groupName);
+                    if ($groupId) {
+                        // Send Mail to support
+                        require_once '../cmcservice/mail.php';
+                        $groupName = $FromShortName . ' to ' . $ToShortName;
+                        sendGroupCreationMail($groupName);
+                    }
+
+                } else {
+                    $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $groupId = $nearbyGroup[0]['PoolId'];
+                }
+
+                if ($found > 0 || $createGroup) {
+
+                    $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge,isIntercity) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge', $isIntercity)";
+                   //echo $sql;die;
+                    $stmt = $con->prepare($sql);
+                    $res = $stmt->execute();
+
+                    $sql = "INSERT INTO groupCabs(groupId, cabId) VALUES ($groupId, '$CabId')";
+
+                    $stmt = $con->prepare($sql);
+                    $res = $stmt->execute();
+
+                    if ($res) {
+                        $msg = 'Ride created.';
+                    } else {
+                        $msg = 'An Error occured, Please try later.';
+                    }
+                } else {
+                    $msg = 'An Error occured, Please try later.';
+                }
             }
+         }
 
-        } else {
-            $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $groupId = $nearbyGroup[0]['PoolId'];
-        }
-
-        if ($found > 0 || $createGroup) {
-
-            $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge,isIntercity) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge', $isIntercity)";
-           //echo $sql;die;
-            $stmt = $con->prepare($sql);
-            $res = $stmt->execute();
-
-            $sql = "INSERT INTO groupCabs(groupId, cabId) VALUES ($groupId, '$CabId')";
-
-            $stmt = $con->prepare($sql);
-            $res = $stmt->execute();
-
-            if ($res) {
-                $msg = 'Ride created.';
-            } else {
-                $msg = 'An Error occured, Please try later.';
-            }
-        } else {
-            $msg = 'An Error occured, Please try later.';
-        }
     } else {
         $msg = 'Please fill all the boxes.';
     }
@@ -218,9 +211,22 @@ function checkPostForBlank($arrParams){
                             <div style="clear:both;"></div>
                             <br/>
 
-                            <div class="divRight bluetext"><input type="text" name="vehicle" id="vehicle" placeholder="Vehicle"  style="width:300px;"></div>
+                            <div class="divRight bluetext">
+                            <select name="vehicle" id="vehicle" style="width:300px;">
+                                <option value="">Select Vehicle</option>
+                            <?php
+                                $stmt = $con->query("SELECT * FROM vehicle");
+
+                                while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+                            ?>
+                              <option value="<?=$row['id'];?>"><?=$row['vehicleModel'];?></option>
+                            <?php } ?>
+                            </select>
+                            </div>
                             <div style="clear:both;"></div>
                             <br/>
+
                             <div class="divRight bluetext"><input type="text" name="registrationNumber" id="registrationNumber" placeholder="Registration Number"  style="width:300px;"></div>
                             <div style="clear:both;"></div>
                             <br/>
