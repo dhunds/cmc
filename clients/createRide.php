@@ -593,7 +593,7 @@ echo $str;
         function showMembersJoined(cabId) {
             var left = (screen.width/2)-(450/2);
             var top = (screen.height/2)-(450/2);
-             return window.open('joinedMembers.php?cabId='+cabId, 'iShareRyde', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=350, height=300, top='+top+', left='+left);
+             return window.open('joinedMembers.php?cabId='+cabId, 'iShareRyde', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=350, height=250, top='+top+', left='+left);
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&libraries=places&callback=initMap" async defer></script>

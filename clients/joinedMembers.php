@@ -20,16 +20,16 @@ if (isset($_REQUEST['cabId']) && $_REQUEST['cabId'] !='') {
 <head>
     <title>JavaScript - Popup example</title>
 <body>
-<table>
+<table width="100%">
     <tr bgcolor="#18A5DE">
-        <td style="width: 48%; color: #fff;"><b>Mobile Number</b></td>
-        <td style="width: 48%; color: #fff;"><b>Name</b></td>
+        <td style="width: 48%; color: #fff;padding:8px;"><b>Mobile Number</b></td>
+        <td style="width: 48%; color: #fff;padding:8px;"><b>Name</b></td>
     </tr>
     <?php
             foreach($members as $value){
                 echo '<tr>
-                            <td>'.$value['MemberNumber'].'</td>
-                            <td>&nbsp;&nbsp;'.$value['MemberName'].'</td>
+                            <td style="padding:8px;">'.$value['MemberNumber'].'</td>
+                            <td style="padding:8px;">'.$value['MemberName'].'</td>
                         </tr>';
             }
     ?>
