@@ -291,10 +291,10 @@ function checkPostForBlank($arrParams){
                     <span id="rides">
                     <div class="pure-g dashboard-summary-heading">
                         <div class="pure-u-10-24"><p class="tHeading">Location</p></div>
-                        <div class="pure-u-4-24"><p class="tHeading">Mobile Number</p></div>
+                        <div class="pure-u-3-24"><p class="tHeading">Mobile </p></div>
                         <div class="pure-u-3-24"><p class="tHeading">Time</p></div>
                         <div class="pure-u-2-24"><p class="tHeading">Seats</p></div>
-                        <div class="pure-u-5-24"><p class="tHeading">Remaining Seats</p></div>
+                        <div class="pure-u-6-24"><p class="tHeading">Remaining Seats</p></div>
                     </div>
                         <?php 
                            $sql = "SELECT c.* FROM cabopen c JOIN cabOwners co ON c.MobileNumber=co.mobileNumber WHERE co.cleintId=".$_SESSION['userId']." AND c.CabStatus='A'";
@@ -313,7 +313,7 @@ if ($found > 0) {
     <div class="pure-u-10-24">
         <p class="dashboard-summary-title">'.$val['FromShortName'].' to '.$val['ToShortName'].'</p>
     </div>
-    <div class="pure-u-4-24">
+    <div class="pure-u-3-24">
         <p align="center" class="dashboard-summary-title">'.substr(trim($val['MobileNumber']), -10).'</p>
     </div>
     <div class="pure-u-3-24">
@@ -322,8 +322,8 @@ if ($found > 0) {
     <div class="pure-u-2-24">
         <p align="center" class="dashboard-summary-title">'.$val['Seats'].'</p>
     </div>
-    <div class="pure-u-5-24">
-        <p align="center" class="dashboard-summary-title">'.$val['RemainingSeats'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="updateRide.php?cabId='.$val['CabId'].'">Edit</a> | <a href="javascript:;" onclick="showMembersJoined(\''.$val['CabId'].'\')">View</a></p>
+    <div class="pure-u-6-24">
+        <p align="center" class="dashboard-summary-title">'.$val['RemainingSeats'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="updateRide.php?cabId='.$val['CabId'].'">Edit</a> | <a href="javascript:;" onclick="showMembersJoined(\''.$val['CabId'].'\')">Riders</a> | <a href="javascript:;" onclick="cancelRide(\''.$val['CabId'].'\')">Cancel</a></p>
     </div>
 </div>';
 
@@ -593,7 +593,21 @@ echo $str;
         function showMembersJoined(cabId) {
             var left = (screen.width/2)-(450/2);
             var top = (screen.height/2)-(450/2);
-             return window.open('joinedMembers.php?cabId='+cabId, 'iShareRyde', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=350, height=250, top='+top+', left='+left);
+             return window.open('joinedMembers.php?cabId='+cabId, 'iShareRyde', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=500, height=250, top='+top+', left='+left);
+        }
+        function cancelRide(cabId) {
+            var validateCancel = confirm("Are you sure you want to cancel this ride?");
+
+            if (validateCancel){
+                $.post( "cancelRide.php", {"cabId": cabId}, function( data ) {
+
+                    if (data=='Ride cancelled'){
+                        location.reload();
+                    } else {
+                        alert(data);
+                    }
+                });
+            }
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&libraries=places&callback=initMap" async defer></script>
