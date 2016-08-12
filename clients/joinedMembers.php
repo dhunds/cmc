@@ -22,8 +22,8 @@ if (isset($_REQUEST['cabId']) && $_REQUEST['cabId'] !='') {
 <body>
 <table>
     <tr bgcolor="#18A5DE">
-        <td><b>Mobile Number</b></td>
-        <td>&nbsp;&nbsp;<b>Name</b></td>
+        <td style="width: 48%; color: #fff;"><b>Mobile Number</b></td>
+        <td style="width: 48%; color: #fff;"><b>Name</b></td>
     </tr>
     <?php
             foreach($members as $value){
