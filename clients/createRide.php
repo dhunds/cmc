@@ -5,7 +5,7 @@ include_once('topmenu.php');
 include('../common.php');
 
 if (isset($_POST['submit'])) {
-    $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'email', 'vehicle', 'registrationNumber', 'FromLocation', 'ToLocation', 'FromShortName', 'ToShortName', 'seats', 'distance', 'expTime', 'slat', 'slon', 'elat', 'elon'));
+    $error = checkPostForBlank (array('mobileNumber', 'ownerName', 'email', 'vehicle', 'registrationNumber', 'FromLocation', 'ToLocation', 'FromShortName', 'ToShortName', 'seats', 'distance', 'expTime', 'slat', 'slon', 'elat', 'elon', 'fromCity',  'toCity'));
 
     if (!$error) {
 //    echo '<pre>';
@@ -64,7 +64,7 @@ if (isset($_POST['submit'])) {
 
 
          if ($userExists < 1) {
-            $sql = "INSERT INTO registeredusers (FullName, Password, MobileNumber, DeviceToken, Email, Gender, DOB, Platform, PushNotification, LastLoginDateTime, SingleUsePassword, SingleUseExpiry, SingleUseVerified, ResetPasswordOTP, CreatedOn, isAdminType, referralCode, usedReferralCode, totalCredits, defaultPaymentOption, defaultPaymentAcceptOption, type, status, socialId, socialType, mobikwikToken) VALUES ('".$_POST['name']."', '', '".$MobileNumber."', '', '".$_POST['email']."', '', '', '', 'off', CURRENT_TIMESTAMP, NULL, NULL, '0', NULL, NULL, '0', '', '', '', '1', '1', '2', '1', '', '', '')";
+            $sql = "INSERT INTO registeredusers (FullName, Password, MobileNumber, DeviceToken, Email, Gender, DOB, Platform, PushNotification, LastLoginDateTime, SingleUsePassword, SingleUseExpiry, SingleUseVerified, ResetPasswordOTP, CreatedOn, isAdminType, referralCode, usedReferralCode, totalCredits, defaultPaymentOption, defaultPaymentAcceptOption, type, status, socialId, socialType, mobikwikToken) VALUES ('".$_POST['ownerName']."', '', '".$MobileNumber."', '', '".$_POST['email']."', '', '', '', 'off', CURRENT_TIMESTAMP, NULL, NULL, '0', NULL, NULL, '0', '', '', '', '1', '1', '2', '1', '', '', '')";
 
             $stmt = $con->prepare($sql);
             $stmt->execute();
@@ -73,106 +73,105 @@ if (isset($_POST['submit'])) {
             $stmt = $con->prepare($sql);
             $stmt->execute();
 
-         } else {
+         }
 
-            $stmt = $con->query("SELECT id, cleintId FROM cabOwners WHERE mobileNumber = '".$MobileNumber."'");
-            $userAssociated = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+        $stmt = $con->query("SELECT id, cleintId FROM cabOwners WHERE mobileNumber = '".$MobileNumber."'");
+        $userAssociated = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-            if ($userAssociated > 0) {
-                $cabOwner = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($userAssociated > 0) {
+            $cabOwner = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($cabOwner['cleintId'] != $_SESSION['userId']){
-                    $msg = 'User is not authorised.';
-                    $error=1;
-                }
+            if ($cabOwner['cleintId'] != $_SESSION['userId']){
+                $msg = 'Driver already linked to some other corporate account. Please write to support@ishareryde.com with driver phone number and name for resolution. Ride has not been created !';
+                $error=1;
+            }
+        } else {
+            $sql = "INSERT INTO  cabOwners (`mobileNumber` ,`Name`, `cleintId`)VALUES ('".$MobileNumber."',  '".$_POST['ownerName']."', '$client_id');";
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
+        }
+
+        if (!$error){
+
+            $stmt = $con->query("SELECT id FROM userVehicleDetail WHERE mobileNumber = '".$MobileNumber."'");
+            $isVehicleAttached = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+            if ($isVehicleAttached < 1) {
+                $stmt = $con->prepare("INSERT INTO userVehicleDetail SET vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."', mobileNumber = '".$MobileNumber."', created=now()");
+                $stmt->execute();
             } else {
-                $sql = "INSERT INTO  cabOwners (`mobileNumber` ,`Name`, `cleintId`)VALUES ('".$MobileNumber."',  '".$_POST['name']."', '$client_id');";
-                $stmt = $con->prepare($sql);
+                $stmt = $con->prepare("UPDATE userVehicleDetail SET vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."' WHERE mobileNumber = '".$MobileNumber."'");
                 $stmt->execute();
             }
 
-            if (!$error){
+            $sql = "SELECT
+              PoolId,
+              PoolName,
+              (
+                6371 * acos (
+                  cos ( radians($sLat) )
+                  * cos( radians( startLat ) )
+                  * cos( radians( startLon ) - radians($sLon) )
+                  + sin ( radians($sLat) )
+                  * sin( radians( startLat ) )
+                )
+              ) AS origin,
+              (
+                6371 * acos (
+                  cos ( radians($eLat) )
+                  * cos( radians( endLat ) )
+                  * cos( radians( endLon ) - radians($eLon) )
+                  + sin ( radians($eLat) )
+                  * sin( radians( endLat ) )
+                )
+              ) AS destination
 
-                $stmt = $con->query("SELECT id FROM userVehicleDetail WHERE mobileNumber = '".$MobileNumber."'");
-                $isVehicleAttached = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+            FROM userpoolsmaster
+            WHERE poolType=2
+            HAVING origin < " . $proximity . " AND destination < " . $proximity . "
+            ORDER BY origin, destination LIMIT 0,1";
 
-                if ($isVehicleAttached < 1) {
-                    $stmt = $con->prepare("INSERT INTO userVehicleDetail SET vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."', mobileNumber = '".$MobileNumber."', created=now()");
-                    $stmt->execute();
-                } else {
-                    $stmt = $con->prepare("UPDATE userVehicleDetail SET vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."' WHERE mobileNumber = '".$MobileNumber."'");
-                    $stmt->execute();
+            $stmt = $con->query($sql);
+            $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+            $createGroup = 0;
+
+            if ($found < 1) {
+                $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
+                $groupId = $createGroup;
+
+                if ($groupId) {
+                    // Send Mail to support
+                    require_once '../cmcservice/mail.php';
+                    $groupName = $FromShortName . ' to ' . $ToShortName;
+                    sendGroupCreationMail($groupName);
                 }
 
-                $sql = "SELECT
-                  PoolId,
-                  PoolName,
-                  (
-                    6371 * acos (
-                      cos ( radians($sLat) )
-                      * cos( radians( startLat ) )
-                      * cos( radians( startLon ) - radians($sLon) )
-                      + sin ( radians($sLat) )
-                      * sin( radians( startLat ) )
-                    )
-                  ) AS origin,
-                  (
-                    6371 * acos (
-                      cos ( radians($eLat) )
-                      * cos( radians( endLat ) )
-                      * cos( radians( endLon ) - radians($eLon) )
-                      + sin ( radians($eLat) )
-                      * sin( radians( endLat ) )
-                    )
-                  ) AS destination
+            } else {
+                $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $groupId = $nearbyGroup[0]['PoolId'];
+            }
 
-                FROM userpoolsmaster
-                WHERE poolType=2
-                HAVING origin < " . $proximity . " AND destination < " . $proximity . "
-                ORDER BY origin, destination LIMIT 0,1";
+            if ($found > 0 || $createGroup) {
 
-                $stmt = $con->query($sql);
-                $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-                $createGroup = 0;
+                $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge,isIntercity) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge', $isIntercity)";
+               //echo $sql;die;
+                $stmt = $con->prepare($sql);
+                $res = $stmt->execute();
 
-                if ($found < 1) {
-                    $createGroup = createPublicGroups($con, $sLat, $sLon, $eLat, $eLon, $FromShortName, $ToShortName);
-                    $groupId = $createGroup;
+                $sql = "INSERT INTO groupCabs(groupId, cabId) VALUES ($groupId, '$CabId')";
 
-                    if ($groupId) {
-                        // Send Mail to support
-                        require_once '../cmcservice/mail.php';
-                        $groupName = $FromShortName . ' to ' . $ToShortName;
-                        sendGroupCreationMail($groupName);
-                    }
+                $stmt = $con->prepare($sql);
+                $res = $stmt->execute();
 
-                } else {
-                    $nearbyGroup = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    $groupId = $nearbyGroup[0]['PoolId'];
-                }
-
-                if ($found > 0 || $createGroup) {
-
-                    $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge,isIntercity) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge', $isIntercity)";
-                   //echo $sql;die;
-                    $stmt = $con->prepare($sql);
-                    $res = $stmt->execute();
-
-                    $sql = "INSERT INTO groupCabs(groupId, cabId) VALUES ($groupId, '$CabId')";
-
-                    $stmt = $con->prepare($sql);
-                    $res = $stmt->execute();
-
-                    if ($res) {
-                        $msg = 'Ride created.';
-                    } else {
-                        $msg = 'An Error occured, Please try later.';
-                    }
+                if ($res) {
+                    $msg = 'Ride created.';
                 } else {
                     $msg = 'An Error occured, Please try later.';
                 }
+            } else {
+                $msg = 'An Error occured, Please try later.';
             }
-         }
+        }
 
     } else {
         $msg = 'Please fill all the boxes.';
@@ -324,7 +323,7 @@ if ($found > 0) {
         <p align="center" class="dashboard-summary-title">'.$val['Seats'].'</p>
     </div>
     <div class="pure-u-5-24">
-        <p align="center" class="dashboard-summary-title">'.$val['RemainingSeats'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="updateRide.php?cabId='.$val['CabId'].'">Edit</a></p>
+        <p align="center" class="dashboard-summary-title">'.$val['RemainingSeats'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="updateRide.php?cabId='.$val['CabId'].'">Edit</a> | <a href="javascript:;" onclick="showMembersJoined(\''.$val['CabId'].'\')">View</a></p>
     </div>
 </div>';
 
@@ -382,6 +381,10 @@ echo $str;
                     }
                 }
 
+                if (document.getElementById('fromCity').value==''){
+                    alert('From address could not be located');
+                }
+
                 sLat = place.geometry.location.lat();
                 sLon = place.geometry.location.lng();
                 drawLocationFrom(sLat, sLon);
@@ -408,6 +411,10 @@ echo $str;
                     if (place.address_components[i].types[0] == "locality"){
                         document.getElementById('toCity').value = place.address_components[i].long_name;
                     }
+                }
+
+                if (document.getElementById('toCity').value==''){
+                    alert('To address could not be located');
                 }
             });
         }
@@ -583,6 +590,11 @@ echo $str;
             }
         );
 
+        function showMembersJoined(cabId) {
+            var left = (screen.width/2)-(450/2);
+            var top = (screen.height/2)-(450/2);
+             return window.open('joinedMembers.php?'+cabId, 'iShareRyde', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=450, height=450, top='+top+', left='+left);
+        }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&libraries=places&callback=initMap" async defer></script>
     <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0&callback=initMap"-->

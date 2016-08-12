@@ -28,7 +28,7 @@ if (!$error) {
             $cabOwner = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($cabOwner['cleintId'] != $client_id){
-                setResponse(array("code"=>200, "status"=>"Error", "message"=>"User is not authorised"));
+                setResponse(array("code"=>200, "status"=>"Error", "message"=>"Driver already linked to some other corporate account. Please write to support@ishareryde.com with driver phone number and name for resolution. Ride has not been created !"));
             }
         } else {
             $sql = "INSERT INTO  cabOwners (`mobileNumber` ,`Name`, `cleintId`)VALUES ('".$_POST['mobileNumber']."',  '".$_POST['name']."', '$client_id');";

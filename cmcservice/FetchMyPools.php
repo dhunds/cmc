@@ -17,7 +17,7 @@ LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
 LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
 LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
 LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
-JOIN vehicle v ON v.id = vd.vehicleId
+LEFT JOIN vehicle v ON v.id = vd.vehicleId
 WHERE TRIM(cm.MemberNumber) = '" . $MobileNumber . "'
 AND ar.MemberNumber='" . $MobileNumber . "'
 AND cm.DropStatus !='Yes'
@@ -33,7 +33,7 @@ LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
 LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
 LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
 LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
-JOIN vehicle v ON v.id = vd.vehicleId
+LEFT JOIN vehicle v ON v.id = vd.vehicleId
 WHERE TRIM(co.MobileNumber) = '" . $MobileNumber . "'
 AND co.CabStatus ='A'
 ORDER BY ExpStartDateTime

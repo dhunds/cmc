@@ -33,7 +33,7 @@ if ($found > 0) {
         <p align="center" class="dashboard-summary-title">'.$val['Seats'].'</p>
     </div>
     <div class="pure-u-5-24">
-        <p align="center" class="dashboard-summary-title">'.$val['RemainingSeats'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="updateRide.php?cabId='.$val['CabId'].'">Edit</a></p>
+        <p align="center" class="dashboard-summary-title">'.$val['RemainingSeats'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="updateRide.php?cabId='.$val['CabId'].'">Edit</a> | <a href="javascript:;" onclick="showMembersJoined(\''.$val['CabId'].'\')">View</a></p>
     </div>
 </div>';
 
