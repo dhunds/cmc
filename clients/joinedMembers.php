@@ -3,8 +3,8 @@ include 'connection.php';
 
 $members = [];
 
-if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
-    $sql = "SELECT MemberName, MemberNumber FROM acceptedrequest WHERE CabId='".$_POST['cabId']."' AND Status !='Dropped'";
+if (isset($_REQUEST['cabId']) && $_REQUEST['cabId'] !='') {
+    $sql = "SELECT MemberName, MemberNumber FROM acceptedrequest WHERE CabId='".$_REQUEST['cabId']."' AND Status !='Dropped'";
     $stmt = $con->query($sql);
     $membersJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -21,9 +21,9 @@ if (isset($_POST['cabId']) && $_POST['cabId'] !='') {
     <title>JavaScript - Popup example</title>
 <body>
 <table>
-    <tr>
+    <tr bgcolor="#18A5DE">
         <td><b>Mobile Number</b></td>
-        <td><b>Name</b></td>
+        <td>&nbsp;&nbsp;<b>Name</b></td>
     </tr>
     <?php
             foreach($members as $value){
