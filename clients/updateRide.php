@@ -25,6 +25,8 @@ if (isset($_POST['submit']) && $_POST['cabId'] !='') {
     }
 
     list($TravelDate, $TravelTime) = explode(" ", $_POST['startTime']);
+    $TravelTime = date('g:i A', strtotime($TravelTime));
+
     $dateInput = explode('/', $TravelDate);
     $cDate = $dateInput[1] . '/' . $dateInput[0] . '/' . $dateInput[2];
     $expTrip = strtotime($cDate . ' ' . $TravelTime);
