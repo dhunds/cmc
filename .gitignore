@@ -1,5 +1,6 @@
 .idea/
 cmcadmin/connection.php
 cmcservice/connection.php
+apis/connection.php
 clients/connection.php
 api/db.php
