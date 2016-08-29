@@ -20,7 +20,6 @@ CREATE TABLE `userLinkedWallet` (
 
 ALTER TABLE `userLinkedWallet`
   ADD PRIMARY KEY (`id`);
-
 ALTER TABLE `userLinkedWallet`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -90,10 +89,47 @@ ALTER TABLE `walletTransactionLogs` ADD `orderId` VARCHAR(50) NOT NULL AFTER `tr
 ALTER TABLE `ridePayments` ADD `amountPaidByRider` FLOAT NOT NULL AFTER `serviceTax`, ADD `amountPaidByMerchant` FLOAT NOT NULL AFTER `amountPaidByRider`;
 ALTER TABLE `ridePayments` ADD `orderId` VARCHAR(50) NOT NULL AFTER `transactionId`;
 
-
-
 ALTER TABLE  `walletTransactionLogs` CHANGE  `serviceTax`  `serviceTax` FLOAT( 1 ) NOT NULL ;
 ALTER TABLE `ridePayments` DROP `transactionId`;
 
 ALTER TABLE  `ridePayments` ADD  `amountPaidToDriver` FLOAT NOT NULL AFTER  `amountPaidByMerchant` ,
 ADD  `driverPaymentOrderId` VARCHAR( 30 ) NOT NULL AFTER  `amountPaidToDriver` ;
+
+-------------------------------------------------
+-------------------------------------------------
+    // After 23 August 2016
+-------------------------------------------------
+-------------------------------------------------
+
+
+ALTER TABLE `acceptedrequest` ADD `ownerUserId` INT NOT NULL AFTER `CabId`, ADD `memberUserId` INT NOT NULL AFTER `ownerUserId`;
+ALTER TABLE `availedOffers` ADD `userId` INT NOT NULL AFTER `mobileNumber`;
+ALTER TABLE `cabopen` ADD `userId` INT NOT NULL AFTER `CabId`;
+ALTER TABLE `cabOwners` ADD `userId` INT NOT NULL AFTER `id`;
+ALTER TABLE `cabrating` ADD `userId` INT NOT NULL AFTER `Rating`;
+ALTER TABLE `cancelledBookings` ADD `userId` INT NOT NULL AFTER `ToLat`;
+ALTER TABLE `cmccabrecords` ADD `userId` INT NOT NULL AFTER `ToLat`;
+ALTER TABLE `credits` ADD `userId` INT NOT NULL AFTER `offerId`;
+ALTER TABLE `cronnotifications` ADD `SentMemberUserId` INT NOT NULL AFTER `NotificationType`, ADD `receivedMemberUserId` INT NOT NULL AFTER `SentMemberUserId`;
+ALTER TABLE `feedback` ADD `ownerUserId` INT NOT NULL AFTER `CabId`, ADD `memberUserId` INT NOT NULL AFTER `ownerUserId`;
+ALTER TABLE `notifications` ADD `sentMemberUserId` INT NOT NULL AFTER `NotificationType`, ADD `receivedMemberUserId` INT NOT NULL AFTER `sentMemberUserId`;
+ALTER TABLE `paymentLogs` ADD `userIdFrom` INT NOT NULL AFTER `id`, ADD `userIdTo` INT NOT NULL AFTER `userIdFrom`;
+ALTER TABLE `payments` ADD `userId` INT NOT NULL AFTER `id`;
+ALTER TABLE `registeredusers` ADD `id` INT NOT NULL AUTO_INCREMENT FIRST, ADD UNIQUE (`id`);
+ALTER TABLE `searchLocations` ADD `userId` INT NOT NULL AFTER `toLocation`;
+ALTER TABLE `tmp_register` ADD `id` INT NOT NULL AUTO_INCREMENT FIRST, ADD UNIQUE (`id`);
+ALTER TABLE `transactionLogs` ADD `senderUserId` INT NOT NULL AFTER `token`, ADD `receiverUserId` INT NOT NULL AFTER `senderUserId`;
+ALTER TABLE `usedCredits` ADD `userId` INT NOT NULL AFTER `id`;
+ALTER TABLE `usercoupons` ADD `userId` INT NOT NULL AFTER `id`;
+ALTER TABLE `userLinkedWallet` ADD `userId` INT NOT NULL AFTER `id`;
+ALTER TABLE `userOffers` ADD `userId` INT NOT NULL AFTER `id`;
+ALTER TABLE `userpoolsmaster` ADD `ownerUserId` INT NOT NULL AFTER `PoolId`;
+ALTER TABLE `userpoolsslave` ADD `memberUserId` INT NOT NULL AFTER `PoolId`;
+ALTER TABLE `userprofileimage` ADD `userId` INT NOT NULL FIRST;
+ALTER TABLE `userRating` ADD `ownerUserId` INT NOT NULL AFTER `id`, ADD `memberUserId` INT NOT NULL AFTER `ownerUserId`;
+ALTER TABLE `mobikwikTransactions` ADD `senderUserId` INT NOT NULL AFTER `transactionDate`, ADD `receiverUserId` INT NOT NULL AFTER `senderuserId`;
+ALTER TABLE `ridePayments` ADD `paidByUserId` INT NOT NULL AFTER `id`, ADD `paidToUserId` INT NOT NULL AFTER `paidByUserId`;
+ALTER TABLE `cabmembers` ADD `memberUserId` INT NOT NULL AFTER `CabId`;
+ALTER TABLE `referfriendtoclub` ADD `memberUserId` INT NOT NULL AFTER `FriendName`, ADD `friendUserId` INT NOT NULL AFTER `memberUserId`;
+ALTER TABLE `referfriendtoride` ADD `memberUserId` INT NOT NULL AFTER `FriendName`, ADD `friendUserId` INT NOT NULL AFTER `memberUserId`;
+
