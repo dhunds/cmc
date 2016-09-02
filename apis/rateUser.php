@@ -3,15 +3,17 @@ include ('connection.php');
 include_once('includes/functions.php');
 
 if (isset($_POST['ownerNumber']) && $_POST['ownerNumber'] !='' && isset($_POST['memberNumber']) && $_POST['memberNumber'] !='' && isset($_POST['rating']) && $_POST['rating'] !='' && isset($_POST['cabId']) && $_POST['cabId'] !='') {
+    $memberUserId = $_POST['memberUserId'];
+    $ownerUserId = $_POST['ownerUserId'];
 
-    $sql = "SELECT raing FROM userRating WHERE ownerNumber='" . $_POST['ownerNumber'] . "' AND memberNumber = '" . $_POST['memberNumber'] . "' AND cabId='" . $_POST['cabId'] . "'";
+    $sql = "SELECT raing FROM userRating WHERE ownerUserId='$ownerUserId' AND memberUserId = '$memberUserId' AND cabId='" . $_POST['cabId'] . "'";
 
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if (!$found)
     {
-        $sql = "INSERT INTO userRating (ownerNumber,memberNumber, cabId, rating, reason, created) VALUES ('".$_POST['ownerNumber']."','".$_POST['memberNumber']."', '".$_POST['cabId']."', ".$_POST['rating'].", '".$_POST['reason']."', now())";
+        $sql = "INSERT INTO userRating (ownerUserId, memberUserId, ownerNumber,memberNumber, cabId, rating, reason, created) VALUES ($ownerUserId, $memberUserId, '".$_POST['ownerNumber']."','".$_POST['memberNumber']."', '".$_POST['cabId']."', ".$_POST['rating'].", '".$_POST['reason']."', now())";
 
     }
 

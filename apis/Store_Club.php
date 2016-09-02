@@ -8,12 +8,12 @@ $OwnerNumber = $_POST['OwnerNumber'];
 $ClubName = $_POST['ClubName'];
 $ClubMembersName = $_POST['ClubMembersName'];
 $ClubMembersNumber = $_POST['ClubMembersNumber'];
+$ownerUserId = $_POST['ownerUserId'];
 
-$sql = "SELECT referralCode FROM registeredusers WHERE MobileNumber='".trim($OwnerNumber)."'";
+$sql = "SELECT referralCode FROM registeredusers WHERE userId='".trim($ownerUserId)."'";
 $stmt = $con->query($sql);
 $usr = $stmt->fetch(PDO::FETCH_ASSOC);
 $OwnerReferralCode = $usr['referralCode'];
-
 
 $ClubMembersNumberNew = substr($ClubMembersNumber, 1, -1);
 $ClubMembersNameNew = substr($ClubMembersName, 1, -1);
@@ -23,13 +23,13 @@ $sql->execute();
 $club_limit = (int)$sql->fetchColumn();
 
 
-$stmt = $con->query("Select * From userpoolsmaster Where PoolName='$ClubName' AND OwnerNumber='$OwnerNumber'");
+$stmt = $con->query("Select * From userpoolsmaster Where PoolName='$ClubName' AND ownerUserId='$ownerUserId'");
 //$no_of_users = $stmt->rowCount();
 $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 if ($no_of_users > 0) {
     echo 'Club Already Exist';
 } else {
-    $sql2 = "INSERT INTO userpoolsmaster(OwnerNumber, PoolName, Active) VALUES ('$OwnerNumber','$ClubName','1')";
+    $sql2 = "INSERT INTO userpoolsmaster(OwnerNumber, ownerUserId, PoolName, Active) VALUES ('$OwnerNumber', '$ownerUserId', '$ClubName','1')";
     $stmt2 = $con->prepare($sql2);
     $res2 = $stmt2->execute();
     $poolid = $con->lastInsertId();
@@ -56,12 +56,13 @@ if ($no_of_users > 0) {
 
                     $stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$FriendNumber' and PushNotification != 'off'");
                     $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-
+                    $friendUserId=0;
                     if ($FriendExists > 0) {
                         while ($row = $stmtF->fetch()) {
                             $FriendDeviceToken = $row['DeviceToken'];
                             $FriendPlatform = $row['Platform'];
                             $FriendName = $row['FullName'];
+                            $friendUserId = $row['userId'];
                         }
                     }
 
@@ -75,7 +76,7 @@ if ($no_of_users > 0) {
                         }
 
                         $NotificationType = "PoolId_Added";
-                        $manFriend = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, PoolId, DateTime) VALUES ('$NotificationType','$OwnerName','$OwnerNumber','$FriendName','$FriendNumber','$Message','$poolid',now())";
+                        $manFriend = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, PoolId, DateTime, sentMemberUserId, receivedMemberUserId) VALUES ('$NotificationType','$OwnerName','$OwnerNumber','$FriendName','$FriendNumber','$Message','$poolid',now(), $ownerUserId, $friendUserId)";
                         $manstmtFriend = $con->prepare($manFriend);
                         $manresFriend = $manstmtFriend->execute();
                         $notificationId = $con->lastInsertId();
@@ -104,7 +105,7 @@ if ($no_of_users > 0) {
                         $objNotification->sendSMS("[" . $FriendNumber . "]", $messageSMS);
                     }
 
-                    $sql3 = "INSERT INTO userpoolsslave(PoolId,MemberName,MemberNumber, IsActive) VALUES ('$poolid','$memName[$i]','$memNumber[$i]','1')";
+                    $sql3 = "INSERT INTO userpoolsslave(PoolId,MemberName,MemberNumber,memberUserId,  IsActive) VALUES ('$poolid','$memName[$i]','$memNumber[$i]', $friendUserId, '1')";
                     $stmt3 = $con->prepare($sql3);
                     $res3 = $stmt3->execute();
                     if ($res3 == true) {

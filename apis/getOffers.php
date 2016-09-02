@@ -5,6 +5,8 @@ $resp = array('header' => 500, 'status' => 'fail', 'message' => '', 'data' => ar
 
 if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
 
+    $userId = $_POST['userId'];
+
     $sql = "SELECT id, title, description, terms, code, amount, type, maxUse, maxUsePerUser, validFrom, validThru, status  FROM offers WHERE status=1 AND validThru > NOW()";
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
@@ -15,9 +17,8 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
         $finalArray = array();
 
         foreach ($data as $val) {
-            // OLD Implementation till 22nd Dec 1015
-            //$sql = "SELECT COALESCE(SUM(credits),0) as credits, COUNT(id) as useCount FROM credits WHERE offerId=" . $val['id'] . " AND mobileNumber='" . $_POST['mobileNumber'] . "' AND beneficiaryType=1";
-            $sql = "SELECT COALESCE(SUM(credits),0) as credits, COUNT(id) as useCount FROM credits WHERE offerId=" . $val['id'] . " AND mobileNumber='" . $_POST['mobileNumber'] . "'";
+
+            $sql = "SELECT COALESCE(SUM(credits),0) as credits, COUNT(id) as useCount FROM credits WHERE offerId=" . $val['id'] . " AND userId='" . $_POST['userId'] . "'";
             $stmt = $con->query($sql);
             $credit = $stmt->fetch(PDO::FETCH_ASSOC);
 

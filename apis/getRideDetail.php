@@ -4,7 +4,7 @@ include('connection.php');
 if (isset($_REQUEST['cabId']) && $_REQUEST['cabId'] !='') {
     $cabId = $_REQUEST['cabId'];
 
-    $stmt = $con->query("SELECT co.*, ui.imagename FROM cabopen co JOIN userprofileimage ui ON ui.MobileNumber=co.MobileNumber WHERE co.CabId = '$cabId'");
+    $stmt = $con->query("SELECT co.*, ui.imagename FROM cabopen co JOIN userprofileimage ui ON ui.userId=co.userId WHERE co.CabId = '$cabId'");
     $cab_exits = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($cab_exits) {

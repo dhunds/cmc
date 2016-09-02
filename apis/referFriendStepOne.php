@@ -8,6 +8,7 @@ $MemberName = $_POST['MemberName'];
 $MemberNumber = $_POST['MemberNumber'];
 $ReferedUserName = $_POST['ReferedUserName'];
 $ReferedUserNumber = $_POST['ReferedUserNumber'];
+$memberUserId = $_POST['memberUserId'];
 
 $Message = '';
 $OwnerNumber = '';
@@ -21,15 +22,14 @@ $ClubName = '';
 $ReferedUserNumberNew = substr($ReferedUserNumber, 1, -1);
 $ReferedUserNameNew = substr($ReferedUserName, 1, -1);
 
-$sqlI = "SELECT OwnerNumber FROM userpoolsmaster WHERE PoolId = '$PoolId' and PoolStatus = 'OPEN' and Active = 1";
+$sqlI = "SELECT ownerUserId, OwnerNumber, PoolName FROM userpoolsmaster WHERE PoolId = '$PoolId' and PoolStatus = 'OPEN' and Active = 1";
 $stmtI = $con->query($sqlI);
-$OwnerNumber = $stmtI->fetchColumn();
+$row = $stmtI->fetch(PDO::FETCH_ASSOC);
+$OwnerNumber = $row['OwnerNumber'];
+$ClubName = $row['PoolName'];
+$ownerUserId = $row['ownerUserId'];
 
-$sqlP = "SELECT PoolName FROM userpoolsmaster WHERE PoolId = '$PoolId' and PoolStatus = 'OPEN' and Active = 1";
-$stmtP = $con->query($sqlP);
-$ClubName = $stmtP->fetchColumn();
-
-$stmt = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$OwnerNumber' and PushNotification != 'off'");
+$stmt = $con->query("SELECT * FROM registeredusers WHERE userId = '$ownerUserId' and PushNotification != 'off'");
 $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 if ($no_of_users > 0) {
@@ -56,16 +56,26 @@ if ($no_of_users > 0) {
         $length = count($refNumber);
 
         for ($i = 0; $i < $length; $i++) {
+
+            $stmtF = $con->query("SELECT userId FROM registeredusers WHERE MobileNumber = '$refNumber[$i]'");
+            $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+            if ($FriendExists >0) {
+                $friendUserId = $stmtF->fetchColumn();
+            } else {
+                $friendUserId = 0;
+            }
+
             $Message = $MemberName . " has reffered " . $refName[$i] . " to join your group " . $ClubName;
             $NotificationType = "PoolId_Refered";
 
-           $sqlRef = "INSERT INTO referfriendtoclub (PoolId,MemberNumber,FriendNumber,FriendName,RefDateTime) VALUES ('$PoolId','$MemberNumber','$refNumber[$i]','$refName[$i]',now())";
+            $sqlRef = "INSERT INTO referfriendtoclub (PoolId,MemberNumber,FriendNumber,FriendName,RefDateTime, memberUserId, friendUserId) VALUES ('$PoolId','$MemberNumber','$refNumber[$i]','$refName[$i]',now(), $memberUserId, $friendUserId)";
             $stmtRef = $con->prepare($sqlRef);
             $resRef = $stmtRef->execute();
             $RefId = $con->lastInsertId();
 
             if ($resRef === true) {
-               $man = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, PoolId, DateTime,RefId) VALUES ('$NotificationType','$MemberName','$MemberNumber','$OwnerName','$OwnerNumber','$Message','$PoolId',now(),'$RefId')";
+                $man = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, PoolId, DateTime,RefId, sentMemberUserId, receivedMemberUserId) VALUES ('$NotificationType','$MemberName','$MemberNumber','$OwnerName','$OwnerNumber','$Message','$PoolId',now(),'$RefId', $memberUserId, $ownerUserId)";
                 $manstmt = $con->prepare($man);
                 $manres = $manstmt->execute();
 

@@ -3,7 +3,8 @@ include ('connection.php');
 include_once('includes/offers.php');
 
 if (isset($_POST['offerCode']) && $_POST['offerCode'] !='' && isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='') {
-    $attachOffer = attachCouponsToUsers($_POST['offerCode'], $_POST['mobileNumber']);
+
+    $attachOffer = attachCouponsToUsers($_POST['offerCode'], $_POST['mobileNumber'], $_POST['userId']);
     http_response_code(200);
     header('Content-Type: application/json');
     echo '{"status":"success", "message":"'.$attachOffer.'"}';

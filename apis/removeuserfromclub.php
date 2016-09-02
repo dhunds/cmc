@@ -5,6 +5,7 @@ $objNotification = new Notification();
 
 $poolid = $_POST['poolid'];
 $MemberNumber = trim($_POST['usernumber']);
+$userId = $_POST['userId'];
 
 $OwnerNumber = '';
 $OwnerName = '';
@@ -17,10 +18,11 @@ if ($OwnerExists > 0) {
     while ($row = $stmtO->fetch()) {
         $OwnerNumber = trim((string)$row['OwnerNumber']);
         $ClubName = $row['PoolName'];
+        $ownerId = $row['ownerUserId'];;
     }
 
     if ($OwnerNumber != '') {
-        $stmtI = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$OwnerNumber' and PushNotification != 'off'");
+        $stmtI = $con->query("SELECT * FROM registeredusers WHERE userId = '$ownerId' and PushNotification != 'off'");
         $OwnRegExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         if ($OwnRegExists > 0) {
@@ -32,7 +34,7 @@ if ($OwnerExists > 0) {
         }
     }
 }
-$stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$MemberNumber' and PushNotification != 'off'");
+$stmtF = $con->query("SELECT * FROM registeredusers WHERE userId = '$userId' and PushNotification != 'off'");
 $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 if ($FriendExists > 0) {
@@ -51,7 +53,7 @@ if ($FriendExists > 0) {
     }
 
     $NotificationType = "PoolId_Removed";
-    $manFriend = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, PoolId, DateTime) VALUES ('$NotificationType','$OwnerName','$OwnerNumber','$MemberName','$MemberNumber','$Message','$poolid',now())";
+    $manFriend = "INSERT INTO notifications(NotificationType, SentMemberName, SentMemberNumber, ReceiveMemberName, ReceiveMemberNumber, Message, PoolId, DateTime, sentMemberUserId, receivedMemberUserId) VALUES ('$NotificationType','$OwnerName','$OwnerNumber','$MemberName','$MemberNumber','$Message','$poolid',now(), $ownerId, $userId)";
     $manstmtFriend = $con->prepare($manFriend);
     $manresFriend = $manstmtFriend->execute();
 
@@ -69,7 +71,7 @@ if ($FriendExists > 0) {
         }
     }
 
-    $sql21 = "DELETE FROM userpoolsslave WHERE TRIM(PoolId) = '$poolid' AND TRIM(MemberNumber) = '$MemberNumber'";
+    $sql21 = "DELETE FROM userpoolsslave WHERE TRIM(PoolId) = '$poolid' AND TRIM(memberUserId) = '$userId'";
     $stmt21 = $con->prepare($sql21);
     $res21 = $stmt21->execute();
 
@@ -79,7 +81,7 @@ if ($FriendExists > 0) {
         echo "FAILURE";
     }
 } else {
-    $sql21 = "DELETE FROM userpoolsslave WHERE TRIM(PoolId) = '$poolid' AND TRIM(MemberNumber) = '$MemberNumber'";
+    $sql21 = "DELETE FROM userpoolsslave WHERE TRIM(PoolId) = '$poolid' AND TRIM(memberUserId) = '$userId'";
     $stmt21 = $con->prepare($sql21);
     $res21 = $stmt21->execute();
 

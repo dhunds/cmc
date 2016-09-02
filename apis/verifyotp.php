@@ -79,10 +79,15 @@ if ($user_exists == 0) {
 
             $stmt = $con->prepare($sql);
             $res = $stmt->execute();
+            $insertedId = $con->lastInsertId();
 
-            $sql = "INSERT INTO userprofileimage(MobileNumber, imagename) VALUES ('" . $user['MobileNumber'] . "','')";
+            $sql = "INSERT INTO userprofileimage(userId, MobileNumber, imagename) VALUES ($insertedId, '" . $user['MobileNumber'] . "','')";
             $stmt = $con->prepare($sql);
             $res2 = $stmt->execute();
+
+            $sql = "UPDATE userpoolsslave SET memberUserId = '" . $insertedId . "' WHERE MemberNumber = '".$MobileNumber."'";
+            $stmt = $con->prepare($sql);
+            $res = $stmt->execute();
 
             if ($user['Email'] != '') {
                 require_once 'mail.php';

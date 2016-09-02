@@ -1,8 +1,8 @@
 <?php
 include('connection.php');
 
-if (isset($_POST['mobileNumber']) && isset($_POST['mobileNumber'])) {
-    $sql = "SELECT Email FROM registeredusers WHERE MobileNumber='" . $_POST['mobileNumber'] . "'";
+if (isset($_POST['userId']) && isset($_POST['userId'])) {
+    $sql = "SELECT Email FROM registeredusers WHERE userId='" . $_POST['userId'] . "'";
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 

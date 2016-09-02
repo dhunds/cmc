@@ -25,9 +25,13 @@ $sth = $con->prepare("SELECT COUNT(*) AS RemainingSeats FROM acceptedrequest WHE
 $sth->execute();
 $RemainingSeats = (int)$sth->fetchColumn();
 
-$sth1 = $con->prepare("SELECT Seats FROM cabopen WHERE CabId = '$CabId' and CabStatus = 'A'");
+$sth1 = $con->prepare("SELECT Seats, Distance, perKmCharge FROM cabopen WHERE CabId = '$CabId' and CabStatus = 'A'");
 $sth1->execute();
-$Seats = (int)$sth1->fetchColumn();
+$row = $sth1->fetch(PDO::FETCH_ASSOC);
+
+$Seats = (int)$row['Seats'];
+$dist = $row['Distance'];
+$perkmCharge = $row['perKmCharge'];
 
 $stmt = $con->query("SELECT MemberName FROM acceptedrequest WHERE CabId = '$CabId' AND MemberNumber='$MemberNumber' Status != 'Dropped'");
 $alreadyJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
@@ -82,6 +86,23 @@ if ($alreadyJoined) {
                 $upstmt2 = $con->prepare($upsql2);
                 $upres2 = $upstmt2->execute();
             }
+            
+            $isAssociate = isAssociate($OwnerNumber);
+
+            if ($isAssociate) {
+                $sql = "SELECT SmsMessage FROM smstemplates WHERE SmsshortCode = 'JOINRIDE'";
+                $stmt = $con->query($sql);
+                $txtMsg = $stmt->fetchColumn();
+                $OwnerNumberWithoutPrefix = substr(trim($OwnerNumber), -10);
+                $amount = round($row['Distance'] * $row['perKmCharge']);
+
+                $txtMsg = str_replace("NXXXXX", $OwnerName, $txtMsg);
+                $txtMsg = str_replace("MXXXXX", $OwnerNumberWithoutPrefix, $txtMsg);
+                $txtMsg = str_replace("AXXXXX", $amount, $txtMsg);
+                $MobNumber = '[' . $MobileNumber . ']';
+                $objNotification->sendSMS($MobNumber, $txtMsg);
+            }
+
             $NotificationType = "CabId_Joined";
 
             $params = array('NotificationType' => $NotificationType, 'SentMemberName' => $MemberName, 'SentMemberNumber' => $MemberNumber, 'ReceiveMemberName'=>$OwnerName, 'ReceiveMemberNumber'=>$OwnerNumber, 'Message'=>$Message, 'CabId'=>$CabId, 'DateTime'=>'now()');

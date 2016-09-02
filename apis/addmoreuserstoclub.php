@@ -1,4 +1,4 @@
-Ø<?php
+<?php
 include('connection.php');
 include_once('classes/class.notification.php');
 $objNotification = new Notification();

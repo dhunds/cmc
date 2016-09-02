@@ -226,7 +226,7 @@ function checkForOffers ($mobileNumber) {
     }
 }
 
-function attachCouponsToUsers ($offerCode, $mobileNumber) {
+function attachCouponsToUsers ($offerCode, $mobileNumber, $userId) {
     global $con;
     $sql = "SELECT id, amount, maxUse, maxUsePerUser, status FROM offers WHERE status=1 AND validThru > now() AND code='".$offerCode."'";
     $stmt = $con->query($sql);
@@ -235,25 +235,25 @@ function attachCouponsToUsers ($offerCode, $mobileNumber) {
     if ($found > 0) {
         $offer = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "SELECT id FROM userOffers WHERE offerId=" . $offer['id'] . " AND mobileNumber='" . $mobileNumber . "'";
+        $sql = "SELECT id FROM userOffers WHERE offerId=" . $offer['id'] . " AND userId='" . $userId . "'";
         $con->query($sql);
         $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         if ($found > 0) {
             $msg ="Coupon Already Applied";
         } else {
-            $sql = "SELECT id FROM userOffers WHERE mobileNumber='" . $mobileNumber . "'";
+            $sql = "SELECT id FROM userOffers WHERE userId='" . $userId . "'";
             $stmt = $con->query($sql);
             $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
             if ($found > 0) {
-                $sql = "UPDATE userOffers SET offerId=".$offer['id']." WHERE mobileNumber='" . $mobileNumber . "'";
+                $sql = "UPDATE userOffers SET offerId=".$offer['id']." WHERE userId='" . $userId . "'";
                 $stmt = $con->prepare($sql);
                 $stmt->execute();
 
                 $msg = "Coupon Applied";
             } else {
-                $sql = "INSERT INTO userOffers(mobileNumber, offerId) VALUES ('$mobileNumber',".$offer['id'].")";
+                $sql = "INSERT INTO userOffers(userId, mobileNumber, offerId) VALUES ($userId, '$mobileNumber',".$offer['id'].")";
                 $nStmt = $con->prepare($sql);
                 $nStmt->execute();
                 $msg = "Coupon Applied";
@@ -273,10 +273,10 @@ function checkOfferUseCount(){
     return $offerCount;
 }
 
-function checkOffers ($mobileNumber) {
+function checkOffers ($userId) {
     global $con;
 
-    $stmt = $con->query("SELECT f.title, f.description, f.terms, f.code FROM userOffers uf JOIN offers f ON uf.offerId = f.id WHERE uf.mobileNumber = '".$mobileNumber."' AND uf.status=1");
+    $stmt = $con->query("SELECT f.title, f.description, f.terms, f.code FROM userOffers uf JOIN offers f ON uf.offerId = f.id WHERE uf.userId = '".$userId."' AND uf.status=1");
     $offerExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($offerExists) {

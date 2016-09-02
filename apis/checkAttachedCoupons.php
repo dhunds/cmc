@@ -3,7 +3,7 @@ include ('connection.php');
 include_once('includes/offers.php');
 
 if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] !='') {
-    $offer = checkOffers($_POST['mobileNumber']);
+    $offer = checkOffers($_POST['userId']);
 
     if ($offer) {
         $resp = array('header' => 200, 'status' => 'success', 'data' => $offer);
