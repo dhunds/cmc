@@ -7,6 +7,7 @@ $MembersNumber = $_POST['MembersNumber'];
 $MembersName = $_POST['MembersName'];
 $FullName = $_POST['FullName'];
 $MobileNumber = $_POST['MobileNumber'];
+$userId = $_POST['userId'];
 $Message = $_POST['Message'];
 $latlongstr = $_POST['latlongstr'];
 

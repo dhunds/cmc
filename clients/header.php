@@ -27,8 +27,14 @@
                 </a>
             </div>
             <div style="text-align: right;width: 50%; float: right;">
+                <?php if($_SESSION['logo']){ ?>
                 <img src="logo/<?=$_SESSION['logo'];?>" alt=""
                      title="" border="0" class="pure-img-responsive-home" onerror="this.src=''"/>
+                <?php } else { ?>
+                    <img src="" alt="" title="" border="0" class="pure-img-responsive-home"/>
+                <?php } ?>
+
+                
             </div>
 
         </div>

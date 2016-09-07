@@ -73,7 +73,7 @@ if ($res2 == true) {
     $stmt = $con->query($sql);
     $message = $stmt->fetchColumn();
     $message = str_replace("XXXXXX", $singleusepassword, $message);
-    $MobileNumber = '[' . $MobileNumber . ']';
+    $MobileNumber = '[' . substr(trim($_POST['MobileNumber']), -10) . ']';
 
     $objNotification->sendSMS($MobileNumber, $message);
 

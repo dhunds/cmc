@@ -585,7 +585,7 @@ echo $str;
             });
         }
 
-        $(document).ready(
+        $(document).load(
             function() {
                 setInterval(function() {
                     $.post( "clientRides.php", function( data ) {

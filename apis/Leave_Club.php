@@ -5,6 +5,8 @@ $objNotification = new Notification();
 
 $poolid = $_POST['poolid'];
 $MemberNumber = trim($_POST['MemberNumber']);
+$memberUserId = trim($_POST['memberUserId']);
+
 
 $OwnerNumber = '';
 $OwnerName = '';
@@ -18,11 +20,13 @@ $OwnerExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 if ($OwnerExists > 0) {
     while ($row = $stmtO->fetch()) {
         $OwnerNumber = trim((string)$row['OwnerNumber']);
+        $ownerUserId = trim((string)$row['ownerUserId']);
+
         $ClubName = $row['PoolName'];
     }
 
     if ($OwnerNumber != '') {
-        $stmtI = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$OwnerNumber' and PushNotification != 'off'");
+        $stmtI = $con->query("SELECT * FROM registeredusers WHERE ownerUserId = '$ownerUserId' and PushNotification != 'off'");
         $OwnRegExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         if ($OwnRegExists > 0) {
@@ -35,7 +39,7 @@ if ($OwnerExists > 0) {
     }
 }
 
-$stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$MemberNumber' and PushNotification != 'off'");
+$stmtF = $con->query("SELECT * FROM registeredusers WHERE userId = '$memberUserId' and PushNotification != 'off'");
 $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 if ($FriendExists > 0) {
@@ -73,7 +77,7 @@ if ($FriendExists > 0) {
         }
     }
 
-    $sql21 = "DELETE FROM userpoolsslave WHERE TRIM(PoolId) = '$poolid' AND TRIM(MemberNumber) = '$MemberNumber'";
+    $sql21 = "DELETE FROM userpoolsslave WHERE TRIM(PoolId) = '$poolid' AND TRIM(memberUserId) = '$memberUserId'";
     $stmt21 = $con->prepare($sql21);
     $res21 = $stmt21->execute();
 

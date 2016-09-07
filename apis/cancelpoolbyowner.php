@@ -6,16 +6,17 @@ $objNotification = new Notification();
 $CabId = $_POST['CabId'];
 $OwnerName = $_POST['OwnerName'];
 $OwnerNumber = $_POST['OwnerNumber'];
+$ownerUserId = $_POST['ownerUserId'];
 $Message = $_POST['Message'];
 
 $Status = "U";
 
-$sql2 = "UPDATE cabopen set CabStatus='I' where (CabId = '$CabId' AND MobileNumber = '$OwnerNumber')";
+$sql2 = "UPDATE cabopen set CabStatus='I' where (CabId = '$CabId' AND userId = '$ownerUserId')";
 $stmt2 = $con->prepare($sql2);
 $res2 = $stmt2->execute();
 
 if ($res2 === true) {
-    $stmt999 = $con->query("SELECT MemberName,MemberNumber FROM acceptedrequest WHERE (CabId = '$CabId' AND Status != 'Dropped' AND MemberNumber != '$OwnerNumber')");
+    $stmt999 = $con->query("SELECT MemberName,MemberNumber FROM acceptedrequest WHERE (CabId = '$CabId' AND Status != 'Dropped' AND memberUserId != '$ownerUserId')");
 
     while ($row999 = $stmt999->fetch()) {
         $MemberName_array[] = $row999['MemberName'];
@@ -31,7 +32,7 @@ if ($res2 === true) {
     $manstmt = $con->prepare($sqlquery);
     $ressqlquery = $manstmt->execute();
 
-    $stmt = $con->query("SELECT * FROM registeredusers WHERE PushNotification != 'off' and MobileNumber IN (SELECT MemberNumber FROM acceptedrequest WHERE (CabId = '$CabId' AND Status != 'Dropped' AND MemberNumber != '$OwnerNumber'))");
+    $stmt = $con->query("SELECT * FROM registeredusers WHERE PushNotification != 'off' and MobileNumber IN (SELECT MemberNumber FROM acceptedrequest WHERE (CabId = '$CabId' AND Status != 'Dropped' AND memberUserId != '$ownerUserId'))");
     $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($no_of_users > 0) {

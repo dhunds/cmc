@@ -195,7 +195,7 @@ if ($totalRows > 0) {
 }
 */
 // userRating
-
+/*
 $stmt = $con->query("SELECT DISTINCT ownerNumber FROM userRating");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -224,6 +224,63 @@ if ($totalRows > 0) {
 
         if ($userId) {
             $stmt2 = $con->prepare("UPDATE userRating SET memberUserId=".$userId." WHERE memberNumber='".trim($row['memberNumber'])."'");
+            $stmt2->execute();
+            $i++;
+        }
+    }
+}
+*/
+
+// CabMember
+
+/*
+$stmt = $con->query("SELECT DISTINCT MemberNumber FROM cabmembers");
+$totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+if ($totalRows > 0) {
+    while ($row = $stmt->fetch()) {
+        $stmt1 = $con->query("SELECT userId FROM registeredusers WHERE trim(MobileNumber)='".trim($row['MemberNumber'])."'");
+
+        $userId = $stmt1->fetchColumn();
+
+        if ($userId) {
+            $stmt2 = $con->prepare("UPDATE cabmembers SET memberUserId=".$userId." WHERE MemberNumber='".trim($row['MemberNumber'])."'");
+            $stmt2->execute();
+            $i++;
+        }
+    }
+}
+*/
+
+
+$stmt = $con->query("SELECT DISTINCT OwnerNumber FROM acceptedrequest");
+$totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+if ($totalRows > 0) {
+    while ($row = $stmt->fetch()) {
+        $stmt1 = $con->query("SELECT userId FROM registeredusers WHERE trim(MobileNumber)='".trim($row['OwnerNumber'])."'");
+
+        $userId = $stmt1->fetchColumn();
+
+        if ($userId) {
+            $stmt2 = $con->prepare("UPDATE acceptedrequest SET ownerUserId=".$userId." WHERE OwnerNumber='".trim($row['OwnerNumber'])."'");
+            $stmt2->execute();
+            $i++;
+        }
+    }
+}
+
+$stmt = $con->query("SELECT DISTINCT MemberNumber FROM acceptedrequest");
+$totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+if ($totalRows > 0) {
+    while ($row = $stmt->fetch()) {
+        $stmt1 = $con->query("SELECT userId FROM registeredusers WHERE trim(MobileNumber)='".trim($row['MemberNumber'])."'");
+
+        $userId = $stmt1->fetchColumn();
+
+        if ($userId) {
+            $stmt2 = $con->prepare("UPDATE acceptedrequest SET memberUserId=".$userId." WHERE MemberNumber='".trim($row['MemberNumber'])."'");
             $stmt2->execute();
             $i++;
         }

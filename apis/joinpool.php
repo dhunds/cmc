@@ -7,6 +7,10 @@ $CabId = $_POST['CabId'];
 $OwnerName = $_POST['OwnerName'];
 $OwnerNumber = $_POST['OwnerNumber'];
 $MemberName = $_POST['MemberName'];
+
+$ownerUserId = $_POST['ownerUserId'];
+$memberUserId = $_POST['memberUserId'];
+
 $MemberNumber = $_POST['MemberNumber'];
 $MemberLocationAddress = $_POST['MemberLocationAddress'];
 $MemberLocationlatlong = $_POST['MemberLocationlatlong'];
@@ -17,7 +21,7 @@ $Message = $_POST['Message'];
 $PoolId = $_POST['PoolId'];
 $distance = $_POST['distance'];
 
-$sqlI = "SELECT imagename FROM userprofileimage WHERE Trim(MobileNumber) = Trim('$MemberNumber')";
+$sqlI = "SELECT imagename FROM userprofileimage WHERE Trim(userId) = Trim('$memberUserId')";
 $stmtI = $con->query($sqlI);
 $MemberImageName = $stmtI->fetchColumn();
 
@@ -29,7 +33,7 @@ $sth1 = $con->prepare("SELECT Seats FROM cabopen WHERE CabId = '$CabId' and CabS
 $sth1->execute();
 $Seats = (int)$sth1->fetchColumn();
 
-$stmt = $con->query("SELECT MemberName FROM acceptedrequest WHERE CabId = '$CabId' AND MemberNumber='$MemberNumber' Status != 'Dropped'");
+$stmt = $con->query("SELECT MemberName FROM acceptedrequest WHERE CabId = '$CabId' AND memberUserId='$memberUserId' Status != 'Dropped'");
 $alreadyJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 if ($alreadyJoined) {
@@ -37,16 +41,16 @@ if ($alreadyJoined) {
     if (($Seats - $RemainingSeats) > 0) {
 
         if (isset($_POST['rideType']) && $_POST['rideType'] !='' && ($_POST['rideType']=='4' || $_POST['rideType']=='5')){
-            $sql = "INSERT INTO cabmembers(CabId, MemberName, MemberNumber) VALUES ('$CabId', '$MemberName', '$MemberNumber')";
+            $sql = "INSERT INTO cabmembers(CabId,memberUserId,  MemberName, MemberNumber) VALUES ('$CabId', $memberUserId, '$MemberName', '$MemberNumber')";
             $stmt = $con->prepare($sql);
             $stmt->execute();
 
             if ($PoolId) {
-                $stmt = $con->query("SELECT PoolId FROM userpoolsslave WHERE MemberNumber = '$MemberNumber' AND PoolId = '$PoolId'");
+                $stmt = $con->query("SELECT PoolId FROM userpoolsslave WHERE memberUserId = '$memberUserId' AND PoolId = '$PoolId'");
                 $isAlreadyMember = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
                 if (!$isAlreadyMember) {
-                    $sql = "INSERT INTO userpoolsslave(PoolId, MemberName, MemberNumber, IsActive) VALUES ('$PoolId', '$MemberName', '$MemberNumber', '1')";
+                    $sql = "INSERT INTO userpoolsslave(PoolId, memberUserId, MemberName, MemberNumber, IsActive) VALUES ('$PoolId', $memberUserId, '$MemberName', '$MemberNumber', '1')";
                     $stmt = $con->prepare($sql);
                     $stmt->execute();
                 }
@@ -57,11 +61,11 @@ if ($alreadyJoined) {
                 $reverseGroupId = (int)$stmt->fetchColumn();
 
                 if ($reverseGroupId) {
-                    $stmt = $con->query("SELECT PoolId FROM userpoolsslave WHERE MemberNumber = '$MemberNumber' AND PoolId = '$reverseGroupId'");
+                    $stmt = $con->query("SELECT PoolId FROM userpoolsslave WHERE memberUserId = '$memberUserId' AND PoolId = '$reverseGroupId'");
                     $isAlreadyMember = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
                     if (!$isAlreadyMember) {
-                        $sql = "INSERT INTO userpoolsslave(PoolId, MemberName, MemberNumber, IsActive) VALUES ('$reverseGroupId', '$MemberName', '$MemberNumber', '1')";
+                        $sql = "INSERT INTO userpoolsslave(PoolId, memberUserId, MemberName, MemberNumber, IsActive) VALUES ('$reverseGroupId', $memberUserId,  '$MemberName', '$MemberNumber', '1')";
                         $stmt = $con->prepare($sql);
                         $stmt->execute();
                     }
@@ -71,7 +75,7 @@ if ($alreadyJoined) {
             }
         }
 
-        $sql2 = "INSERT INTO acceptedrequest(CabId, OwnerName, OwnerNumber, MemberName, MemberNumber, MemberLocationAddress, MemberLocationlatlong, MemberEndLocationAddress, MemberEndLocationlatlong, distance, MemberImageName, Status) VALUES ('$CabId', '$OwnerName','$OwnerNumber','$MemberName', '$MemberNumber','$MemberLocationAddress', '$MemberLocationlatlong','$MemberEndLocationAddress','$MemberEndLocationlatlong', $distance, '$MemberImageName','$Status')";
+        $sql2 = "INSERT INTO acceptedrequest(CabId, ownerUserId, memberUserId, OwnerName, OwnerNumber, MemberName, MemberNumber, MemberLocationAddress, MemberLocationlatlong, MemberEndLocationAddress, MemberEndLocationlatlong, distance, MemberImageName, Status) VALUES ('$CabId', $ownerUserId, $memberUserId, '$OwnerName','$OwnerNumber','$MemberName', '$MemberNumber','$MemberLocationAddress', '$MemberLocationlatlong','$MemberEndLocationAddress','$MemberEndLocationlatlong', $distance, '$MemberImageName','$Status')";
         $stmt2 = $con->prepare($sql2);
         $res2 = $stmt2->execute();
 
@@ -87,7 +91,7 @@ if ($alreadyJoined) {
             $params = array('NotificationType' => $NotificationType, 'SentMemberName' => $MemberName, 'SentMemberNumber' => $MemberNumber, 'ReceiveMemberName'=>$OwnerName, 'ReceiveMemberNumber'=>$OwnerNumber, 'Message'=>$Message, 'CabId'=>$CabId, 'DateTime'=>'now()');
             $notificationId = $objNotification->logNotification($params);
 
-            $stmt = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$OwnerNumber' and PushNotification != 'off'");
+            $stmt = $con->query("SELECT * FROM registeredusers WHERE userId = '$ownerUserId' and PushNotification != 'off'");
             $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
             if ($no_of_users > 0) {

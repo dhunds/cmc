@@ -89,6 +89,10 @@ if ($user_exists == 0) {
             $stmt = $con->prepare($sql);
             $res = $stmt->execute();
 
+            $sql = "UPDATE cabmembers SET memberUserId = '" . $insertedId . "' WHERE MemberNumber = '".$MobileNumber."'";
+            $stmt = $con->prepare($sql);
+            $res = $stmt->execute();
+
             if ($user['Email'] != '') {
                 require_once 'mail.php';
                 sendRegistrationMail ($FullName, $Email);

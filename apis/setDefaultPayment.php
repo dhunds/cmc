@@ -7,8 +7,9 @@ if (isset($_POST['payDefault']) && $_POST['payDefault'] !='') {
 
     $payDefault = $_POST['payDefault'];
     $mobileNumber = $_POST['mobileNumber'];
+    $userId = $_POST['userId'];
 
-    $sql = "UPDATE registeredusers set defaultPaymentOption = '$payDefault', defaultPaymentAcceptOption='$payDefault' WHERE MobileNumber = '$mobileNumber'";
+    $sql = "UPDATE registeredusers set defaultPaymentOption = '$payDefault', defaultPaymentAcceptOption='$payDefault' WHERE userId = '$userId'";
     $stmt = $con->prepare($sql);
     
     if ($stmt->execute()) {

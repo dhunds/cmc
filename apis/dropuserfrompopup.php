@@ -8,14 +8,16 @@ $OwnerName = $_POST['OwnerName'];
 $OwnerNumber = $_POST['OwnerNumber'];
 $MemberName = $_POST['MemberName'];
 $MemberNumber = $_POST['MemberNumber'];
+$ownerUserId = $_POST['ownerUserId'];
+$memberUserId = $_POST['memberUserId'];
 $Message = $_POST['Message'];
 
-$sql2 = "DELETE FROM cabmembers WHERE (CabId = '$CabId' AND MemberNumber = '$MemberNumber')";
+$sql2 = "DELETE FROM cabmembers WHERE (CabId = '$CabId' AND memberUserId = $memberUserId)";
 $stmt2 = $con->prepare($sql2);
 $res2 = $stmt2->execute();
 
 if ($res2 === true) {
-    $sql3 = "DELETE FROM acceptedrequest WHERE (CabId = '$CabId' AND MemberNumber = '$MemberNumber')";
+    $sql3 = "DELETE FROM acceptedrequest WHERE (CabId = '$CabId' AND memberUserId = $memberUserId)";
     $stmt3 = $con->prepare($sql3);
     $res3 = $stmt3->execute();
 
@@ -29,7 +31,7 @@ if ($res2 === true) {
     $notificationId = $objNotification->logNotification($params);
 
     if ($res3 === true) {
-        $stmt = $con->query("SELECT * FROM registeredusers WHERE PushNotification != 'off' and MobileNumber = '$MemberNumber'");
+        $stmt = $con->query("SELECT * FROM registeredusers WHERE PushNotification != 'off' and userId = '$memberUserId'");
         //$no_of_users = $stmt->rowCount();
         $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
         if ($no_of_users > 0) {

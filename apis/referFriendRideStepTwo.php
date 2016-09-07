@@ -6,6 +6,8 @@ $objNotification = new Notification();
 $RefId = $_POST['RefId'];
 $OwnerName = $_POST['OwnerName'];
 $OwnerNumber = $_POST['OwnerNumber'];
+$ownerUserId = $_POST['ownerUserId'];
+
 $Accepted = $_POST['Accepted'];
 $CabId = '';
 $PoolName = '';
@@ -28,6 +30,7 @@ $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 if ($no_of_users > 0) {
     while ($row = $stmt->fetch()) {
         $MemberNumber = (string)$row['MemberNumber'];
+        $memberUserId = (string)$row['memberUserId'];
         $FriendNumber = (string)$row['FriendNumber'];
         $FriendName = $row['FriendName'];
         $CabId = $row['CabId'];
@@ -37,7 +40,7 @@ if ($no_of_users > 0) {
     $stmtNotification = $con->prepare($sqlNotification);
     $resNotification = $stmtNotification->execute();
     if ($resNotification == true) {
-        $stmtM = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$MemberNumber' and PushNotification != 'off'");
+        $stmtM = $con->query("SELECT * FROM registeredusers WHERE userId = $memberUserId and PushNotification != 'off'");
 
         $MemberExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
         if ($MemberExists > 0) {

@@ -6,6 +6,7 @@ $objNotification = new Notification();
 $RefId = $_POST['RefId'];
 $OwnerName = $_POST['OwnerName'];
 $OwnerNumber = $_POST['OwnerNumber'];
+$ownerUserId = $_POST['ownerUserId'];
 $Accepted = $_POST['Accepted'];
 $PoolId = '';
 $PoolName = '';
@@ -26,6 +27,7 @@ $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 if ($no_of_users > 0) {
     while ($row = $stmt->fetch()) {
         $MemberNumber = trim((string)$row['MemberNumber']);
+        $memberUserId = trim((string)$row['memberUserId']);
         $FriendNumber = trim((string)$row['FriendNumber']);
         $FriendName = $row['FriendName'];
         $PoolId = $row['PoolId'];
@@ -43,7 +45,7 @@ if ($no_of_users > 0) {
         $stmtO = $con->query($sqlO);
         $OwnerNumber = trim((string)$stmtO->fetchColumn());
 
-        $stmtM = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$MemberNumber' and PushNotification != 'off'");
+        $stmtM = $con->query("SELECT * FROM registeredusers WHERE userId = $memberUserId and PushNotification != 'off'");
         $MemberExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
         if ($MemberExists > 0) {
             while ($row = $stmtM->fetch()) {
@@ -53,7 +55,7 @@ if ($no_of_users > 0) {
             }
         }
 
-        $stmtGetCab = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$OwnerNumber'");
+        $stmtGetCab = $con->query("SELECT * FROM registeredusers WHERE userId = $ownerUserId");
         $cabExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         if ($cabExists > 0) {
@@ -69,6 +71,8 @@ if ($no_of_users > 0) {
             if ($FriendExists > 0) {
                 while ($row = $stmtF->fetch()) {
                     $FriendDeviceToken = $row['DeviceToken'];
+                    $FriendUserId = $row['userId'];
+
                     $FriendPlatform = $row['Platform'];
                     $FriendName = $row['FullName'];
                 }
@@ -106,7 +110,7 @@ if ($no_of_users > 0) {
                 }
             }
 
-            $sql3 = "INSERT INTO userpoolsslave(PoolId,MemberName,MemberNumber, IsActive) VALUES  ('$PoolId','$FriendName',Trim('$FriendNumber'),'1')";
+            $sql3 = "INSERT INTO userpoolsslave(PoolId, memberUserId, MemberName,MemberNumber, IsActive) VALUES  ('$PoolId',$FriendUserId, '$FriendName',Trim('$FriendNumber'),'1')";
             $stmt3 = $con->prepare($sql3);
             $res3 = $stmt3->execute();
             if ($res3 == true) {

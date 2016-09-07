@@ -9,14 +9,18 @@ $SentMemberName = $_POST['SentMemberName'];
 $SentMemberNumber = $_POST['SentMemberNumber'];
 $ReceiveMemberName = $_POST['ReceiveMemberName'];
 $ReceiveMemberNumber = $_POST['ReceiveMemberNumber'];
+
+$ownerUserId = $_POST['ownerUserId'];
+$memberUserId = $_POST['memberUserId'];
+
 $Message = $_POST['Message'];
 
-$sql2 = "UPDATE cabmembers SET DropStatus = 'Yes' WHERE CabId = '$CabId' AND MemberNumber = $SentMemberNumber";
+$sql2 = "UPDATE cabmembers SET DropStatus = 'Yes' WHERE CabId = '$CabId' AND memberUserId = $memberUserId";
 $stmt2 = $con->prepare($sql2);
 $res2 = $stmt2->execute();
 
 if ($res2 === true) {
-    $sql2345 = "UPDATE acceptedrequest SET Status= 'Dropped' WHERE CabId='$CabId' AND Trim(MemberNumber)='$SentMemberNumber'";
+    $sql2345 = "UPDATE acceptedrequest SET Status= 'Dropped' WHERE CabId='$CabId' AND Trim(memberUserId)='$memberUserId'";
     $stmt2345 = $con->prepare($sql2345);
     $res2345 = $stmt2345->execute();
 
@@ -44,7 +48,7 @@ if ($res2 === true) {
     $params = array('NotificationType' => $NotificationType, 'SentMemberName' => $SentMemberName, 'SentMemberNumber' => $SentMemberNumber, 'ReceiveMemberName'=>$ReceiveMemberName, 'ReceiveMemberNumber'=>$ReceiveMemberNumber, 'Message'=>$Message, 'CabId'=>$CabId, 'DateTime'=>'now()');
     $notificationId = $objNotification->logNotification($params);
 
-    $stmt = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$ReceiveMemberNumber' and PushNotification != 'off'");
+    $stmt = $con->query("SELECT * FROM registeredusers WHERE userId = '$ownerUserId' and PushNotification != 'off'");
     $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($no_of_users > 0) {

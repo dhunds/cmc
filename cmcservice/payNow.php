@@ -160,7 +160,7 @@ if (!$error) {
 
         if ($paymentMethod =='Cash') {
 
-            if ($isAssociate) {
+
                 $sql = "SELECT SmsMessage FROM smstemplates WHERE SmsshortCode = 'PAYMENTCASH'";
                 $stmt = $con->query($sql);
                 $txtMsg = $stmt->fetchColumn();
@@ -169,7 +169,7 @@ if (!$error) {
                 $txtMsg = str_replace("AXXXXX", $payableByRider, $txtMsg);
                 $MobNumber = '[' . substr(trim($driverCellWithPrefix), -10) . ']';
                 $objNotification->sendSMS($MobNumber, $txtMsg);
-            }
+
 
             $Message = "Please take Rs. " . $payableByRider . " in cash from " . $riderProfile['FullName'] . ".";
 
@@ -177,15 +177,6 @@ if (!$error) {
         } else {
 
             if ($isAssociate){
-
-                $sql = "SELECT SmsMessage FROM smstemplates WHERE SmsshortCode = 'PAYMENTWALLET'";
-                $stmt = $con->query($sql);
-                $txtMsg = $stmt->fetchColumn();
-                $OwnerNumberWithoutPrefix = substr(trim($OwnerNumber), -10);
-                $txtMsg = str_replace("NXXXXX", $riderProfile['FullName'], $txtMsg);
-                $txtMsg = str_replace("AXXXXX", $payableByRider, $txtMsg);
-                $MobNumber = '[' . substr(trim($driverCellWithPrefix), -10) . ']';
-                $objNotification->sendSMS($MobNumber, $txtMsg);
 
                 $Message = "Payment received from " . $riderProfile['FullName'] . ".";
             } else {
@@ -197,6 +188,15 @@ if (!$error) {
                     $Message = "Payment of Rs." . ( $amount - $totalDeductible ). " received from " . $riderProfile['FullName'] . ".";
                 }
             }
+
+            $sql = "SELECT SmsMessage FROM smstemplates WHERE SmsshortCode = 'PAYMENTWALLET'";
+            $stmt = $con->query($sql);
+            $txtMsg = $stmt->fetchColumn();
+            $OwnerNumberWithoutPrefix = substr(trim($OwnerNumber), -10);
+            $txtMsg = str_replace("NXXXXX", $riderProfile['FullName'], $txtMsg);
+            $txtMsg = str_replace("AXXXXX", $payableByRider, $txtMsg);
+            $MobNumber = '[' . substr(trim($driverCellWithPrefix), -10) . ']';
+            $objNotification->sendSMS($MobNumber, $txtMsg);
 
             $jsonResp = array('code'=>200, 'status' => "success", 'message' => 'Payment processed. Enjoy your ride!');
         }

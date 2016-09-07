@@ -521,9 +521,9 @@ function logRidePayment ($sender, $receiver, $amount, $cabId, $status, $serviceC
     return $insertedId;
 }
 
-function logRidePayments ($paidBy, $paidTo, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $walletId, $cabId, $amountPaidToDriver, $driverPaymentOrderId) {
+function logRidePayments ($memberUserId, $ownerUserId, $paidBy, $paidTo, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $walletId, $cabId, $amountPaidToDriver, $driverPaymentOrderId) {
     global $con;
-    $sql = "INSERT INTO ridePayments(paidBy, paidTo, orderId, amount, serviceCharge, serviceTax, amountPaidByRider, amountPaidByMerchant, walletId, cabId, amountPaidToDriver, driverPaymentOrderId) VALUES ('$paidBy', '$paidTo', '$orderId', $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $walletId, '$cabId', $amountPaidToDriver, '$driverPaymentOrderId')";
+    $sql = "INSERT INTO ridePayments(paidByUserId, paidToUserId, paidBy, paidTo, orderId, amount, serviceCharge, serviceTax, amountPaidByRider, amountPaidByMerchant, walletId, cabId, amountPaidToDriver, driverPaymentOrderId) VALUES ($memberUserId, $ownerUserId, '$paidBy', '$paidTo', '$orderId', $amount, $serviceCharge, $serviceTax, $payableByRider, $payableByMerchant, $walletId, '$cabId', $amountPaidToDriver, '$driverPaymentOrderId')";
     $stmt = $con->prepare($sql);
     $stmt->execute();
     $insertedId = $con->lastInsertId();
@@ -584,10 +584,10 @@ function getWalletIdByName($walletName) {
     return false;
 }
 
-function updateOfferUsed($mobileNumber, $offerId, $cabId) {
+    function updateOfferUsed($mobileNumber, $offerId, $cabId, $userId) {
     global $con;
 
-    $sql = "INSERT INTO availedOffers(mobileNumber, offerId, cabId) VALUES ('$mobileNumber', '$offerId', '$cabId')";
+    $sql = "INSERT INTO availedOffers(userId, mobileNumber, offerId, cabId) VALUES ($userId, '$mobileNumber', '$offerId', '$cabId')";
     $stmt = $con->prepare($sql);
     if ($stmt->execute()) {
         return true;
@@ -595,13 +595,13 @@ function updateOfferUsed($mobileNumber, $offerId, $cabId) {
     return false;
 }
 
-function updateCreditUsed($mobileNumber, $debitFromCredits, $debitAmount, $cabId) {
+function updateCreditUsed($mobileNumber, $debitFromCredits, $debitAmount, $cabId, $userId) {
     global $con;
 
     $sql = "UPDATE registeredusers set 	totalCredits = '$debitAmount' WHERE MobileNumber = '$mobileNumber'";
     $stmt = $con->prepare($sql);
     if ($stmt->execute()) {
-        $sql = "INSERT INTO usedCredits(mobileNumber, amount, cabId) VALUES ('$mobileNumber', '$debitFromCredits', '$cabId')";
+        $sql = "INSERT INTO usedCredits(userId, mobileNumber, amount, cabId) VALUES ('$mobileNumber', '$debitFromCredits', '$cabId')";
         $stmt = $con->prepare($sql);
         $stmt->execute();
         return true;
@@ -609,11 +609,11 @@ function updateCreditUsed($mobileNumber, $debitFromCredits, $debitAmount, $cabId
     return false;
 }
 
-function updateBoardedStatus($mobileNumber, $cabId, $hasBoarded)
+function updateBoardedStatus($memberUserId, $cabId, $hasBoarded)
 {
     global $con;
 
-    $sql = "UPDATE acceptedrequest set hasBoarded = '$hasBoarded' where CabId = '$cabId' AND MemberNumber='$mobileNumber'";
+    $sql = "UPDATE acceptedrequest set hasBoarded = '$hasBoarded' where CabId = '$cabId' AND memberUserId=$memberUserId";
     $stmt = $con->prepare($sql);
 
     if ($stmt->execute()) {

@@ -22,6 +22,8 @@ if (!$error) {
     $amount = $_POST['amount'];
     $riderCell = $_POST['sendercell'];
     $ownerCell = $_POST['receivercell'];
+    $ownerUserId = $_POST['ownerUserId'];
+    $memberUserId = $_POST['memberUserId'];
     $paymentMethod = $_POST['paymentMethod'];
     $riderCellWithPrefix = '0091'.$riderCell;
     $driverCellWithPrefix = '0091'.$ownerCell;
@@ -121,15 +123,15 @@ if (!$error) {
         if ($paymentMethod =='Cash') {
 
             $transactionId ='';
-            updateBoardedStatus($riderCellWithPrefix, $cabId, 2);
+            updateBoardedStatus($memberUserId, $cabId, 2);
 
-            logRidePayments($riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletId, $cabId, $payableByRider, $orderIdMerchant);
+            logRidePayments($memberUserId, $ownerUserId, $riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletId, $cabId, $payableByRider, $orderIdMerchant);
         } else {
 
             $transactionId = (isset($respRiderPayment['transactionId']))?$respRiderPayment['transactionId']:'';
             updateBoardedStatus($riderCellWithPrefix, $cabId, 1);
 
-            logRidePayments($riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletId, $cabId, $payableByMerchant, $orderIdMerchant);
+            logRidePayments($memberUserId, $ownerUserId, $riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletId, $cabId, $payableByMerchant, $orderIdMerchant);
         }
 
 
@@ -137,7 +139,7 @@ if (!$error) {
 
         if ($discount > 0) {
 
-            updateOfferUsed($riderCellWithPrefix, $offerDetail['id'], $cabId);
+            updateOfferUsed($riderCellWithPrefix, $offerDetail['id'], $cabId, $memberUserId);
         }
 
         if (($credit > 0) && ($discount < $amount)) {
@@ -151,7 +153,7 @@ if (!$error) {
             }
 
             $debitAmount = $credit - $debitFromCredits;
-            updateCreditUsed($riderCellWithPrefix, $debitFromCredits, $debitAmount, $cabId);
+            updateCreditUsed($riderCellWithPrefix, $debitFromCredits, $debitAmount, $cabId, $memberUserId);
         }
 
         //Setting response
@@ -185,11 +187,11 @@ if (!$error) {
         // Sending payment mail to member
         if ($riderProfile['Email'] != '') {
 
-            $sql = "SELECT date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate, co.TravelTime, co.perKmCharge, co.OwnerName, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance FROM cabopen co JOIN acceptedrequest ar ON co.CabId = ar.CabId WHERE co.CabId = '" . $cabId . "' AND ar.MemberNumber='" . $riderCellWithPrefix . "'";
+            $sql = "SELECT date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate, co.TravelTime, co.perKmCharge, co.OwnerName, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance FROM cabopen co JOIN acceptedrequest ar ON co.CabId = ar.CabId WHERE co.CabId = '" . $cabId . "' AND ar.userId='" . $memberUserId . "'";
             $stmt = $con->query($sql);
             $cabDetail = $stmt->fetch();
 
-            $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicleModel, uvd.registrationNumber FROM registeredusers ru JOIN userprofileimage ui ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.MobileNumber = '" . $driverCellWithPrefix . "'");
+            $stmt = $con->query("SELECT ru.FullName, ru.Email, ui.imagename, v.vehicleModel, uvd.registrationNumber FROM registeredusers ru JOIN userprofileimage ui ON ru.MobileNumber = ui.MobileNumber JOIN userVehicleDetail uvd ON ru.MobileNumber = uvd.mobileNumber JOIN vehicle v ON v.id = uvd.vehicleId WHERE ru.userId = '" . $ownerUserId . "'");
             $ownerDetail = $stmt->fetch();
 
             $rideDetails = array("TravelDate" => $cabDetail['TravelDate'], "TravelTime" => $cabDetail['TravelTime'], "perKmCharge" => $cabDetail['perKmCharge'], "MemberLocationAddress" => $cabDetail['MemberLocationAddress'], "MemberEndLocationAddress" => $cabDetail['MemberEndLocationAddress'], "distance" => $cabDetail['distance'], "amount" => $payableByRider, "discount"=>$discount, "credits"=>$debitFromCredits, "vehicleModel" => $ownerDetail['vehicleModel'], "registrationNumber"=>$ownerDetail['registrationNumber'], "imagename" => $ownerDetail['imagename'], "memberEmail" => $riderProfile['Email'], "OwnerName" => $cabDetail['OwnerName']);

@@ -110,3 +110,20 @@ function getGroupCities($fromCity){
 
     return $cities;
 }
+
+function getCity($lat, $lng) {
+    $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&sensor=true";
+    $data = @file_get_contents($url);
+    $jsondata = json_decode($data,true);
+    $result = $jsondata['results']['0'];
+    $city = '';
+
+    foreach ($result['address_components'] as $component) {
+        if (in_array('locality', $component['types'])){
+            $city = $component['long_name'];
+            break;
+        }
+    }
+
+    return $city;
+}

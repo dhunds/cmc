@@ -24,10 +24,11 @@ if ($OwnerExists > 0) {
     while ($row = $stmtO->fetch()) {
         $OwnerNumber = trim((string)$row['OwnerNumber']);
         $ClubName = $row['PoolName'];
+        $ownerUserId = $row['ownerUserId'];
     }
 
     if ($OwnerNumber != '') {
-        $stmtI = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$OwnerNumber' and PushNotification != 'off'");
+        $stmtI = $con->query("SELECT * FROM registeredusers WHERE userId = $ownerUserId and PushNotification != 'off'");
         $OwnRegExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         if ($OwnRegExists > 0) {
@@ -65,12 +66,15 @@ if ($PoolStatus == "OPEN") {
 
             $stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = Trim('$MemberNumber') and PushNotification != 'off' AND DeviceToken !=''");
             $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+            $memberUserId=0;
+
             if ($FriendExists > 0) {
 
                 while ($row = $stmtF->fetch()) {
                     $MemberDeviceToken = $row['DeviceToken'];
                     $MemberPlatform = $row['Platform'];
                     $MemberName = $row['FullName'];
+                    $memberUserId = $row['userId'];
                 }
                 $Message = $OwnerName . " has added you to the group " . $ClubName;
                 $gcm_arrayF = array();
@@ -118,7 +122,7 @@ if ($PoolStatus == "OPEN") {
             $user_exists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
             if ($user_exists == 0) {
-                $sql3 = "INSERT INTO userpoolsslave(PoolId,MemberName,MemberNumber, IsActive) VALUES  ('$poolid','$memName[$i]',Trim('$MemberNumber'),'1')";
+                $sql3 = "INSERT INTO userpoolsslave(PoolId, memberUserId, MemberName,MemberNumber, IsActive) VALUES  ('$poolid', $memberUserId, '$memName[$i]',Trim('$MemberNumber'),'1')";
                 $stmt3 = $con->prepare($sql3);
                 $res3 = $stmt3->execute();
             }

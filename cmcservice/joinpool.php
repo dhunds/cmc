@@ -1,5 +1,6 @@
 <?php
 include('connection.php');
+include('includes/functions.php');
 include_once('classes/class.notification.php');
 $objNotification = new Notification();
 
@@ -86,7 +87,7 @@ if ($alreadyJoined) {
                 $upstmt2 = $con->prepare($upsql2);
                 $upres2 = $upstmt2->execute();
             }
-            
+
             $isAssociate = isAssociate($OwnerNumber);
 
             if ($isAssociate) {
@@ -94,12 +95,13 @@ if ($alreadyJoined) {
                 $stmt = $con->query($sql);
                 $txtMsg = $stmt->fetchColumn();
                 $OwnerNumberWithoutPrefix = substr(trim($OwnerNumber), -10);
+                $memberNumberWithoutPrefix = substr(trim($MemberNumber), -10);
                 $amount = round($row['Distance'] * $row['perKmCharge']);
 
-                $txtMsg = str_replace("NXXXXX", $OwnerName, $txtMsg);
-                $txtMsg = str_replace("MXXXXX", $OwnerNumberWithoutPrefix, $txtMsg);
+                $txtMsg = str_replace("NXXXXX", $MemberName, $txtMsg);
+                $txtMsg = str_replace("MXXXXX", $memberNumberWithoutPrefix, $txtMsg);
                 $txtMsg = str_replace("AXXXXX", $amount, $txtMsg);
-                $MobNumber = '[' . $MobileNumber . ']';
+                $MobNumber = '[' . $OwnerNumberWithoutPrefix . ']';
                 $objNotification->sendSMS($MobNumber, $txtMsg);
             }
 
