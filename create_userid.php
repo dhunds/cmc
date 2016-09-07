@@ -19,7 +19,7 @@ try {
 $i=0;
 
 //Poolmaster
-/*
+
 $stmt = $con->query("SELECT DISTINCT OwnerNumber FROM userpoolsmaster");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -35,10 +35,10 @@ if ($totalRows > 0) {
             $i++;
         }
     }
-}*/
+}
 //poolslave
 
-/*
+
 $stmt = $con->query("SELECT DISTINCT MemberNumber FROM userpoolsslave");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -54,10 +54,10 @@ if ($totalRows > 0) {
             $i++;
         }
     }
-}*/
+}
 
 // User Image
-/*
+
 $stmt = $con->query("SELECT DISTINCT MobileNumber FROM userprofileimage");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -74,10 +74,9 @@ if ($totalRows > 0) {
         }
     }
 }
-*/
 
 // Save vehicle detail
-/*
+
 $stmt = $con->query("SELECT DISTINCT mobileNumber FROM userVehicleDetail");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -94,10 +93,10 @@ if ($totalRows > 0) {
         }
     }
 }
-*/
+
 
 // Credits
-/*
+
 $stmt = $con->query("SELECT DISTINCT mobileNumber FROM credits");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -114,9 +113,9 @@ if ($totalRows > 0) {
         }
     }
 }
-*/
+
 // User Offers
-/*
+
 $stmt = $con->query("SELECT DISTINCT mobileNumber FROM userOffers");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -133,10 +132,10 @@ if ($totalRows > 0) {
         }
     }
 }
-*/
+
 
 // Notification Part 1
-/*
+
 $stmt = $con->query("SELECT DISTINCT SentMemberNumber FROM notifications");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -153,10 +152,10 @@ if ($totalRows > 0) {
         }
     }
 }
-*/
+
 
 // Notification Part 2
-/*
+
 $stmt = $con->query("SELECT DISTINCT ReceiveMemberNumber FROM notifications WHERE ReceiveMemberNumber !=''");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -173,10 +172,10 @@ if ($totalRows > 0) {
         }
     }
 }
-*/
+
 
 // Cabopen
-/*
+
 $stmt = $con->query("SELECT DISTINCT MobileNumber FROM cabopen");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -193,9 +192,9 @@ if ($totalRows > 0) {
         }
     }
 }
-*/
+
 // userRating
-/*
+
 $stmt = $con->query("SELECT DISTINCT ownerNumber FROM userRating");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -229,11 +228,10 @@ if ($totalRows > 0) {
         }
     }
 }
-*/
+
 
 // CabMember
 
-/*
 $stmt = $con->query("SELECT DISTINCT MemberNumber FROM cabmembers");
 $totalRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -250,7 +248,7 @@ if ($totalRows > 0) {
         }
     }
 }
-*/
+
 
 
 $stmt = $con->query("SELECT DISTINCT OwnerNumber FROM acceptedrequest");
