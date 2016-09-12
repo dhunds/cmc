@@ -67,7 +67,7 @@ if ($no_of_users > 0) {
         if (strtolower($Accepted) == strtolower('YES')) {
             $stmtF = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = '$FriendNumber' and PushNotification != 'off'");
             $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
-
+            $FriendUserId=0;
             if ($FriendExists > 0) {
                 while ($row = $stmtF->fetch()) {
                     $FriendDeviceToken = $row['DeviceToken'];

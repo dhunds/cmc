@@ -9,6 +9,7 @@ $privateRides = array();
 if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
 
     $mobileNumber = $_POST['mobileNumber'];
+    $userId = $_POST['userId'];
     list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
 
     $proximity = rideProximity();
@@ -23,13 +24,13 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN acceptedrequest ar ON cm.CabId = ar.CabId
     LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
     LEFT JOIN vehicle v ON v.id = vd.vehicleId
-    WHERE TRIM(cm.MemberNumber) = '" . $mobileNumber . "'
+   WHERE TRIM(cm.memberUserId) = '" . $userId . "'
     AND NOW() < DATE_ADD(co.ExpStartDateTime, INTERVAL 30 MINUTE)
-    AND co.MobileNumber !='$mobileNumber'
+    AND co.userId !='$userId'
     AND co.status < 1
     AND co.CabStatus ='A'
     AND co.RemainingSeats >0
-    AND NOT EXISTS (SELECT 1 FROM acceptedrequest ar2 WHERE ar2.CabId = co.CabId AND ar2.MemberNumber='$mobileNumber')
+    AND NOT EXISTS (SELECT 1 FROM acceptedrequest ar2 WHERE ar2.CabId = co.CabId AND ar2.MemberNumber='$userId')
     ORDER BY co.ExpStartDateTime";
 
     $stmt = $con->query($sql);
@@ -66,11 +67,11 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
     LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
     LEFT JOIN vehicle v ON v.id = vd.vehicleId
     WHERE NOW() < DATE_ADD(co.ExpStartDateTime, INTERVAL 30 MINUTE)
-    AND co.MobileNumber !='$mobileNumber'
+     AND co.userId !='$userId'
     AND co.status < 1
     AND co.CabStatus ='A'
     AND co.RemainingSeats >0
-    AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.MemberNumber='$mobileNumber')
+    AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.MemberNumber='$userId')
     HAVING origin < ".$proximity."
     ORDER BY co.ExpStartDateTime";
 
@@ -136,11 +137,11 @@ if (isset($_POST['sLatLon']) && isset($_POST['mobileNumber']) && $_POST['mobileN
                 LEFT JOIN vehicle v ON v.id = vd.vehicleId
                 WHERE gc.groupId IN (" . $myPublicGroups . ")
                 AND NOW() < DATE_ADD(co.ExpStartDateTime, INTERVAL 30 MINUTE)
-                AND co.MobileNumber !='$mobileNumber'
+                AND co.userId !='$userId'
                 AND co.status < 1
                 AND co.CabStatus ='A'
                 AND co.RemainingSeats >0
-                AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.MemberNumber='$mobileNumber')
+                AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.MemberNumber='$userId')
                 ORDER BY co.ExpStartDateTime";
 
             $stmt = $con->query($sql);

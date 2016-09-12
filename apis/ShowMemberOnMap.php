@@ -3,7 +3,7 @@ include('connection.php');
 
 $CabId = $_POST['CabId'];
 $MemberNumber = $_POST['MemberNumber'];
-$MemberUserId = $_POST['MemberUserId'];
+$MemberUserId = $_POST['memberUserId'];
 
 $sql = "SELECT ac.*, ru.socialType, ru.CreatedOn FROM acceptedrequest ac JOIN registeredusers ru ON ac.memberUserId=ru.userId WHERE ac.CabId = '$CabId' AND ac.Status != 'Dropped' AND ac.memberUserId != '$MemberUserId'";
 

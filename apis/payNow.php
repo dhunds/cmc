@@ -187,7 +187,7 @@ if (!$error) {
         // Sending payment mail to member
         if ($riderProfile['Email'] != '') {
 
-            $sql = "SELECT date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate, co.TravelTime, co.perKmCharge, co.OwnerName, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance FROM cabopen co JOIN acceptedrequest ar ON co.CabId = ar.CabId WHERE co.CabId = '" . $cabId . "' AND ar.userId='" . $memberUserId . "'";
+            $sql = "SELECT date_format(co.ExpStartDateTime, '%M %d, %Y') as TravelDate, co.TravelTime, co.perKmCharge, co.OwnerName, ar. MemberName, ar.MemberLocationAddress, ar.MemberEndLocationAddress, ar.distance FROM cabopen co JOIN acceptedrequest ar ON co.CabId = ar.CabId WHERE co.CabId = '" . $cabId . "' AND ar.memberUserId='" . $memberUserId . "'";
             $stmt = $con->query($sql);
             $cabDetail = $stmt->fetch();
 

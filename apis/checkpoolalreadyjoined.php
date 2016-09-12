@@ -3,7 +3,7 @@ include('connection.php');
 
 $CabId = $_POST['CabId'];
 $MemberNumber = $_POST['MemberNumber'];
-$MemberUserId = $_POST['MemberUserId'];
+$MemberUserId = $_POST['memberUserId'];
 
 $stmt = $con->query("SELECT * FROM acceptedrequest WHERE (CabId = '$CabId' AND memberUserId = '$MemberUserId') AND Status != 'Dropped'");
 $no_of_rows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();

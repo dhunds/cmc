@@ -2,9 +2,10 @@
 
  include ('connection.php');
 	
- $userId = $_POST['userId'];
+ $userId = $_POST['memberUserId'];
+ $MobileNumber = $_POST['MemberNumber'];
  
- $sql = "UPDATE notifications SET StatusArchieve='Yes' WHERE Trim(receivedMemberUserId) = Trim('$userId')";
+ $sql = "UPDATE notifications SET StatusArchieve='Yes' WHERE Trim(ReceiveMemberNumber) = Trim('$MobileNumber')";
  $stmt = $con->query($sql);
  $no_of_rows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
