@@ -2,6 +2,7 @@
 include ('connection.php');
 
 $MobileNumber = $_REQUEST['MobileNumber'];
+$userId = $_POST['userId'];
 $lastcabid = $_REQUEST['LastCabId'];
 
 $startLimit = 0;
@@ -23,7 +24,7 @@ JOIN acceptedrequest ar ON cm.CabId = ar.CabId
 LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
 LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
 LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
-WHERE TRIM(cm.MemberNumber) = '" . $MobileNumber . "'
+WHERE TRIM(cm.memberUserId) = '" . $userId . "'
 AND cm.DropStatus !='Yes'
 
 UNION
@@ -35,7 +36,7 @@ JOIN registeredusers ru ON co.MobileNumber = ru.MobileNumber
 LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
 LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
 LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
-WHERE TRIM(co.MobileNumber) = '" . $MobileNumber . "'
+WHERE TRIM(co.userId) = '" . $userId . "'
 ORDER BY ExpStartDateTime";
 
 $stmt = $con->query($sql);
@@ -60,11 +61,10 @@ if ($totalRows > 0)
             $val = $data[$i];
 
             if ($val['CabStatus'] == 'A') {
-                $stmt = $con->query("select MemberNumber FROM cabmembers where CabId = '" . $val['CabId'] . "' AND trim(MemberNumber)='" . $MobileNumber . "' AND settled=1");
+                $stmt = $con->query("select MemberNumber FROM cabmembers where CabId = '" . $val['CabId'] . "' AND trim(memberUserId)='" . $userId . "' AND settled=1");
                 $foundRows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-                $stmt = $con->query("select MobileNumber FROM cabopen where CabId = '" . $val['CabId'] . "' AND trim(MobileNumber)='" . $MobileNumber . "' AND
-    settled=1");
+                $stmt = $con->query("select MobileNumber FROM cabopen where CabId = '" . $val['CabId'] . "' AND trim(userId)='" . $userId . "' AND settled=1");
                 $foundRows1 = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
                 if ($foundRows > 0 || $foundRows1 > 0) {

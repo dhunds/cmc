@@ -2,6 +2,7 @@
 include('connection.php');
 
 $MobileNumber = $_POST['MobileNumber'];
+$userId = $_POST['userId'];
 
 $sql = "SELECT a.*, (SELECT imagename from userprofileimage where MobileNumber = a.SentMemberNumber LIMIT 1) as imagename FROM notifications a WHERE Trim(a.ReceiveMemberNumber) = Trim('$MobileNumber') AND Trim(a.StatusArchieve) = 'No' and RefStatus IS NULL ORDER BY a.DateTime DESC";
 

@@ -3,6 +3,8 @@
  include ('connection.php');
 	
  $MobileNumber = $_POST['MemberNumber'];
+ $memberUserId = $_POST['memberUserId'];
+
  
 	$sql = "UPDATE `notifications` SET `Status`='R' WHERE Trim(`ReceiveMemberNumber`) = Trim('$MobileNumber')";
 	$stmt = $con->query($sql);
