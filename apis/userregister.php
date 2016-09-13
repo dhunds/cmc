@@ -48,9 +48,9 @@ if ($FullName != '' && ($MobileNumber != '' || $socialId !='')) {
     } while (!isReferralCodeUnique($code));
 
     if ($socialId !="") {
-        $sql = "SELECT FullName, MobileNumber FROM registeredusers WHERE socialId='" . $socialId . "'";
+        $sql = "SELECT userId, FullName, MobileNumber FROM registeredusers WHERE socialId='" . $socialId . "'";
     } else {
-        $sql = "SELECT FullName, MobileNumber FROM registeredusers WHERE MobileNumber='" . $MobileNumber . "'";
+        $sql = "SELECT userId, FullName, MobileNumber FROM registeredusers WHERE MobileNumber='" . $MobileNumber . "'";
     }
 
     
@@ -62,6 +62,7 @@ if ($FullName != '' && ($MobileNumber != '' || $socialId !='')) {
         $resp['status'] = 'success';
         $resp['message'] = 'Account already exists.';
         $resp['mobileNumber'] = $user['MobileNumber'];
+        $resp['userId'] = $user['userId'];
 
         http_response_code(500);
         header('Content-Type: application/json');
