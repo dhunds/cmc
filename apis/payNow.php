@@ -129,7 +129,7 @@ if (!$error) {
         } else {
 
             $transactionId = (isset($respRiderPayment['transactionId']))?$respRiderPayment['transactionId']:'';
-            updateBoardedStatus($riderCellWithPrefix, $cabId, 1);
+            updateBoardedStatus($memberUserId, $cabId, 1);
 
             logRidePayments($memberUserId, $ownerUserId, $riderCellWithPrefix, $driverCellWithPrefix, $orderId, $amount, $serviceCharge, $serviceTax, $payableByRider, ($amount - $payableByRider), $riderWalletId, $cabId, $payableByMerchant, $orderIdMerchant);
         }
