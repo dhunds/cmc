@@ -232,12 +232,17 @@ class Mobikwik
 
         if ($mobileNumber != '' && $token != '') {
 
+            $sql = "SELECT userId FROM registeredusers WHERE MobileNumber = '" . $mobileNumber . "'";
+            $stmt = $con->query($sql);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $userId = $user['userId'];
+
             $wallet = $this->getWallet($mobileNumber);
 
             if (!empty($wallet)) {
-                $sql = "UPDATE userLinkedWallet SET token = '" . $token . "' where mobileNumber = '" . $mobileNumber . "' AND walletId=2";
+                $sql = "UPDATE userLinkedWallet SET token = '" . $token . "' where userId = '" . $userId . "' AND walletId=2";
             } else {
-                $sql = "INSERT INTO userLinkedWallet SET mobileNumber = '" . $mobileNumber . "', walletId=2, token = '" . $token . "'";
+                $sql = "INSERT INTO userLinkedWallet SET userId = '" . $userId . "', mobileNumber = '" . $mobileNumber . "', walletId=2, token = '" . $token . "'";
             }
 
             $stmt = $con->prepare($sql);
