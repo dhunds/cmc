@@ -5,7 +5,7 @@ $CabId = $_POST['CabId'];
 $MemberNumber = $_POST['MemberNumber'];
 $MemberUserId = $_POST['memberUserId'];
 
-$sql = "SELECT ac.*, ru.socialType, ru.CreatedOn, (SELECT COUNT(*) FROM acceptedrequest WHERE MemberNumber=ac.MobileNumber AND hasBoarded=1) as ridestaken, (SELECT COUNT(*) FROM cabopen WHERE MobileNumber=ac.MobileNumber AND status !=0) as ridesgiven FROM acceptedrequest ac JOIN registeredusers ru ON ac.memberUserId=ru.userId WHERE ac.CabId = '$CabId' AND ac.Status != 'Dropped' AND ac.memberUserId != '$MemberUserId'";
+$sql = "SELECT ac.*, ru.socialType, ru.CreatedOn, (SELECT COUNT(*) FROM acceptedrequest WHERE MemberNumber=ac.OwnerNumber AND hasBoarded=1) as ridestaken, (SELECT COUNT(*) FROM cabopen WHERE MobileNumber=ac.OwnerNumber AND status !=0) as ridesgiven FROM acceptedrequest ac JOIN registeredusers ru ON ac.memberUserId=ru.userId WHERE ac.CabId = '$CabId' AND ac.Status != 'Dropped' AND ac.memberUserId != '$MemberUserId'";
 
 $stmt = $con->query($sql);
 $no_of_rows = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
