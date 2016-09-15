@@ -6,6 +6,8 @@ $objNotification = new Notification();
 
 list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
 list($eLat, $eLon) = explode(',', $_POST['eLatLon']);
+$fromCity = getCity($sLat, $sLon);
+$toCity = getCity($eLat, $eLon);
 
 $CabId = $_POST['CabId'];
 $MobileNumber = $_POST['MobileNumber'];
@@ -24,8 +26,8 @@ $Message = $_POST['Message'];
 $ExpTripDuration = $_POST['ExpTripDuration'];
 $FromShortName = $_POST['FromShortName'];
 $ToShortName = $_POST['ToShortName'];
-$fromCity = $_POST['fromCity'];
-$toCity = $_POST['toCity'];
+//$fromCity = $_POST['fromCity'];
+//$toCity = $_POST['toCity'];
 $sLatLon = $_POST['sLatLon'];
 $eLatLon = $_POST['eLatLon'];
 

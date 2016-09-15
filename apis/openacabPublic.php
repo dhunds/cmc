@@ -9,6 +9,9 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
     list($eLat, $eLon) = explode(',', $_POST['eLatLon']);
 
+    $fromCity = getCity($sLat, $sLon);
+    $toCity = getCity($eLat, $eLon);
+
     $proximity = rideProximity();
 
     $CabId = $_POST['CabId'];
@@ -28,8 +31,9 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
     $ExpTripDuration = $_POST['ExpTripDuration'];
     $FromShortName = $_POST['FromShortName'];
     $ToShortName = $_POST['ToShortName'];
-    $fromCity = $_POST['fromCity'];
-    $toCity = $_POST['toCity'];
+
+    //$fromCity = $_POST['fromCity'];
+    //$toCity = $_POST['toCity'];
 
     $rideType = '';
 

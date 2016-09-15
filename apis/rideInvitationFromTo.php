@@ -29,22 +29,43 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
     list($sLat, $sLon) = explode(',', $_POST['sLatLon']);
     list($eLat, $eLon) = explode(',', $_POST['eLatLon']);
 
+    $fromCity = getCity($sLat, $sLon);
+    $toCity = getCity($eLat, $eLon);
+
     $proximity = rideProximity();
 
-    if (isset($_POST['fromCity']) && $_POST['fromCity'] !='' && isset($_POST['toCity']) && $_POST['toCity'] !='') {
+    $isOldApi = 0;
 
-        $fromCity = $_POST['fromCity'];
-        $toCity = $_POST['toCity'];
-        $isOldApi = 0;
-
-        if (isIntracityRide($fromCity, $toCity)){
-            $isIntercity =0;
-        } else {
-            $isIntercity =1;
-        }
+    if (isIntracityRide($fromCity, $toCity)){
+        $isIntercity =0;
+    } else {
+        $isIntercity =1;
     }
 
-    if ($isOldApi || !$isIntercity) {
+    if (!$isIntercity) {
+
+        $sql = "SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.fromCity, co.toCity, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.isIntercity, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, pm.PoolId, pm.PoolName, pm.rGid, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn, (SELECT COUNT(*) FROM acceptedrequest WHERE MemberNumber=co.MobileNumber AND hasBoarded=1) as ridestaken, (SELECT COUNT(*) FROM cabopen WHERE MobileNumber=co.MobileNumber AND status !=0) as ridesgiven
+    FROM cabopen co
+    LEFT JOIN groupCabs gc ON co.CabId = gc.cabId
+    LEFT JOIN userpoolsmaster pm ON gc.groupId = pm.PoolId
+    JOIN registeredusers ru ON co.MobileNumber = ru.MobileNumber
+    LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
+    LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
+    LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
+    LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
+    LEFT JOIN vehicle v ON v.id = vd.vehicleId
+    WHERE NOW() < DATE_ADD(co.ExpStartDateTime, INTERVAL 30 MINUTE)
+    AND co.userId !='$userId'
+    AND co.status < 1
+    AND co.CabStatus ='A'
+    AND co.fromCity ='".$fromCity."'
+    AND co.toCity ='".$toCity."'
+    AND co.isIntercity=1
+    AND co.RemainingSeats >0
+    AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.memberUserId='$userId')
+    ORDER BY co.ExpStartDateTime";
+
+    } else {
 
         $sql = "SELECT
         (
@@ -84,30 +105,6 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && isset($_POST['mobile
     HAVING origin < ".$proximity."
     AND destination < ".$proximity."
     ORDER BY ExpStartDateTime";
-
-    } else {
-
-        $sql = "SELECT co.CabId, co.MobileNumber, co.OwnerName, co.FromLocation, co.ToLocation, co.FromShortName, co.ToShortName, co.fromCity, co.toCity, co.sLatLon, co.eLatLon, co.TravelDate, co.TravelTime, co.Seats, co.Distance, co.ExpTripDuration, co.OpenTime, co.CabStatus, co.status, co.RateNotificationSend, co.ExpStartDateTime, co.ExpEndDateTime, co.OwnerChatStatus, co.FareDetails, co.RemainingSeats, 'N' As IsOwner, CONCAT((co.Seats - co.RemainingSeats),'/', co.Seats) as Seat_Status, co.rideType, co.isIntercity, co.perKmCharge, ui.imagename, cr.BookingRefNo, cn.CabName, cr.DriverName, cr.DriverNumber, cr.CarNumber, cr.CarType, pm.PoolId, pm.PoolName, pm.rGid, v.vehicleModel, vd.registrationNumber, vd.isCommercial, ru.socialType, ru.CreatedOn, (SELECT COUNT(*) FROM acceptedrequest WHERE MemberNumber=co.MobileNumber AND hasBoarded=1) as ridestaken, (SELECT COUNT(*) FROM cabopen WHERE MobileNumber=co.MobileNumber AND status !=0) as ridesgiven
-    FROM cabopen co
-    LEFT JOIN groupCabs gc ON co.CabId = gc.cabId
-    LEFT JOIN userpoolsmaster pm ON gc.groupId = pm.PoolId
-    JOIN registeredusers ru ON co.MobileNumber = ru.MobileNumber
-    LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
-    LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
-    LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
-    LEFT JOIN userVehicleDetail vd ON co.MobileNumber = vd.mobileNumber
-    LEFT JOIN vehicle v ON v.id = vd.vehicleId
-    WHERE NOW() < DATE_ADD(co.ExpStartDateTime, INTERVAL 30 MINUTE)
-    AND co.userId !='$userId'
-    AND co.status < 1
-    AND co.CabStatus ='A'
-    AND co.fromCity ='".$fromCity."'
-    AND co.toCity ='".$toCity."'
-    AND co.isIntercity=1
-    AND co.RemainingSeats >0
-    AND NOT EXISTS (SELECT 1 FROM cabmembers cm2 WHERE cm2.CabId = co.CabId AND cm2.memberUserId='$userId')
-    ORDER BY co.ExpStartDateTime";
-
     }
 
     $stmt = $con->query($sql);
