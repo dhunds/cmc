@@ -33,6 +33,8 @@ $RemainingSeats = (int)$sth->fetchColumn();
 $sth1 = $con->prepare("SELECT Seats FROM cabopen WHERE CabId = '$CabId' and CabStatus = 'A'");
 $sth1->execute();
 $Seats = (int)$sth1->fetchColumn();
+$dist = $row['Distance'];
+$perkmCharge = $row['perKmCharge'];
 
 $stmt = $con->query("SELECT MemberName FROM acceptedrequest WHERE CabId = '$CabId' AND memberUserId='$memberUserId' Status != 'Dropped'");
 $alreadyJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
