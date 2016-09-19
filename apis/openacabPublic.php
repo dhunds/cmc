@@ -115,7 +115,7 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
             $res = $stmt->execute();
 
             // Send Members Notification About ride
-            $sql = "SELECT DISTINCT(ru.MobileNumber), ru.Platform, ru.DeviceToken FROM registeredusers ru JOIN userpoolsslave us ON ru.MobileNumber =  us.MemberNumber WHERE us.PoolId = $groupId AND ru.MobileNumber != '$MobileNumber' AND ru.PushNotification ='on' AND ru.DeviceToken !='' AND ru.lastNotificationSentOn < CURRENT_DATE()";
+            $sql = "SELECT DISTINCT(ru.MobileNumber), ru.userId, ru.Platform, ru.DeviceToken FROM registeredusers ru JOIN userpoolsslave us ON ru.MobileNumber =  us.MemberNumber WHERE us.PoolId = $groupId AND ru.MobileNumber != '$MobileNumber' AND ru.PushNotification ='on' AND ru.DeviceToken !='' AND ru.lastNotificationSentOn < CURRENT_DATE()";
 
             $stmt = $con->query($sql);
             $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
@@ -132,12 +132,12 @@ if (isset($_POST['sLatLon']) && isset($_POST['eLatLon']) && $_POST['sLatLon'] !=
                         $gcm_array = array();
                         $gcm_array[] = $user['DeviceToken'];
                         $objNotification->setVariables($gcm_array, $body);
-                        $res = $objNotification->sendGCMNotification();
+                        //$res = $objNotification->sendGCMNotification();
                     } else {
                         $apns_array = array();
                         $apns_array[] = $user['DeviceToken'];
                         $objNotification->setVariables($apns_array, $body);
-                        $objNotification->sendIOSNotification();
+                        //$res = $objNotification->sendIOSNotification();
                     }
 
                     $sql = "UPDATE registeredusers set lastNotificationSentOn = now() WHERE userId = '".$user['userId']."'";

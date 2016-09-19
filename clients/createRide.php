@@ -59,7 +59,7 @@ if (isset($_POST['submit'])) {
             $perKmCharge = perKMChargeIntercity();
         }
 
-        $stmt = $con->query("SELECT FullName FROM registeredusers WHERE MobileNumber = '".$MobileNumber."'");
+        $stmt = $con->query("SELECT userId FROM registeredusers WHERE MobileNumber = '".$MobileNumber."'");
         $userExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 
@@ -68,11 +68,15 @@ if (isset($_POST['submit'])) {
 
             $stmt = $con->prepare($sql);
             $stmt->execute();
+            $userId = $con->lastInsertId();
 
             $sql = "INSERT INTO  userprofileimage (MobileNumber ,imagename)VALUES ('".$MobileNumber."',  '');";
             $stmt = $con->prepare($sql);
             $stmt->execute();
 
+         } else {
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $userId = $user['userId'];
          }
 
         $stmt = $con->query("SELECT id, cleintId FROM cabOwners WHERE mobileNumber = '".$MobileNumber."'");
@@ -86,7 +90,7 @@ if (isset($_POST['submit'])) {
                 $error=1;
             }
         } else {
-            $sql = "INSERT INTO  cabOwners (`mobileNumber` ,`Name`, `cleintId`)VALUES ('".$MobileNumber."',  '".$_POST['ownerName']."', '$client_id');";
+            $sql = "INSERT INTO  cabOwners (userId, `mobileNumber` ,`Name`, `cleintId`)VALUES ($userId, '".$MobileNumber."',  '".$_POST['ownerName']."', '$client_id');";
             $stmt = $con->prepare($sql);
             $stmt->execute();
         }
@@ -97,7 +101,7 @@ if (isset($_POST['submit'])) {
             $isVehicleAttached = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
             if ($isVehicleAttached < 1) {
-                $stmt = $con->prepare("INSERT INTO userVehicleDetail SET vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."', mobileNumber = '".$MobileNumber."', created=now()");
+                $stmt = $con->prepare("INSERT INTO userVehicleDetail SET userId=$userId, vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."', mobileNumber = '".$MobileNumber."', created=now()");
                 $stmt->execute();
             } else {
                 $stmt = $con->prepare("UPDATE userVehicleDetail SET vehicleId = '$vehicleId',  isCommercial=1, registrationNumber='".$_POST['registrationNumber']."' WHERE mobileNumber = '".$MobileNumber."'");
@@ -153,7 +157,7 @@ if (isset($_POST['submit'])) {
 
             if ($found > 0 || $createGroup) {
 
-                $sql = "INSERT INTO cabopen(CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge,isIntercity) VALUES ('$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge', $isIntercity)";
+                $sql = "INSERT INTO cabopen(userId, CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge,isIntercity) VALUES ($userId, '$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge', $isIntercity)";
                //echo $sql;die;
                 $stmt = $con->prepare($sql);
                 $res = $stmt->execute();
