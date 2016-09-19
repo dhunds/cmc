@@ -242,6 +242,36 @@ function sendMail($from, $to, $subject, $body){
     }
 }
 
+function sendPaymentMailToAssociate ($name, $email, $from, $amount) {
+    global $client;
+    $body = '<html>
+                <head>
+                    <title></title>
+                </head>
+                <body>
+                    <p>Dear '.$name.',</p>
+
+                    <p>You have received payment of Rs. '.$amount.' from '.$from.'</p>
+                    <p>Team iShareRyde</p>
+
+                    <p> </p>
+                </body>
+             </html>';
+
+    $msg = array();
+    $msg['Source'] = "support@ishareryde.com";
+    $msg['Destination']['ToAddresses'][] = $email;
+    $msg['Message']['Subject']['Data'] = "Payment Received";
+    $msg['Message']['Body']['Html']['Data'] =$body;
+    $msg['Message']['Body']['Html']['Charset'] = "UTF-8";
+
+    try{
+        $client->sendEmail($msg);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+    }
+}
+
 function sendPaymentMailOwner ($email, $RideDetail, $subject){
 
     $str = '<div  style="margin:0px;">

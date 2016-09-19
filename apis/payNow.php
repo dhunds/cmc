@@ -161,12 +161,33 @@ if (!$error) {
 
         if ($paymentMethod =='Cash') {
 
+            if ($isAssociate) {
+                $sql = "SELECT SmsMessage FROM smstemplates WHERE SmsshortCode = 'PAYMENTCASH'";
+                $stmt = $con->query($sql);
+                $txtMsg = $stmt->fetchColumn();
+                $OwnerNumberWithoutPrefix = substr(trim($OwnerNumber), -10);
+                $txtMsg = str_replace("NXXXXX", $riderProfile['FullName'], $txtMsg);
+                $txtMsg = str_replace("AXXXXX", $payableByRider, $txtMsg);
+                $MobNumber = '[' . substr(trim($driverCellWithPrefix), -10) . ']';
+                $objNotification->sendSMS($MobNumber, $txtMsg);
+            }
+
             $Message = "Please take Rs. " . $payableByRider . " in cash from " . $riderProfile['FullName'] . ".";
 
             $jsonResp = array('code'=>200, 'status' => 'success',  'message' => 'Please pay Rs.' . $payableByRider . ' in cash');
         } else {
 
             if ($isAssociate){
+
+                $sql = "SELECT SmsMessage FROM smstemplates WHERE SmsshortCode = 'PAYMENTWALLET'";
+                $stmt = $con->query($sql);
+                $txtMsg = $stmt->fetchColumn();
+                $OwnerNumberWithoutPrefix = substr(trim($OwnerNumber), -10);
+                $txtMsg = str_replace("NXXXXX", $riderProfile['FullName'], $txtMsg);
+                $txtMsg = str_replace("AXXXXX", $payableByRider, $txtMsg);
+                $MobNumber = '[' . substr(trim($driverCellWithPrefix), -10) . ']';
+                $objNotification->sendSMS($MobNumber, $txtMsg);
+
                 $Message = "Payment received from " . $riderProfile['FullName'] . ".";
             } else {
 
@@ -179,6 +200,14 @@ if (!$error) {
             }
 
             $jsonResp = array('code'=>200, 'status' => "success", 'message' => 'Payment processed. Enjoy your ride!');
+        }
+
+        //Send Email to driver (if associate)
+
+        if ($isAssociate) {
+            if ($driverProfile['Email'] != '') {
+                sendPaymentMailToAssociate($driverProfile['FullName'], $driverProfile['Email'], $riderProfile['FullName'], $payableByRider);
+            }
         }
 
         $NotificationType = "Payment_Received";
