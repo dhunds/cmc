@@ -143,7 +143,8 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
                         $mobikwikBalance = $resp->balanceamount;
                     }
                 }
-                setResponse(array("code"=>200, "status"=>"success", "token"=>$resp['token'], "balance"=>$mobikwikBalance));
+
+                setResponse(array("code"=>200, "status"=>"success", "token"=>$resp['token'], "balance"=>(string)$mobikwikBalance));
 
             } else {
                 setResponse(array("code"=>200, "status"=>"fail", "message"=>"No Data"));
