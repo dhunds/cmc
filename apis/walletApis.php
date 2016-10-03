@@ -144,7 +144,7 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
                     }
                 }
 
-                setResponse(array("code"=>200, "status"=>"success", "token"=>$resp2['token'], "balance"=>(string)$mobikwikBalance));
+                setResponse(array("code"=>200, "status"=>"success", "token"=>$resp['token'], "balance"=>(string)$mobikwikBalance));
 
             } else {
                 setResponse(array("code"=>200, "status"=>"fail", "message"=>"No Data"));

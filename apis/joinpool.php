@@ -30,11 +30,16 @@ $sth = $con->prepare("SELECT COUNT(*) AS RemainingSeats FROM acceptedrequest WHE
 $sth->execute();
 $RemainingSeats = (int)$sth->fetchColumn();
 
-$sth1 = $con->prepare("SELECT Seats FROM cabopen WHERE CabId = '$CabId' and CabStatus = 'A'");
+$sth1 = $con->prepare("SELECT Seats, Distance, perKmCharge FROM cabopen WHERE CabId = '$CabId' and CabStatus = 'A'");
 $sth1->execute();
-$Seats = (int)$sth1->fetchColumn();
+$row = $sth1->fetch(PDO::FETCH_ASSOC);
+
+$Seats = (int)$row['Seats'];
 $dist = $row['Distance'];
 $perkmCharge = $row['perKmCharge'];
+
+
+
 
 $stmt = $con->query("SELECT MemberName FROM acceptedrequest WHERE CabId = '$CabId' AND memberUserId='$memberUserId' Status != 'Dropped'");
 $alreadyJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
