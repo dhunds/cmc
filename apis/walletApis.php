@@ -137,14 +137,14 @@ if (isset($_POST['act']) && $_POST['act'] !='' && isset($_POST['mobileNumber']) 
                 $mobikwikBalance = 0;
 
                 if (isset($resp['token']) && $resp['token'] !=''){
-                    $resp = $objWallet->checkBalance($_POST['mobileNumber']);
+                    $resp2 = $objWallet->checkBalance($_POST['mobileNumber']);
 
-                    if ($resp && $resp->status =='SUCCESS') {
-                        $mobikwikBalance = $resp->balanceamount;
+                    if ($resp2 && $resp2->status =='SUCCESS') {
+                        $mobikwikBalance = $resp2->balanceamount;
                     }
                 }
 
-                setResponse(array("code"=>200, "status"=>"success", "token"=>$resp['token'], "balance"=>(string)$mobikwikBalance));
+                setResponse(array("code"=>200, "status"=>"success", "token"=>$resp2['token'], "balance"=>(string)$mobikwikBalance));
 
             } else {
                 setResponse(array("code"=>200, "status"=>"fail", "message"=>"No Data"));
