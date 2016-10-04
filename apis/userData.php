@@ -27,7 +27,7 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
         $user['type'] ='1';
     }
 
-    if ($user['status'] =2) {
+    if ($user['status'] ==2) {
         $user['message'] ='Your account is blocked, please contact support@ishareryde.com';
     } else {
         $user['message'] = '';

@@ -1,4 +1,5 @@
 <?php
+die;
 ini_set('display_errors', 1);
 include ('connection.php');
 $con->setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);
