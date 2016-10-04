@@ -38,9 +38,6 @@ $Seats = (int)$row['Seats'];
 $dist = $row['Distance'];
 $perkmCharge = $row['perKmCharge'];
 
-
-
-
 $stmt = $con->query("SELECT MemberName FROM acceptedrequest WHERE CabId = '$CabId' AND memberUserId='$memberUserId' Status != 'Dropped'");
 $alreadyJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
