@@ -70,9 +70,22 @@ if ($res2 === true) {
     $myArraynumber = explode(',', $Membersnew);
     $myArrayname = explode(',', $MembersNamenew);
     $strNo = '';
-    $str = "INSERT INTO cabmembers(CabId, MemberName, MemberNumber) VALUES";
+
+    $str = "INSERT INTO cabmembers(CabId, memberUserId, MemberName, MemberNumber) VALUES";
+
     for ($i = 0; $i < count($myArraynumber); $i++) {
-        $str .= "('" . $CabId . "','" . $myArrayname[$i] . "','" . $myArraynumber[$i] . "'),";
+
+        $rs = $con->query("SELECT userId FROM registeredusers WHERE MobileNumber = Trim('".$myArraynumber[$i]."')");
+        $FriendExists = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+        if ($FriendExists) {
+            $row = $rs->fetch();
+            $memberUserId = $row['userId'];
+        } else {
+            $memberUserId=0;
+        }
+
+        $str .= "('" . $CabId . "', '" . $memberUserId . "', '" . $myArrayname[$i] . "','" . $myArraynumber[$i] . "'),";
 
         $stmt1 = $con->query("SELECT * FROM registeredusers WHERE MobileNumber = Trim('$myArraynumber[$i]')");
 
