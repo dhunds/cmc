@@ -37,7 +37,7 @@ $perkmCharge = $row['perKmCharge'];
 $stmt = $con->query("SELECT MemberName FROM acceptedrequest WHERE CabId = '$CabId' AND MemberNumber='$MemberNumber' AND Status != 'Dropped'");
 $alreadyJoined = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-if ($alreadyJoined) {
+if (!$alreadyJoined) {
 
     if (($Seats - $RemainingSeats) > 0) {
 
