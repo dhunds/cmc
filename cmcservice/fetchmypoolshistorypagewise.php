@@ -47,7 +47,6 @@ WHERE TRIM(co.MobileNumber) = '" . $MobileNumber . "'
 AND co.ExpStartDateTime >  '2016-05-27 23:59:00'
 ORDER BY ExpStartDateTime DESC LIMIT $startLimit, $pageSize
 ";
-
 $stmt = $con->query($sql);
 $stmt->execute();
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
