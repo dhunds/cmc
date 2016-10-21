@@ -1,8 +1,8 @@
 <?php
 $dsn = 'mysql:host=localhost;dbname=applock';
  $us = 'root';
-// $pa = 'Vbh4{tc+Nb';
-$pa = 'root';
+ $pa = 'Vbh4{tc+Nb';
+//$pa = 'root';
 
 try {
     $con = new PDO($dsn, $us, $pa);
