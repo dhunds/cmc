@@ -1,35 +1,29 @@
 <?php
 
-	function sendSMS($numbers, $message)
+	function sendSMS($MobileNumber, $message)
     {
         global $con;
 
-        $numbers = str_replace(" ", "", $numbers);
-        $numbersNew = substr($numbers, 1, -1);
-        $allNumbers = explode(",", $numbersNew);
+        $url = "http://luna.a2wi.co.in:7501/failsafe/HttpLink?aid=572697&pin=c12&signature=ISHARE&mnumber=" . $MobileNumber . "&message=" . urlencode($message);
+        //echo $url;die;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $curl_scraped_page = curl_exec($ch);
+        curl_close($ch);
 
-        foreach ($allNumbers as $MobileNumber) {
-            $MobileNumber = trim($MobileNumber);
-            $url = "http://luna.a2wi.co.in:7501/failsafe/HttpLink?aid=572697&pin=c12&signature=ISHARE&mnumber=" . $MobileNumber . "&message=" . urlencode($message);
+        $messageData = explode("&", $curl_scraped_page);
+        $infoData = explode("=", $messageData[1]);
+        $timeData = explode("=", $messageData[2]);
+        $zeroVal = explode("~", $messageData[0]);
+        $codeData = explode("=", $zeroVal[1]);
+        $requestidData = explode("=", $zeroVal[0]);
 
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $curl_scraped_page = curl_exec($ch);
-            curl_close($ch);
+        $sql = "INSERT INTO smslogs(sentTo, message, sentDateTime, smsRequestId, smsCode, smsInfo, smsTimeApi) VALUES ('$MobileNumber','$message', now(), '$requestidData[1]','$codeData[1]','$infoData[1]','$timeData[1]')";
+        $stmt = $con->prepare($sql);
+        $res = $stmt->execute();
 
-            $messageData = explode("&", $curl_scraped_page);
-            $infoData = explode("=", $messageData[1]);
-            $timeData = explode("=", $messageData[2]);
-            $zeroVal = explode("~", $messageData[0]);
-            $codeData = explode("=", $zeroVal[1]);
-            $requestidData = explode("=", $zeroVal[0]);
-
-            $sql = "INSERT INTO smslogs(sentTo, message, sentDateTime, smsRequestId, smsCode, smsInfo, smsTimeApi) VALUES ('$MobileNumber','$message', now(), '$requestidData[1]','$codeData[1]','$infoData[1]','$timeData[1]')";
-            $stmt = $con->prepare($sql);
-            $res = $stmt->execute();
-            return $res;
-        }
+        return $res;
     }
 
     function setResponse($args){
@@ -41,4 +35,13 @@
 	    echo json_encode($args);
 	    exit;
 	}
-?>
+
+    function checkPostForBlank($arrParams){
+        $error = 0;
+        foreach ($arrParams as $value) {
+            if (!isset($_POST[$value]) || trim($_POST[$value]) =='') {
+                $error = 1;
+            }
+        }
+        return $error;
+    }
