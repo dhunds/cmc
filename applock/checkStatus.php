@@ -2,7 +2,7 @@
 include('auth.php');
 include('functions.php');
 
-if (isset($_POST['imei']) && $_POST['imei'] != '') {
+if (isset($_POST['imei1']) && $_POST['imei1'] != '') {
 
     $imei1 = (isset($_POST['imei1']))?$_POST['imei1']:'';
     $imei2 = (isset($_POST['imei2']))?$_POST['imei2']:'';

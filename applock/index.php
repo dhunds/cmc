@@ -13,8 +13,9 @@
 <table width="100%">
     <tr bgcolor="#18A5DE">
         <td style="width: 12%; color: #fff;padding:8px;"><b>Mobile Number</b></td>
-        <td style="width: 25%; color: #fff;padding:8px;"><b>IMEI 1</b></td>
-        <td style="width: 31%; color: #fff;padding:8px;"><b>Device ID</b></td>
+        <td style="width: 15%; color: #fff;padding:8px;"><b>IMEI 1</b></td>
+        <td style="width: 15%; color: #fff;padding:8px;"><b>IMEI 2</b></td>
+        <td style="width: 26%; color: #fff;padding:8px;"><b>Device ID</b></td>
         <td style="width: 10%; color: #fff;padding:8px;"><b>Status</b></td>
         <td style="width: 9%; color: #fff;padding:8px;"><b>Next Check</b></td>
         <td style="width: 9%; color: #fff;padding:8px;"><b>Action</b></td>
@@ -40,6 +41,7 @@
                     echo '<tr>
                             <td style="padding:8px;">'.$value['mobileNumber'].'</td>
                             <td style="padding:8px;">'.$value['IMEI1'].'</td>
+                            <td style="padding:8px;">'.$value['IMEI2'].'</td>
                             <td style="padding:8px;">'.$value['deviceId'].'</td>
                             <td style="padding:8px;">'.$status.'</td>
                             <td style="padding:8px;">'.date("dS M y", strtotime($value['nextCheckDateTime'])).'</td>
