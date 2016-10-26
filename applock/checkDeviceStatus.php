@@ -15,7 +15,7 @@ if (!$errors) {
     $auth = hash_hmac('sha256', $messageString, CMC_KEY);
     $messageKey = substr($auth, 0, 10);
 
-    if ($messageKey == $imei) {
+    if ($messageKey == $hash) {
 
         $sql = "SELECT *  FROM deviceDetails WHERE IMEI1='".$imei."' OR IMEI2='".$imei."'";
         $stmt = $con->query($sql);
@@ -24,7 +24,7 @@ if (!$errors) {
         if ($found) {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $messageBody = 'STATUS:'.$user['status'].PHP_EOL.'TIMESTAMP:'.$timestamp.PHP_EOL.'NEXTCHECK:'.strtotime($user['nextCheckDateTime']).PHP_EOL.'HASH:'.$messageKey;
+            $messageBody = $user['status'].'^'.$timestamp.'^'.strtotime($user['nextCheckDateTime']).'^'.$messageKey;
 
             if (sendSMS($mobileNumber, $messageBody)){
                 $resp = array('code' => 200, 'status' => 'success', 'message' => 'Message sent.');

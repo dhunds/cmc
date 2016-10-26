@@ -19,7 +19,7 @@
         $codeData = explode("=", $zeroVal[1]);
         $requestidData = explode("=", $zeroVal[0]);
 
-        $sql = "INSERT INTO smslogs(sentTo, message, sentDateTime, smsRequestId, smsCode, smsInfo, smsTimeApi) VALUES ('$MobileNumber','$message', now(), '$requestidData[1]','$codeData[1]','$infoData[1]','$timeData[1]')";
+        $sql = "INSERT INTO smsLogs(sentTo, message, sentDateTime, smsRequestId, smsCode, smsInfo, smsTimeApi) VALUES ('$MobileNumber','$message', now(), '$requestidData[1]','$codeData[1]','$infoData[1]','$timeData[1]')";
         $stmt = $con->prepare($sql);
         $res = $stmt->execute();
 
