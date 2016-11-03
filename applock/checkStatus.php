@@ -18,16 +18,17 @@ if (isset($_POST['imei1']) && $_POST['imei1'] != '') {
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
     if ($found) {
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql1 = "UPDATE deviceDetails SET deviceId='$gcmId' WHERE IMEI1='".$_POST['imei1']."' OR IMEI2='".$_POST['imei1']."'";
+        if ($gcmId !=''){
+            $sql1 = "UPDATE deviceDetails SET deviceId='$gcmId' WHERE IMEI1='".$_POST['imei1']."' OR IMEI2='".$_POST['imei1']."'";
 
-        if (isset($_POST['imei2']) && $_POST['imei2'] !='') {
-            $sql1 .= " OR IMEI1='".$_POST['imei2']."' OR IMEI2='".$_POST['imei2']."'";
+            if (isset($_POST['imei2']) && $_POST['imei2'] !='') {
+                $sql1 .= " OR IMEI1='".$_POST['imei2']."' OR IMEI2='".$_POST['imei2']."'";
+            }
+
+            $stmt = $con->prepare($sql1);
+            $stmt->execute();
         }
-
-        $stmt = $con->prepare($sql1);
-        $stmt->execute();
 
         $stmt = $con->query($sql);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
