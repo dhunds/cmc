@@ -38,7 +38,7 @@ LEFT JOIN userprofileimage ui ON co.MobileNumber = ui.MobileNumber
 LEFT JOIN cmccabrecords cr ON co.CabId = cr.CabId
 LEFT JOIN cabnames cn ON cn.CabNameID = cr.CabNameID
 WHERE TRIM(co.userId) = '" . $userId . "'
-ORDER BY ExpStartDateTime";
+ORDER BY ExpStartDateTime DESC";
 
 $stmt = $con->query($sql);
 $stmt->execute();

@@ -6,7 +6,7 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
 
     $messageString = 'Testing Message';
 
-    $auth = hash_hmac('sha256', $messageString, CMC_KEY);
+    $auth = hash_hmac('sha256', $messageString, ENC_KEY);
 
     $messageKey = substr($auth, 0, 10);
     $messageString = $messageString.PHP_EOL.$messageKey;

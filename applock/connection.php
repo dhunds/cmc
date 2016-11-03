@@ -13,4 +13,4 @@ try {
     exit();
 }
 
-define("CMC_KEY", "NrD4LMv5xGAXdYvxvzzcxASUgWQkKcZx");
+define("ENC_KEY", "NrD4LMv5xGAXdYvxvzzcxASUgWQkKcZx");

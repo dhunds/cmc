@@ -12,7 +12,7 @@ if (!$errors) {
     $hash = trim($_POST['hash']);
 
     $messageString = $imei.$timestamp;
-    $auth = hash_hmac('sha256', $messageString, CMC_KEY);
+    $auth = hash_hmac('sha256', $messageString, ENC_KEY);
     $messageKey = substr($auth, 0, 10);
 
     if ($messageKey == $hash) {
