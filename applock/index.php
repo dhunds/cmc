@@ -8,6 +8,7 @@
 <html lang="en">
 <head>
     <title>Devices</title>
+    <script src="js/jquery.min.js" type="text/javascript"></script>
 <body>
 	<h2>Device List</h2>
 <table width="100%">
@@ -42,11 +43,10 @@
                             <td style="padding:8px;">'.$value['mobileNumber'].'</td>
                             <td style="padding:8px;">'.$value['IMEI1'].'</td>
                             <td style="padding:8px;">'.$value['IMEI2'].'</td>
-                            <td style="padding:8px;">'.$value['deviceId'].'</td>
+                            <td style="padding:8px;">'.wordwrap($value['deviceId'], 40, "<br />", true).'</td>
                             <td style="padding:8px;">'.$status.'</td>
-                            <td style="padding:8px;">'.date("dS M y", strtotime($value['nextCheckDateTime'])).'</td>
-                            <td style="padding:8px;"><a href="updateStatus.php?id='.$value['id'].'">Edit</a></td>
-                        </tr>';
+                            <td style="padding:8px;">'.date("jS M y h:i a", strtotime($value['nextCheckDateTime'])).'</td>
+                            <td style="padding:8px;"><a href="updateStatus.php?id='.$value['id'].'">Edit</a><br /><a href="javascript:;" onclick="blockUser('.$value['id'].');">Send Push</a></td>';
                 }
             } else {
                 echo '<tr>
@@ -59,3 +59,12 @@
 
 </body>
 </html>
+
+<script>
+    function blockUser(deviceId){
+        $.post( "sendNotification.php", {id: deviceId}, function( data ) {
+            alert(data);
+            location.reload();
+        });
+    }
+</script>

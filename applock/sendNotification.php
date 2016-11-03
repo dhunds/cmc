@@ -14,7 +14,14 @@ if (isset($_REQUEST['id']) && $_REQUEST['id'] != '') {
 
         if ($user['deviceId']){
             $result = sendFCMNotification($user, $user['deviceId']);
-            echo $result;
+            $result = json_decode($result);
+
+            if ($result->success ==1){
+                echo 'Notification sent';
+            } else {
+                echo $result->results[0]->error;
+            }
+
         } else {
             echo 'Device id not available';
         }
