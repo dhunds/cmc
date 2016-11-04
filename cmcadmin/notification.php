@@ -43,10 +43,19 @@ if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != 
     $sql = "SELECT * FROM registeredusers WHERE PushNotification='on' AND Platform='A'";
 
     if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
-        $_POST['mobileNumber'] = '0091' . substr(trim($_POST['mobileNumber']), -10);
-        $sql .= " AND MobileNumber='" . $_POST['mobileNumber'] . "'";
+        //Code changed for notification
+        $arrMob = explode(',',$_POST['mobileNumber']);
+        $strMob = '';
+        foreach ($arrMob as $mob){
+            $strMob .= '0091' . substr(trim($mob), -10).',';
+        }
+        $strMob = substr($strMob, 0, -1);
+        $sql .= " AND MobileNumber IN (" . $strMob . ")";
+        //End code change
+        //$_POST['mobileNumber'] = '0091' . substr(trim($_POST['mobileNumber']), -10);
+        //$sql .= " AND MobileNumber='" . $_POST['mobileNumber'] . "'";
     }
-
+    //echo $sql;die;
     $stmt = $con->query($sql);
     $no_of_users = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
@@ -79,7 +88,8 @@ if (isset($_POST['submit']) && isset($_POST['message']) && $_POST['message'] != 
     $sql = "SELECT * FROM registeredusers WHERE PushNotification='on' AND Platform='I'";
 
     if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
-        $sql .= " AND MobileNumber='" . $_POST['mobileNumber'] . "'";
+        $sql .= " AND MobileNumber IN (" . $strMob . ")";
+        //$sql .= " AND MobileNumber='" . $_POST['mobileNumber'] . "'";
     }
 
     $stmt = $con->query($sql);

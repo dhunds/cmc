@@ -55,6 +55,7 @@
         $fields['data'] = $data;
         if(is_array($target)){
             $fields['registration_ids'] = $target;
+            $fields['priority'] = 'high';
         }else{
             $fields['to'] = $target;
         }
