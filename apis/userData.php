@@ -33,6 +33,16 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
         $user['message'] = '';
     }
 
+    $sql = "SELECT id FROM cabopen WHERE userId='".$_POST['userId']."' AND CabStatus='A'";
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($found) {
+        $user['hasActiveRide'] ='1';
+    } else {
+        $user['hasActiveRide'] ='0';
+    }
+
     $resp = array('header' => 200, 'status' => 'success', 'message' => '', 'data' => $user);
 
 } else {

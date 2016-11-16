@@ -157,7 +157,7 @@ if (isset($_POST['submit'])) {
 
             if ($found > 0 || $createGroup) {
 
-                $sql = "INSERT INTO cabopen(userId, CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge,isIntercity) VALUES ($userId, '$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge', $isIntercity)";
+                $sql = "INSERT INTO cabopen(userId, CabId, MobileNumber, OwnerName, FromLocation, ToLocation, FromShortName, ToShortName, fromCity, toCity, sLatLon, eLatLon, sLat, sLon, eLat, eLon, TravelDate, TravelTime, Seats, RemainingSeats, Distance, OpenTime, ExpTripDuration,ExpStartDateTime,ExpEndDateTime,rideType,perKmCharge,isIntercity, cabType) VALUES ($userId, '$CabId','$MobileNumber','$OwnerName','$FromLocation','$ToLocation','$FromShortName','$ToShortName', '$fromCity', '$toCity', '$sLatLon','$eLatLon', '$sLat', '$sLon', '$eLat', '$eLon','$TravelDate','$TravelTime','$Seats','$RemainingSeats','$Distance',now(),'$ExpTripDuration', '$ExpStartDateTime','$ExpEndDateTime','$rideType','$perKmCharge', $isIntercity,2)";
                //echo $sql;die;
                 $stmt = $con->prepare($sql);
                 $res = $stmt->execute();
