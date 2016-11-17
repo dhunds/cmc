@@ -35,10 +35,21 @@ if (isset($_POST['sLatLon']) && isset($_POST['userId']) && $_POST['userId'] != '
 
     $stmt = $con->query($sql);
     $rides = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $AllRides['privateRides'] = $rides;
+    $AllRides['nearbyRides'] = $rides;
+
+    $sql = "SELECT id FROM cabopen WHERE userId='".$_POST['userId']."' AND CabStatus='A'";
+    $stmt = $con->query($sql);
+    $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+    if ($found) {
+        $hasActiveRide ='1';
+    } else {
+        $hasActiveRide ='0';
+    }
 
     if (count($AllRides) > 0) {
         $finalArray['status'] = 'success';
+        $finalArray['hasActiveRide'] = $hasActiveRide;
         $finalArray['data'] = $AllRides;
         http_response_code(200);
         header('Content-Type: application/json');
