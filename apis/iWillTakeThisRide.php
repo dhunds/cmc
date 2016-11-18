@@ -21,7 +21,12 @@ if (isset($_POST['cabId']) && isset($_POST['cabId']) && isset($_POST['userId']) 
         $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
         if ($found) {
-            $sql = "UPDATE cabopen SET userId=".$userId.", MobileNumber='".$user['MobileNumber']."', OwnerName ='".$user['FullName']."' WHERE CabId=='".$userId."'";
+            http_response_code(200);
+            header('Content-Type: application/json');
+            echo '{"status":"fail", "message":"You already have an active ride"}';
+            exit;
+        } else {
+            $sql = "UPDATE cabopen SET userId=".$userId.", MobileNumber='".$user['MobileNumber']."', OwnerName ='".$user['FullName']."' WHERE CabId='".$cabId."'";
             $stmt = $con->prepare($sql);
 
             if ($stmt->execute()) {
@@ -35,13 +40,8 @@ if (isset($_POST['cabId']) && isset($_POST['cabId']) && isset($_POST['userId']) 
                 echo '{"status":"fail", "message":"An error occured."}';
                 exit;
             }
-        } else {
-            http_response_code(200);
-            header('Content-Type: application/json');
-            echo '{"status":"fail", "message":"Invalid User"}';
-            exit;
         }
-        
+
     } else {
         http_response_code(200);
         header('Content-Type: application/json');
