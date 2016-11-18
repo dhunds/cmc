@@ -16,7 +16,7 @@ if (isset($_POST['cabId']) && isset($_POST['cabId']) && isset($_POST['userId']) 
     if ($found) {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "SELECT id FROM cabopen WHERE userId=".$userId." AND CabStatus='A'";
+        $sql = "SELECT userId FROM cabopen WHERE userId=".$userId." AND CabStatus='A'";
         $stmt = $con->query($sql);
         $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 

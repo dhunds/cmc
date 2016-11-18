@@ -33,7 +33,7 @@ if (isset($_POST['mobileNumber']) && $_POST['mobileNumber'] != '') {
         $user['message'] = '';
     }
 
-    $sql = "SELECT id FROM cabopen WHERE userId='".$_POST['userId']."' AND CabStatus='A'";
+    $sql = "SELECT userId FROM cabopen WHERE userId='".$_POST['userId']."' AND CabStatus='A'";
     $stmt = $con->query($sql);
     $found = $con->query("SELECT FOUND_ROWS()")->fetchColumn();
 
